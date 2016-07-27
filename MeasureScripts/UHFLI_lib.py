@@ -125,12 +125,12 @@ def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
     
     # Poll data parameters
     poll_length = 0.001  # [s]
-    poll_timeout = maxtime*1000  # [ms]
+    poll_timeout = int(maxtime*1000)  # [ms]
     poll_flags = 0
     poll_return_flat_dict = True
     
     daq.setInt('/dev2148/scopes/0/enable', 1)  # Enable scope
-    time.sleep(0.5)  # Wait for everything to be proper initialized
+    time.sleep(0.01)  # Wait for everything to be proper initialized
     
     #START MEASURE
     # Subscribe to the scope data

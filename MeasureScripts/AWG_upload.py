@@ -37,10 +37,10 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     seqCH2 = list()	# Initializing list for channel 2 sequence
     seq = list() # Initializing list that will contain all sequences (all channels)
 
-    A1 = np.array([0.0,200.0,500.0, 0.0]) # Initial amplitudes, 31.25 is factor of attenuation
+    A1 = np.array([0.0,0.0,3.0, 0.0])*31.25 # Initial amplitudes, 31.25 is factor of attenuation
     delta_A1 = A1[1]/(Seq_length) 
     delta_A1 = (1+1.0/Seq_length)*delta_A1
-    A2 = np.array([0.0,200.0,500.0, 0.0]) # Initial amplitudes, 31.25 is factor of attenuation, 1.2 is factor for diagonal pulsing
+    A2 = np.array([0.0,0.0,-3.0, 0.0])*31.25*1.2 # Initial amplitudes, 31.25 is factor of attenuation, 1.2 is factor for diagonal pulsing
     delta_A2 = A2[1]/(Seq_length)  
     delta_A2 = (1+1.0/Seq_length)*delta_A2
 

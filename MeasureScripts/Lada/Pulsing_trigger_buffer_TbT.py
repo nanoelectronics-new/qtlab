@@ -9,13 +9,9 @@ import math
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 AWG = qt.instruments.get("AWG")
 #name='pulsing,80uV -35dBm, -+500, +-600, 200us200us three-part-pulse 1000#' 
-name = "5-24 By=2T,crazy sequence, W,L,W,R,E 700us"
+name = "5-24 ,trace by trace recording_test pause"
 
-Scope_sampling_rate =  7030000#Hz
-Sequence_duration = 0.5065 #s
-Num_of_pulses = 100 # Sequence length - correspond to number of rows in slice matrix
-
-Signal_level = 0.0015 # In Volts. AWG Marker level 
+Num_of_waveforms = 10 # Sequence length - correspond to number of rows in slice matrix
 
  
 
@@ -53,7 +49,7 @@ data.add_value('Reflection [Arb. U.]')
 # is created containing the current settings of all the instruments.
 data.create_file()
 
-try:
+try:   
     data_path = data.get_dir()
 
     # Next two plot-objects are created. First argument is the data object
@@ -73,32 +69,27 @@ try:
 
 
     # readout
-    for i in xrange(Num_of_pulses):
-        result = UHFLI_lib.UHF_measure_scope(AWG_instance = AWG, maxtime = 2) 
-        ch1 = result[0]
-        data.add_data_point(np.linspace(i, i, ch1.size), np.linspace(0, ch1.size, ch1.size), ch1)
-        sleep(0.1)
-        data.new_block()
+    for i in xrange(Num_of_waveforms):
+        print i 
+        result = UHFLI_lib.UHF_measure_scope(AWG_instance = AWG, maxtime = 0.1)  # Collecting the result from UHFLI buffer
+        ch1 = result[0]         # Taking readout from the first channel
+        data.add_data_point(np.linspace(i, i, ch1.size), np.linspace(0, ch1.size, ch1.size), ch1)  # Adding new data point
+        qt.msleep(0.05)  # Sleeping for keeping GUI responsive
+        data.new_block()  # Need to be here
 
-    plot3d.update()
+    
 
     
 
     # Saving UHFLI setting to the measurement data folder
     # You can load this settings file from UHFLI user interface 
-    UHFLI_lib.UHF_save_settings(path = data_path)
+    UHFLI_lib.UHF_save_settings(path = data_path)  
     
 
    
-        
-    
-    
-
-    #plt.show()
-
-
 
 finally:
+    plot3d.update()  
     AWG._ins.do_set_output(0,1)   # Turn off AWG ch1
     AWG._ins.do_set_output(0,2)   # Turn off AWG ch1
 
