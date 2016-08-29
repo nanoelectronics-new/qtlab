@@ -276,7 +276,7 @@ class Pulse():
                 plt.figure(Name)
             else:
                 plt.figure(self.waveform_name)
-        if waveform == None:  # If no wavefrom is passed use self.wavefrom
+        if waveform is None:  # If no wavefrom is passed use self.wavefrom
             wav = self.waveform
         else:
             wav = waveform

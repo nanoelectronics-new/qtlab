@@ -17,17 +17,17 @@ import convert_for_diamond_plot as cnv
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '5-24 gate vs gate check'
+file_name = '6-11 gate vs gate'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
 
+#bias = 600
 
-
-v1_vec = arange(2000,2300,0.5)     #V_g
-v2_vec = arange(2330,2300,-0.5)  #V_sd 
+v1_vec = arange(1950,2400,1)     #V_g
+v2_vec = arange(2700,2500,-1)  #V_sd 
 
 
 
@@ -51,8 +51,8 @@ data = qt.Data(name=file_name)
 # information is used later for plotting purposes.
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
-data.add_coordinate('V_{SD} [mV]')
-data.add_coordinate('V_G [mV]')
+data.add_coordinate('V_{G} (sensor) [mV]')  #v2
+data.add_coordinate('V_G (dot) [mV]')   #v1
 data.add_value('Current [pA]')
 
 # The next command will actually create the dirs and files, based
@@ -68,12 +68,14 @@ data_path = data.get_dir()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='plotko5', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
 # preparation is done, now start the measurement.
 # It is actually a simple loop.
+
+#IVVI.set_dac1(bias)
 
 init_start = time()
 vec_count = 0

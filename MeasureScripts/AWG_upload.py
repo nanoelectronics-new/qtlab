@@ -37,27 +37,27 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     seqCH2 = list()	# Initializing list for channel 2 sequence
     seq = list() # Initializing list that will contain all sequences (all channels)
 
-    A1 = np.array([0.0,0.0,3.0, 0.0])*31.25 # Initial amplitudes, 31.25 is factor of attenuation
-    delta_A1 = A1[1]/(Seq_length) 
-    delta_A1 = (1+1.0/Seq_length)*delta_A1
-    A2 = np.array([0.0,0.0,-3.0, 0.0])*31.25*1.2 # Initial amplitudes, 31.25 is factor of attenuation, 1.2 is factor for diagonal pulsing
-    delta_A2 = A2[1]/(Seq_length)  
-    delta_A2 = (1+1.0/Seq_length)*delta_A2
+    A1 = np.array([0.0,-2.0,-0.5,0.5,0.0])*31.25 # Initial amplitudes, 31.25 is factor of attenuation
+    delta_A1 = -0.5*31.25/(Seq_length/1.0) 
+    #delta_A1 = (1+1.0/Seq_length)*delta_A1
+    A2 = np.array([0.0,2.0,0.5,-0.5,0.0])*31.25*1.2 # Initial amplitudes, 31.25 is factor of attenuation, 1.2 is factor for diagonal pulsing
+    delta_A2 = (0.5*31.25*1.2)/(Seq_length/1.0)  
+    #delta_A2 = (1+1.0/Seq_length)*delta_A2
 
     
 
     for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
         p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV')  # Generating next object wavefrom in sequnce
-                                                                                                                         # Starting from 3rd element (WAV1elem%d'%(i+2)) 
-                                                                                                                         # because sync and compensate sequence elements are 1st and 2nd
+                                                                                                                         # Starting from second element (WAV1elem%d'%(i+1)) 
+                                                                                                                         # because sync element is first 
         
         #if i == 0:
             #p.setValuesCH1([2,0])  # Starting element in sequence with zero amp for synchronization reasons
             #p.setMarkersCH1([0],[0])   # Starting element in sequence with zero marker amp for synchronization reasons
         #else:
-        p.setValuesCH1([300, A1[0]],[300, A1[1]], [300,A1[2]], [300,A1[3]]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
-        p.setMarkersCH1([0,1,0,0],[0,1,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
-        #A1[1] = A1[1] - delta_A1 # Defining amplitude change between wavefroms in sequence
+        p.setValuesCH1([100, A1[0]],[500, A1[1]], [500,A1[2]], [500,A1[3]],[100,A1[4]]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
+        p.setMarkersCH1([0,1,0,0,0],[0,1,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
+        A1[2] = A1[2] - delta_A1 # Defining amplitude change between wavefroms in sequence
 
         
         #if i == 0:
@@ -65,9 +65,9 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
             #p.setValuesCH2([2,0])  # Starting element in sequence with zero amp for synchronization reasons
             #p.setMarkersCH2([0],[0])   # Starting element in sequence with zero marker amp for synchronization reasons
         #else:
-        p.setValuesCH2([300, A2[0]],[300, A2[1]], [300,A2[2]], [300,A2[3]]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
-        p.setMarkersCH2([0,1,0,0],[0,1,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
-        #A2[1] = A2[1] - delta_A2 # Defining amplitude change between wavefroms in sequence
+        p.setValuesCH2([100, A2[0]],[500, A2[1]], [500,A2[2]], [500,A2[3]],[100,A2[4]]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
+        p.setMarkersCH2([0,1,0,0,0],[0,1,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
+        A2[2] = A2[2] - delta_A2 # Defining amplitude change between wavefroms in sequence
     
 
     

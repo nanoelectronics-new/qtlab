@@ -1,4 +1,4 @@
-from numpy import pi, random, arange, size
+from numpy import pi, random, arange, size, mod
 from time import time,sleep
 import datetime
 import UHFLI_lib
@@ -15,8 +15,9 @@ import UHFLI_lib
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')   # Initialize dmm
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
+N = 1380
 
-file_name = '5-24 gate vs gate check'
+file_name = '5-24 gate vs gate check 5uV bias'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -26,8 +27,8 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(1900,2300,1)     #V_g
-v2_vec = arange(2500,2200,-1)  #V_sd 
+v1_vec = arange(2100,2500,1)     #V_g
+v2_vec = arange(2500,2100,-1)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -67,7 +68,7 @@ data_path = data.get_dir()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-plot3d = qt.Plot3D(data, name='nn', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='plot20', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
@@ -76,16 +77,11 @@ plot3d = qt.Plot3D(data, name='nn', coorddims=(1,0), valdim=2, style='image') #f
 
 init_start = time()
 vec_count = 0
+v1 = IVVI.get_dac7()
 
-
-for v1 in v1_vec:
-    
+for i in range(N):  
     
     start = time()
-    # set the voltage
-    IVVI.set_dac7(v1)
-
-
     for v2 in v2_vec:
 
         IVVI.set_dac5(v2)
@@ -93,26 +89,26 @@ for v1 in v1_vec:
         # readout
         result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
 
-        data.add_data_point(v2, v1, result_reflectometry) 
+        data.add_data_point(v2, i, result_reflectometry) 
         qt.msleep(0.001)
         # save the data point to the file, this will automatically trigger
         # the plot windows to update
-       
+           
         # the next function is necessary to keep the gui responsive. It
         # checks for instance if the 'stop' button is pushed. It also checks
         # if the plots need updating.
-        
+            
     data.new_block()
     stop = time()
-    
+        
 
     plot2d.update()
 
     plot3d.update()
 
     vec_count = vec_count + 1
-    print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
-    
+    #print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
+    print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(N - i))))
     
 
 print 'Overall duration: %s sec' % (stop - init_start, )
