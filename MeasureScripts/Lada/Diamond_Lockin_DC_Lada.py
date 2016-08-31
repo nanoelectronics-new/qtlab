@@ -9,17 +9,18 @@ import convert_for_diamond_plot as cnv
 #####################################################
 # here is where the actual measurement program starts
 #####################################################
-IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'BIP', 'BIP'], numdacs=16) # Initialize IVVI
-UHFLI_lib.UHF_init_demod()  # Initialize UHF LI
-dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
+#IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'BIP', 'BIP'], numdacs=16) # Initialize IVVI
+UHFLI_lib.UHF_init_demod(demod_c = 7)  # Initialize UHF LI
+#dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 
 
-gain = 1e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 100e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-# you define two vectors of what you want to sweep. In this case
-# a magnetic field (b_vec) and a frequency (f_vec)
-v1_vec = arange(4000,3999,-1)  #V_g
-v2_vec = arange(-500,500,2) #V_sd
+# you define two vectors of what you want to sweep
+
+
+v1_vec = arange(2500,2200,-2)     #V_g
+v2_vec = arange(-200,200,0.2)  #V_sd 
 
 
 
@@ -38,9 +39,9 @@ qt.mstart()
 #fname_ac = '5-24 lockin'
 #fname_dc = '5-24 dc'
 
-data_ac = qt.Data(name='5-24 lockin') #just renamed
+data_ac = qt.Data(name='5-24 lockin By 1T') #just renamed
 
-data_dc = qt.Data(name='5-24 dc') #added to have current recored as well
+data_dc = qt.Data(name='5-24 dc By 1T') #added to have current recored as well
 
 data_path_ac = data_ac.get_dir()
 data_path_dc = data_dc.get_dir()
@@ -74,8 +75,8 @@ data_dc.create_file()
 plot2d_ac = qt.Plot2D(data_ac, name='measure2D',autoupdate=False)
 plot3d_ac = qt.Plot3D(data_ac, name='measure3D', coorddims=(1,0), valdim=2, style='image')
 
-plot2d_dc = qt.Plot2D(data_dc, name='measure2D',autoupdate=False)
-plot3d_dc = qt.Plot3D(data_dc, name='measure3D', coorddims=(1,0), valdim=2, style='image')
+#plot2d_dc = qt.Plot2D(data_dc, name='measure2D',autoupdate=False)
+#plot3d_dc = qt.Plot3D(data_dc, name='measure3D', coorddims=(1,0), valdim=2, style='image')
 
 
 
@@ -96,10 +97,10 @@ for v1 in v1_vec:
         IVVI.set_dac1(v2)
 
         # readout
-        result_ac = UHFLI_lib.UHF_measure_demod(Num_of_TC = 0.25, demod_c = 0, out_c = 0)/gain  # Reading the lockin and correcting for M1b gain
+        result_ac = UHFLI_lib.UHF_measure_demod(Num_of_TC = 1)/gain  # Reading the lockin and correcting for M1b gain
         result_dc = dmm.get_readval()/gain*1e12
 
-        print result_ac, result_dc
+        #print result_ac, result_dc
 
     
         # save the data point to the file, this will automatically trigger
@@ -120,8 +121,8 @@ for v1 in v1_vec:
     plot2d_ac.update()
     plot3d_ac.update() #added
 
-    plot2d_dc.update()
-    plot3d_dc.update() #added
+    #plot2d_dc.update()
+    #plot3d_dc.update() #added
 
     vec_count = vec_count + 1
     print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))

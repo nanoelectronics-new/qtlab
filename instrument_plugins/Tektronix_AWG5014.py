@@ -1167,7 +1167,7 @@ class Tektronix_AWG5014(Instrument):
         
 ## SEQUENCE COMMANDS
 
-    def load_seq_elem(self, elem, channel, waveform_name, TWAIT = 0, INF = 0, GOTOind = None):    # ADDED FUNCTION (TO TEST)
+    def load_seq_elem(self, elem, channel, waveform_name, TWAIT = 0, INF = 0,count = 0, GOTOind = None):    # ADDED FUNCTION (TO TEST)
        
         '''
         This command sets the waveform for the specified sequence element on the specified channel. Also parameters such as 
@@ -1197,6 +1197,11 @@ class Tektronix_AWG5014(Instrument):
         
         #Infinite loop of this element (ON/OFF)
         self._visainstrument.write('SEQUENCE:ELEMENT%d:LOOP:INFINITE %d' %(elem, INF))
+
+        if INF == 0 and count > 0:
+            #Loop this element for "count" number of repetitions 
+            self._visainstrument.write('SEQUENCE:ELEMENT%d:LOOP:INFINITE %d' %(elem, count))
+
         
         if GOTOind is not None:  # If we want to specify GOTOind
          

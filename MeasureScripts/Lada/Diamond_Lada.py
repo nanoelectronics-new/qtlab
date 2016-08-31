@@ -17,17 +17,19 @@ import convert_for_diamond_plot as cnv
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '6-11 gate vs gate'
 
-gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+file_name = '5-24 diamond test'
 
-# you define two vectors of what you want to sweep. In this case
-# a magnetic field (b_vec) and a frequency (f_vec)
+gain = 100e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-#bias = 600
+#bias = 80
 
-v1_vec = arange(1950,2400,1)     #V_g
-v2_vec = arange(2700,2500,-1)  #V_sd 
+
+gain_Lockin = 1 # Conversion factor for the Lockin
+
+
+v1_vec = arange(2500,2200,-2)     #V_g
+v2_vec = arange(-250,250,0.25)  #V_sd  
 
 
 
@@ -68,7 +70,7 @@ data_path = data.get_dir()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-plot3d = qt.Plot3D(data, name='plotko5', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='plot1', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
@@ -86,12 +88,12 @@ for v1 in v1_vec:
     
     start = time()
     # set the voltage
-    IVVI.set_dac7(v1)
+    IVVI.set_dac5(v1)
 
 
     for v2 in v2_vec:
 
-        IVVI.set_dac5(v2)
+        IVVI.set_dac1(v2)
 
         # readout
         result = dmm.get_readval()/gain*1e12

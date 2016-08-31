@@ -1,22 +1,22 @@
 from numpy import pi, random, arange, size
 from time import time,sleep
 import datetime
-
+import UHFLI_lib
 
 
 #####################################################
 # here is where the actual measurement program starts
 #####################################################
-IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4') # Initialize IVVI
-UHFLI_lib.UHF_init_demod()  # Initialize UHF LI
+#IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4') # Initialize IVVI
+UHFLI_lib.UHF_init_demod(demod_c = 7)  # Initialize UHF LI
 
-gain = 1e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-# you define two vectors of what you want to sweep. In this case
-# a magnetic field (b_vec) and a frequency (f_vec)
-v1_vec = arange(-450,-200,1)  #V_g
-v2_vec = arange(-200,200,2) #V_sd
+gain = 100e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
+# you define two vectors of what you want to sweep
+
+v1_vec = arange(2500,2200,-2)     #V_g
+v2_vec = arange(-250,250,0.5)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -30,7 +30,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name='13-14_lockin')
+data = qt.Data(name='5-24 lockin')
 
 # Now you provide the information of what data will be saved in the
 # datafile. A distinction is made between 'coordinates', and 'values'.
@@ -67,7 +67,7 @@ for v1 in v1_vec:
     
     start = time()
     # set the voltage 
-    IVVI.set_dac3(v1)
+    IVVI.set_dac5(v1)
 
     for v2 in v2_vec:
         
