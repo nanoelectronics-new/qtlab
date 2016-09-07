@@ -16,7 +16,7 @@ import UHFLI_lib
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 
-file_name = '5-24 By=2T gate vs gate zoomin other sweeping direction'
+file_name = '5-24 By=2T gate vs gate'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -26,8 +26,8 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(2220,2140,-0.5)     #V_g
-v2_vec = arange(2550,2480,-0.5)  #V_sd 
+v1_vec = arange(2480,2420,-0.4)     #V_g
+v2_vec = arange(2320,2250,-0.4)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -67,7 +67,7 @@ data_path = data.get_dir()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-plot3d = qt.Plot3D(data, name='p11', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='p7', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 

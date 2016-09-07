@@ -9,12 +9,13 @@ import math
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 
 
-name = "5-24 By=2T diagonal dac upper part of peak 4"
+name = "5-24 By=2T again lower part 1"
 
 stepsize = 0.06
 
-dot_vec = arange(2196.39,2200.21,stepsize*1.65)     
-sens_vec = arange(2495.57,2493.35,-stepsize)  
+dot_vec = arange(2459.07,2462.33,stepsize)     
+#sens_vec = arange(2351.19,2354.10,stepsize)  
+sens_vec = 2279.50
 
 UHFLI_lib.UHF_init_scope()  # Initialize UHF LI
 # you indicate that a measurement is about to start and other
@@ -56,16 +57,16 @@ try:
     # measurement a 'name' can be provided so that window can be reused.
     # If the 'name' doesn't already exists, a new window with that name
     # will be created. For 3d plots, a plotting style is set.
-    plot3d = qt.Plot3D(data, name='0109_4', coorddims=(0,1), valdim=2, style='image', autoupdate = False)
+    plot3d = qt.Plot3D(data, name='0609_1', coorddims=(0,1), valdim=2, style='image', autoupdate = False)
     #plot2d = qt.Plot2D(data, name=name, autoupdate=True)
     #plot2d.set_style('lines')
 
     
-
+    IVVI.set_dac5(sens_vec)
     # readout
     for i in xrange(len(dot_vec)):
         print i 
-        IVVI.set_dac5(sens_vec[i])
+        #IVVI.set_dac5(sens_vec[i])
         IVVI.set_dac7(dot_vec[i])
         result = UHFLI_lib.UHF_measure_scope_single_shot(maxtime = 0.5)  # Collecting the result from UHFLI buffer
         ch1 = result[0]         # Taking readout from the first channel
