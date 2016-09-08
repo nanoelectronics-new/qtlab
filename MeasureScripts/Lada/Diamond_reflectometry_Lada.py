@@ -67,7 +67,7 @@ data_path = data.get_dir()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-plot3d = qt.Plot3D(data, name='p7', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='p9', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 

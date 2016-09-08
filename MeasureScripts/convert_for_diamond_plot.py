@@ -28,7 +28,7 @@ def convert_to_matrix_file(fname = None, path = None):
     iv_num = 0
     
         
-    tmp = open('tmp.txt','w')  #  Open temp file
+    tmp = open(file_path + "/" +'tmp.txt','w')  #  Open temp file
     
     for i,line in enumerate(lines[:len(lines)-1]):  # Skip the last ugly row
         if isfloat(line[:3]):
@@ -42,7 +42,7 @@ def convert_to_matrix_file(fname = None, path = None):
                 
     tmp.close()
     
-    mat = np.loadtxt('tmp.txt')
+    mat = np.loadtxt(file_path + "/" +'tmp.txt')
     
     new_mat = np.zeros((iv_count[0], len(iv_count)))
         
