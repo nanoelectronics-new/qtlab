@@ -100,8 +100,7 @@ def T1_calc_with_conversion(fname = None, path = None, treshold = -0.0002, sampl
 
         #if i == 0:      # Treshold input just for the first dataset - first wait_time
         vec = np.reshape(r_mat,(len(r_mat[0])*len(r_mat[:, 1])),order="F")  # Reshaping r_mat to vector for ploting read intervals adjacent to each other for easier determination of the treshold
-        plt.plot(vec)
-        plt.show(block=False)
+  
         
 
         count_tmp = 0     # Counter for each wait_time
@@ -114,6 +113,34 @@ def T1_calc_with_conversion(fname = None, path = None, treshold = -0.0002, sampl
 
         print count
         count.append(count_tmp)   
+
+    plt.figure(1)
+    # Making histogram
+    plt.plot(wait_time, count, "o")
+    plt.xlabel("time [s]")
+    plt.ylabel("num of events")
+    plt.title("histogram for T1")
+    
+    
+    # Fitting histogram for tunneling time extraction 
+    def func(x, a, b, c):  # Fitting function 
+        return a * np.exp(-b * x) + c
+    """
+    make the curve_fit
+    """
+    
+    popt, pcov = curve_fit(func, np.array(wait_time), np.array(count))
+ 
+    a = popt[0]
+    b = popt[1]
+    c = popt[2]
+  
+    plt.plot(np.array(wait_time), func(np.array(wait_time),a,b,c), "g")
+    
+    plt.show()
+    
+    T1 = 1.0/b
+    print "T1 is: %f s"%T1
 
     return count
     
@@ -171,8 +198,33 @@ def T1_calc(fname = None, path = None, treshold = -0.0002, sampling_rate = 7.03e
         print count
         count.append(count_tmp) 
 
-    plt.plot(count)
-    plt.show()  
+    plt.figure(1)
+    # Making histogram
+    plt.plot(wait_time, count, "o")
+    plt.xlabel("time [s]")
+    plt.ylabel("num of events")
+    plt.title("histogram for T1")
+    
+    
+    # Fitting histogram for tunneling time extraction 
+    def func(x, a, b, c):  # Fitting function 
+        return a * np.exp(-b * x) + c
+    """
+    make the curve_fit
+    """
+    
+    popt, pcov = curve_fit(func, np.array(wait_time), np.array(count))
+ 
+    a = popt[0]
+    b = popt[1]
+    c = popt[2]
+      
+    plt.plot(np.array(wait_time), func(np.array(wait_time),a,b,c), "g")
+    
+    plt.show()
+    
+    T1 = 1.0/b
+    print "T1 is: %f s"%T1
 
     return count
 
