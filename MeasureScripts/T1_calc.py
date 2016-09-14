@@ -44,8 +44,7 @@ def convert_to_matrix_file(fname = None, path = None):
             iv_count.append(0)
             iv_num += 1 
             
-    
-                
+    del lines           
     tmp.close()
     
     mat = np.loadtxt(file_path + "/" +'tmp.txt')

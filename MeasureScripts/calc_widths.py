@@ -44,7 +44,7 @@ def calc_widths(fname = None, path = None, trace_duration = 50, trace_num = 5, t
             iv_num += 1 
             
     
-                
+    del lines            
     tmp.close()
     
     mat = np.loadtxt('tmp.txt')
