@@ -1,3 +1,7 @@
+from memory_profiler import profile
+
+@profile(precision=4)
+
 from os import walk
 
 

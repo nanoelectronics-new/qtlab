@@ -1,3 +1,7 @@
+from memory_profiler import profile
+
+@profile(precision=4)
+
 def convert_to_matrix_file(fname = None, path = None):
     
     if fname is None or path is None:
