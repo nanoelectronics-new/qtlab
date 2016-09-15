@@ -19,10 +19,10 @@ def convert_to_matrix_file(fname = None, path = None):
     trc_num = first_col[-1] # Last element of the first column is number of traces
     del first_col # Freeing up memory
  
-    third_col = np.loadtxt(fname = full_name, usecols= (2,), dtype =np.float16)  # Reading the third column - scope channel 1 
+    third_col = np.loadtxt(fname = full_name, usecols= (2,), dtype =np.float32)  # Reading the third column - scope channel 1 
     fourth_exists = False
     try: # It can happen that there is no fourth column which will give an error - try finally combination skips this error
-        fourth_col = np.loadtxt(fname = full_name, usecols= (2,), dtype =np.float16)  # Reading the fourth column - scope channel 2 
+        fourth_col = np.loadtxt(fname = full_name, usecols= (3,), dtype =np.float16)  # Reading the fourth column - scope channel 2 
         fourth_exists = True # Flag indicating that fourth column exists
     finally:
    
@@ -42,9 +42,9 @@ def convert_to_matrix_file(fname = None, path = None):
         #Saving readout data from channel 1
         np.savetxt(fname=full_name + "_CH1matrix", X=third_col, fmt='%1.4e', delimiter=' ', newline='\n')  
     
-    
-        #Saving readout data from channel 2
-        np.savetxt(fname=full_name + "_CH2matrix", X=fourth_col, fmt='%1.4e', delimiter=' ', newline='\n')  
+        if fourth_exists:
+            #Saving readout data from channel 2
+            np.savetxt(fname=full_name + "_CH2matrix", X=fourth_col, fmt='%1.4e', delimiter=' ', newline='\n')  
     
     
     
