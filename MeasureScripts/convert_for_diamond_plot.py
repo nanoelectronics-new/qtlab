@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+=======
+from memory_profiler import profile
+import os
+
+@profile(precision=4)
+
+>>>>>>> bcf6655... Convert script changed to working - not too good
 def convert_to_matrix_file(fname = None, path = None):
     
     if fname is None or path is None:
@@ -28,7 +36,11 @@ def convert_to_matrix_file(fname = None, path = None):
     iv_num = 0
     
         
+<<<<<<< HEAD
     tmp = open('tmp.txt','w')  #  Open temp file
+=======
+    tmp = open(file_path + "/" +'tmp.txt','w')  #  Open temp file
+>>>>>>> bcf6655... Convert script changed to working - not too good
     
     for i,line in enumerate(lines[:len(lines)-1]):  # Skip the last ugly row
         if isfloat(line[:3]):
@@ -39,6 +51,7 @@ def convert_to_matrix_file(fname = None, path = None):
             iv_num += 1 
             
     
+<<<<<<< HEAD
                 
     tmp.close()
     
@@ -50,12 +63,48 @@ def convert_to_matrix_file(fname = None, path = None):
     
     for col,iv in enumerate(iv_count[:(len(iv_count)-1)]):
         new_mat[:,col] = mat[left_of:iv+left_of,2]
+=======
+    del lines            
+    tmp.close()
+    
+    
+    mat = np.loadtxt(file_path + "/" +'tmp.txt')
+    os.remove(file_path + '/' + 'tmp.txt')  # Removing the tmp file
+    
+    #Collecting readout data from channel 1
+    new_mat = np.zeros((iv_count[0], len(iv_count)))
+        
+    left_of = 0
+    
+    for col,iv in enumerate(iv_count[:(len(iv_count)-1)]):
+        new_mat[:,col] = mat[left_of:iv+left_of,2]    # Taking just third column of the data file - ch1 readout
+ 
+        left_of += iv
+        
+    
+    np.savetxt(fname=full_name + "_CH1matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')  
+    
+    del new_mat
+    
+    #Collecting readout data from channel 2
+    new_mat = np.zeros((iv_count[0], len(iv_count)))
+        
+    left_of = 0
+    
+    for col,iv in enumerate(iv_count[:(len(iv_count)-1)]):
+        new_mat[:,col] = mat[left_of:iv+left_of,3]   # Taking just third column of the data file - ch2 readout
+>>>>>>> bcf6655... Convert script changed to working - not too good
 
         left_of += iv
         
     
+<<<<<<< HEAD
     np.savetxt(fname=full_name + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')    
+=======
+    np.savetxt(fname=full_name + "_CH2matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')  
+>>>>>>> bcf6655... Convert script changed to working - not too good
     
+    del new_mat 
     
     
     
