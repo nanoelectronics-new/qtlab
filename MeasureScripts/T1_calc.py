@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
 import sympy as sym
-from os import walk
+from os import walk, remove
 
 def convert_to_matrix_file(fname = None, path = None):
     
@@ -44,23 +44,30 @@ def convert_to_matrix_file(fname = None, path = None):
             iv_count.append(0)
             iv_num += 1 
             
-    del lines           
+    
+    del lines            
     tmp.close()
     
-    mat = np.loadtxt(file_path + "/" +'tmp.txt')
     
+    mat = np.loadtxt(file_path + "/" +'tmp.txt')
+    remove(file_path + '/' + 'tmp.txt')  # Removing the tmp file
+    
+    #Collecting readout data from channel 1
     new_mat = np.zeros((iv_count[0], len(iv_count)))
         
     left_of = 0
     
     for col,iv in enumerate(iv_count[:(len(iv_count)-1)]):
-        new_mat[:,col] = mat[left_of:iv+left_of,2]
-
+        new_mat[:,col] = mat[left_of:iv+left_of,2]    # Taking just third column of the data file - ch1 readout
+ 
         left_of += iv
-
-    np.savetxt(fname=full_name + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')
-
-    return new_mat
+        
+    
+    np.savetxt(fname=full_name + "_CH1matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')  
+       
+    return new_mat 
+    
+    
 
 
 

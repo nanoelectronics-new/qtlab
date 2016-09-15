@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
 import sympy as sym
+import os
 
 def calc_widths(fname = None, path = None, trace_duration = 50, trace_num = 5, treshold = -0.00002):
     
@@ -33,7 +34,7 @@ def calc_widths(fname = None, path = None, trace_duration = 50, trace_num = 5, t
     iv_num = 0
     
         
-    tmp = open('tmp.txt','w')  #  Open temp file
+    tmp = open(file_path + "/" +'tmp.txt','w')  #  Open temp file
     
     for i,line in enumerate(lines[:len(lines)-1]):  # Skip the last ugly row
         if isfloat(line[:3]):
@@ -47,17 +48,21 @@ def calc_widths(fname = None, path = None, trace_duration = 50, trace_num = 5, t
     del lines            
     tmp.close()
     
-    mat = np.loadtxt('tmp.txt')
     
+    mat = np.loadtxt(file_path + "/" +'tmp.txt')
+    os.remove(file_path + '/' + 'tmp.txt')  # Removing the tmp file
+    
+    #Collecting readout data from channel 1
     new_mat = np.zeros((iv_count[0], len(iv_count)))
         
     left_of = 0
     
     for col,iv in enumerate(iv_count[:(len(iv_count)-1)]):
-        new_mat[:,col] = mat[left_of:iv+left_of,2]
-
+        new_mat[:,col] = mat[left_of:iv+left_of,2]    # Taking just third column of the data file - ch1 readout
+ 
         left_of += iv
-        
+         
+           
     going_up = 0
     vec = new_mat[:,trace_num]
     tresh = treshold
