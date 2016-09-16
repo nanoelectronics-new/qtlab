@@ -9,14 +9,10 @@ import math
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 AWG = qt.instruments.get("AWG")
 #name='pulsing,80uV -35dBm, -+500, +-600, 200us200us three-part-pulse 1000#' 
-<<<<<<< HEAD
+
 name = "5-24 tbt 100# 40kHz -35dBm 5uV bias"
 
 Num_of_waveforms = 10 # Sequence length - correspond to number of rows in slice matrix
-=======
-name = "5-24 tbt 50 kHz #500 -40dBm 0uV bias tw 5ms read 06 mV"
-Num_of_waveforms = 500 # Sequence length - correspond to number of rows in slice matrix
->>>>>>> 8307639... Backup commit measPC1
 
  
 
@@ -62,11 +58,9 @@ try:
     # measurement a 'name' can be provided so that window can be reused.
     # If the 'name' doesn't already exists, a new window with that name
     # will be created. For 3d plots, a plotting style is set.
-<<<<<<< HEAD
+
     plot3d = qt.Plot3D(data, name='0308_1', coorddims=(0,1), valdim=2, style='image', autoupdate = False)
-=======
-    plot3d = qt.Plot3D(data, name='1609_4', coorddims=(0,1), valdim=2, style='image', autoupdate = False)
->>>>>>> 8307639... Backup commit measPC1
+
     #plot2d = qt.Plot2D(data, name=name, autoupdate=True)
     #plot2d.set_style('lines')
 
