@@ -2,7 +2,10 @@ from numpy import pi, random, arange, size
 from time import time,sleep
 import datetime
 import UHFLI_lib
+import data
 
+gen = data.IncrementalGenerator('D:/Measurements/Lada/20160919/File_name_auto_increment/gatevsgate') #last part is the name of the file
+qt.Data.set_filename_generator(gen)
 
 
 #####################################################
@@ -16,7 +19,7 @@ import UHFLI_lib
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 
-file_name = '5-24 By=2T gate vs gate zoomin other sweeping direction'
+#file_name = '5-24 By=2T gate vs gate zoomin other sweeping direction'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -26,8 +29,8 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(2220,2140,-0.5)     #V_g
-v2_vec = arange(2550,2480,-0.5)  #V_sd 
+v1_vec = arange(1580,1650,0.5)     #V_g
+v2_vec = arange(2490,2480,-0.5)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other

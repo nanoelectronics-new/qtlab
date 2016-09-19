@@ -4,7 +4,10 @@ import datetime
 import UHFLI_lib
 import matplotlib.pyplot as plt
 import math
+import data
 
+gen = data.IncrementalGenerator('D:/Measurements/Lada/20160919/File_name_auto_increment/tbt') #last part is the name of the file
+qt.Data.set_filename_generator(gen)
 
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 AWG = qt.instruments.get("AWG")
@@ -12,7 +15,7 @@ AWG = qt.instruments.get("AWG")
 
 name = "5-24 tbt 100# 40kHz -35dBm 5uV bias"
 
-Num_of_waveforms = 10 # Sequence length - correspond to number of rows in slice matrix
+Num_of_waveforms = 100 # Sequence length - correspond to number of rows in slice matrix
 
  
 
