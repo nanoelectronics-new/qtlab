@@ -8,8 +8,8 @@ import data
 
 
 
-gen = data.IncrementalGenerator('D:/Measurements/Lada/20160919/File_name_auto_increment/test') #last part is the name of the file
-qt.Data.set_filename_generator(gen)
+#gen = data.IncrementalGenerator('D:/Measurements/Lada/20160919/File_name_auto_increment/test') #last part is the name of the file
+#qt.Data.set_filename_generator(gen)
 
 
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
@@ -18,98 +18,107 @@ AWG = qt.instruments.get("AWG")
 
 
 
-Num_of_waveforms = 3 # Sequence length - correspond to number of rows in slice matrix
+Num_of_waveforms = 100 # Sequence length - correspond to number of rows in slice matrix
 Num_of_repetitions = 3
  
 
 
 
 UHFLI_lib.UHF_init_scope()  # Initialize UHF LI
-# you indicate that a measurement is about to start and other
-# processes should stop (like batterycheckers, or temperature
-# monitors)
-qt.mstart()
 
-# Next a new data object is made.
-# The file will be placed in the folder:
-# <datadir>/<datestamp>/<timestamp>_testmeasurement/
-# and will be called:
-# <timestamp>_testmeasurement.dat
-# to find out what 'datadir' is set to, type: qt.config.get('datadir')
+qt.mstart()
+data = qt.Data(name = "_testmeasurement")
+data.create_file()
+
 for j in xrange(Num_of_repetitions):
 
-    data = qt.Data()
+    
 
 
-    # Now you provide the information of what data will be saved in the
-    # datafile. A distinction is made between 'coordinates', and 'values'.
-    # Coordinates are the parameters that you sweep, values are the
-    # parameters that you readout (the result of an experiment). This
-    # information is used later for plotting purposes.
-    # Adding coordinate and value info is optional, but recommended.
-    # If you don't supply it, the data class will guess your data format.
-    data.add_coordinate('Line_num')
-    data.add_coordinate('Num of samples')
-    data.add_value('Reflection [Arb. U.]')
-    #data.add_value('Pulse Voltage [V]')
+        # Now you provide the information of what data will be saved in the
+        # datafile. A distinction is made between 'coordinates', and 'values'.
+        # Coordinates are the parameters that you sweep, values are the
+        # parameters that you readout (the result of an experiment). This
+        # information is used later for plotting purposes.
+        # Adding coordinate and value info is optional, but recommended.
+        # If you don't supply it, the data class will guess your data format.
+        #data.add_coordinate('Line_num')
+        #data.add_coordinate('Num of samples')
+        #data.add_value('Reflection [Arb. U.]')
+        #data.add_value('Pulse Voltage [V]')
 
-    # The next command will actually create the dirs and files, based
-    # on the information provided above. Additionally a settingsfile
-    # is created containing the current settings of all the instruments.
-    data.create_file()
+        
+       
 
     try:   
-        
+            
 
-        # Next two plot-objects are created. First argument is the data object
-        # that needs to be plotted. To prevent new windows from popping up each
-        # measurement a 'name' can be provided so that window can be reused.
-        # If the 'name' doesn't already exists, a new window with that name
-        # will be created. For 3d plots, a plotting style is set.
+            # Next two plot-objects are created. First argument is the data object
+            # that needs to be plotted. To prevent new windows from popping up each
+            # measurement a 'name' can be provided so that window can be reused.
+            # If the 'name' doesn't already exists, a new window with that name
+            # will be created. For 3d plots, a plotting style is set.
 
-        #plot3d = qt.Plot3D(data, name='0308_%d'%j, coorddims=(0,1), valdim=2, style='image', autoupdate = False)
+            #
 
-        #plot2d = qt.Plot2D(data, name=name, autoupdate=True)
-        #plot2d.set_style('lines')
+            #plot2d = qt.Plot2D(data, name=name, autoupdate=True)
+            #plot2d.set_style('lines')
 
-        #AWG._ins.stop()
+            #AWG._ins.stop()
         AWG._ins.run()  # Run AWG - Run must be before do_set_output
         AWG._ins.do_set_output(1,1)   # Turn on AWG ch1
         AWG._ins.do_set_output(1,2)   # Turn on AWG ch1
 
 
 
-        # readout
+                # readout
         for i in xrange(Num_of_waveforms):
             print i 
             result = UHFLI_lib.UHF_measure_scope(AWG_instance = AWG, maxtime = 0.3)  # Collecting the result from UHFLI buffer
-            ch1 = result[0]         # Taking readout from the first channel
-            data.add_data_point(np.linspace(i, i, ch1.size), np.linspace(0, ch1.size, ch1.size), ch1)  # Adding new data point
+            if i == 0:
+                ch1 = result[0]         # Taking readout from the first channel, first vector
+            else:
+                ch1 = np.c_[ch1, result[0]]    # Adding next vectors   
+
+
+                
             qt.msleep(0.05)  # Sleeping for keeping GUI responsive
-            data.new_block()  # Need to be here
+                    
 
-        
+        if j == 0:
+            aver = ch1
+        else:       
+            aver = aver + ch1  # Summing all the intermediate results for the average
 
-        
+            
+        AWG._ins.stop()  # Stop AWG to restart the sequencer
+            
+            
+            
 
-        
-        
-        
+           
 
-       
+    except:
+            
+        pass
+            
 
-    finally:
-        plot3d.update()  
-        
-        # after the measurement ends, you need to close the data file.
-        data.close_file()
 
-    # Saving UHFLI setting to the measurement data folder
-    # You can load this settings file from UHFLI user interface 
-    data_path = data.get_dir()
-    UHFLI_lib.UHF_save_settings(path = data_path)  
+# after the measurement ends, you need to close the data file.
+data.close_file()
 
-    AWG._ins.do_set_output(0,1)   # Turn off AWG ch1
-    AWG._ins.do_set_output(0,2)   # Turn off AWG ch1
-    # lastly tell the secondary processes (if any) that they are allowed to start again.
-    qt.mend()
+aver /=float(Num_of_repetitions)  # Calucalting the average result
+
+# Saving UHFLI setting to the measurement data folder
+# You can load this settings file from UHFLI user interface 
+data_path = data.get_dir()
+UHFLI_lib.UHF_save_settings(path = data_path)
+data.add_data_point(aver)
+#np.savetxt(fname=data_path + "/result_CH1matrix", X=average, fmt='%1.4e', delimiter=' ', newline='\n') 
+
+## Maybe add plot here
+
+AWG._ins.do_set_output(0,1)   # Turn off AWG ch1
+AWG._ins.do_set_output(0,2)   # Turn off AWG ch1
+# lastly tell the secondary processes (if any) that they are allowed to start again.
+qt.mend()

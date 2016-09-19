@@ -15,7 +15,7 @@ AWG_clock = 10e6        # Wanted AWG clock. Info https://www.google.at/url?sa=t&
 											
 						# Take care about waveform and sequence length and clock rate  - AWG has limited capability
 AWGMax_amp = 3          # In Volts!!! Maximum needed amplitude on all channels for your particular experiment (noise reduction) - need to be set at the beginning
-Seq_length = 10      # Sequence length (number of periods - waveforms)
+Seq_length = 100      # Sequence length (number of periods - waveforms)
 t_sync = 5000              # Duration of synchronization element in sequence in "TimeUnits"
 Automatic_sequence_generation = False   # Flag for determining type of sequence generation: Automatic - True,  Manual - False 
 
@@ -39,10 +39,10 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
 
 
     A1 = np.array([0.0,4.0,4.0,0.0,0.0])*31.25 # Initial amplitudes, 31.25 is factor of attenuation
-    delta_A1 = -0.5*31.25/(Seq_length/1.0) 
+    delta_A1 = 4.0*31.25/(Seq_length/1.0) 
     #delta_A1 = (1+1.0/Seq_length)*delta_A1
     A2 = np.array([0.0,-4.0,-4.0,0.0,0.0])*31.25*1.1 # Initial amplitudes, 31.25 is factor of attenuation, 1.2 is factor for diagonal pulsing
-    delta_A2 = (0.5*31.25*1.1)/(Seq_length/1.0)  
+    delta_A2 = (-4.0*31.25*1.1)/(Seq_length/1.0)  
 
     #delta_A2 = (1+1.0/Seq_length)*delta_A2
 
@@ -60,7 +60,7 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
 
         p.setValuesCH1([100, A1[0]],[500, A1[1]], [500,A1[2]], [500,A1[3]],[100,A1[4]]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
         p.setMarkersCH1([0,1,0,0,0],[0,1,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
-        #A1[2] = A1[2] - delta_A1 # Defining amplitude change between wavefroms in sequence
+        A1[2] = A1[2] - delta_A1 # Defining amplitude change between wavefroms in sequence
 
 
         
@@ -72,7 +72,7 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
 
         p.setValuesCH2([100, A2[0]],[500, A2[1]], [500,A2[2]], [500,A2[3]],[100,A2[4]]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
         p.setMarkersCH2([0,1,0,0,0],[0,1,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
-        #A2[2] = A2[2] - delta_A2 # Defining amplitude change between wavefroms in sequence
+        A2[2] = A2[2] - delta_A2 # Defining amplitude change between wavefroms in sequence
 
     
 
