@@ -19,7 +19,7 @@ import data
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 
-file_name = '5-24 By=15T gate vs gate pulsing'
+file_name = '5-24 By=15T gate vs gate'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -71,7 +71,7 @@ data_path = data.get_dir()
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
 
-plot3d = qt.Plot3D(data, name='plot4', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='plot5', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 

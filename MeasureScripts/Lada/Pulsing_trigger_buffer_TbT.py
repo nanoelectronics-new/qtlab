@@ -13,7 +13,7 @@ import data
 #AWG = qt.instruments.get("AWG")
 #name='pulsing,80uV -35dBm, -+500, +-600, 200us200us three-part-pulse 1000#' 
 
-name = "5-24 tbt 100# flagplot"
+name = "5-24 tbt 100# test"
 
 Num_of_waveforms = 100 # Sequence length - correspond to number of rows in slice matrix
 
@@ -62,7 +62,7 @@ try:
     # If the 'name' doesn't already exists, a new window with that name
     # will be created. For 3d plots, a plotting style is set.
 
-    plot3d = qt.Plot3D(data, name='2009_2', coorddims=(0,1), valdim=2, style='image', autoupdate = False)
+    plot3d = qt.Plot3D(data, name='2009_3', coorddims=(0,1), valdim=2, style='image', autoupdate = False)
 
     #plot2d = qt.Plot2D(data, name=name, autoupdate=True)
     #plot2d.set_style('lines')

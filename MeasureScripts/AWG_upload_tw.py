@@ -39,8 +39,8 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     deltaT = deltaT**3*10
     
 
-    A1 = np.array([0.0,-4.0,-2.8,0.0,0.0])*31.25 # Initial amplitudes, 31.25 is factor of attenuation
-    A2 = np.array([0.0,4.0,2.8,0.0,0.0])*31.25*0.62 # Initial amplitudes, 31.25 is factor of attenuation, 1.2 is factor for diagonal pulsing
+    A1 = np.array([0.0,-4.5,-1.344,0.0,0.0])*31.25 # Initial amplitudes, 31.25 is factor of attenuation
+    A2 = np.array([0.0,4.5,1.344,0.0,0.0])*31.25*0.62 # Initial amplitudes, 31.25 is factor of attenuation, 1.2 is factor for diagonal pulsing
     
 
    
@@ -55,10 +55,10 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
      
 
         p.setValuesCH1([100, A1[0]],[T[0], A1[1]], [T[1],A1[2]], [T[2],A1[3]],[100,A1[4]]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
-        p.setMarkersCH1([0,1,0,0,0],[0,1,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
+        p.setMarkersCH1([0,0,1,0,0],[0,0,1,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
     
         p.setValuesCH2([100, A2[0]],[T[0], A2[1]], [T[1],A2[2]], [T[2],A2[3]],[100,A2[4]]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
-        p.setMarkersCH2([0,1,0,0,0],[0,1,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
+        p.setMarkersCH2([0,0,1,0,0],[0,0,1,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
         
         seqCH1.append(p.CH1) # Filing sequence list for channel 1 (seqCH1) with next waveform (period)
         seqCH2.append(p.CH2) # Filing sequence list for channel 2 (seqCH2) with next waveform (period)
