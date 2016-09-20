@@ -107,7 +107,7 @@ def set_waveform(seq,AWG_clock,AWGMax_amp, t_sync, sync):
                 mean = aver_list[ch_num]
             seq_elem.rescaleAmplitude(AWGMax_amp, mean)
             # Plot start and end element of sequence
-            if i == 1 or i == (len(seq[ch_num])-1):
+            if i == 0 or i == (len(seq[ch_num])-1):
                 seq_elem.plotWaveform(fig = fig, waveform = seq_elem.reverse_rescaleAmplitude(AWGMax_amp)) # Passing reverse rescaled wavefrom to plotWavefrom 
                                                                                                            # function for getting the correct plot
                 blue_line = mlines.Line2D([], [], color='blue',
@@ -226,7 +226,7 @@ def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync):
         for i,seq_elem in enumerate(seq[ch_num]):
             seq_elem.rescaleAmplitude(AWGMax_amp, mean = 0)  # Argument "mean" added just from compatibility reasons  
             # Plot start and end element of sequence
-            if i == 1 or i == (len(seq[ch_num])-1):
+            if i == 0 or i == (len(seq[ch_num])-1):
                 seq_elem.plotWaveform(fig = fig, waveform = seq_elem.reverse_rescaleAmplitude(AWGMax_amp)) # Passing reverse rescaled wavefrom to plotWavefrom 
                                                                                                            # function for getting the correct plot
                 blue_line = mlines.Line2D([], [], color='blue',
@@ -349,7 +349,7 @@ def set_waveform_trigger_all_wait(seq,AWG_clock,AWGMax_amp, t_sync, sync, t_wait
         for i,seq_elem in enumerate(seq[ch_num]):
             seq_elem.rescaleAmplitude(AWGMax_amp, mean = 0)  # Argument "mean" added just from compatibility reasons  
             # Plot start and end element of sequence
-            if i == 1 or i == (len(seq[ch_num])-1):
+            if i == 0 or i == (len(seq[ch_num])-1):
                 seq_elem.plotWaveform(fig = fig, waveform = seq_elem.reverse_rescaleAmplitude(AWGMax_amp)) # Passing reverse rescaled wavefrom to plotWavefrom 
                                                                                                            # function for getting the correct plot
                 blue_line = mlines.Line2D([], [], color='blue',
