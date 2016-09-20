@@ -2,7 +2,10 @@ from numpy import pi, random, arange, size
 from time import time,sleep
 import datetime
 import UHFLI_lib
+import data
 
+#gen = data.IncrementalGenerator('D:/Measurements/Lada/20160919/File_name_auto_increment/gatevsgate') #last part is the name of the file
+#qt.Data.set_filename_generator(gen)
 
 
 #####################################################
@@ -16,7 +19,7 @@ import UHFLI_lib
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 
-file_name = '5-24 gate vs gate 80uV By=2T -35dBm 100Hz zoom in'
+file_name = '5-24 By=15T gate vs gate'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -26,8 +29,8 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(2136,2148,0.1)     #V_g
-v2_vec = arange(2365,2335,-0.1)  #V_sd 
+v1_vec = arange(1540,1565,0.3)     #V_g
+v2_vec = arange(2495,2475,-0.3)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -67,7 +70,8 @@ data_path = data.get_dir()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-plot3d = qt.Plot3D(data, name='Plot3Dx8', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+
+plot3d = qt.Plot3D(data, name='plot5', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
@@ -94,14 +98,14 @@ for v1 in v1_vec:
         result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
 
         data.add_data_point(v2, v1, result_reflectometry) 
-    
+        qt.msleep(0.001)
         # save the data point to the file, this will automatically trigger
         # the plot windows to update
        
         # the next function is necessary to keep the gui responsive. It
         # checks for instance if the 'stop' button is pushed. It also checks
         # if the plots need updating.
-        qt.msleep(0.001)
+        
     data.new_block()
     stop = time()
     

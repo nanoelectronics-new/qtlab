@@ -4,14 +4,18 @@ import datetime
 import UHFLI_lib
 import matplotlib.pyplot as plt
 import math
+import data
 
+#gen = data.IncrementalGenerator('D:/Measurements/Lada/20160919/File_name_auto_increment/tbt') #last part is the name of the file
+#qt.Data.set_filename_generator(gen)
 
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
-AWG = qt.instruments.get("AWG")
+#AWG = qt.instruments.get("AWG")
 #name='pulsing,80uV -35dBm, -+500, +-600, 200us200us three-part-pulse 1000#' 
-name = "5-24 ,trace by trace recording_test pause"
 
-Num_of_waveforms = 10 # Sequence length - correspond to number of rows in slice matrix
+name = "5-24 tbt 100# test"
+
+Num_of_waveforms = 100 # Sequence length - correspond to number of rows in slice matrix
 
  
 
@@ -57,7 +61,9 @@ try:
     # measurement a 'name' can be provided so that window can be reused.
     # If the 'name' doesn't already exists, a new window with that name
     # will be created. For 3d plots, a plotting style is set.
-    plot3d = qt.Plot3D(data, name='crazy_seq1', coorddims=(0,1), valdim=2, style='image', autoupdate = False)
+
+    plot3d = qt.Plot3D(data, name='2009_3', coorddims=(0,1), valdim=2, style='image', autoupdate = False)
+
     #plot2d = qt.Plot2D(data, name=name, autoupdate=True)
     #plot2d.set_style('lines')
 
@@ -71,7 +77,7 @@ try:
     # readout
     for i in xrange(Num_of_waveforms):
         print i 
-        result = UHFLI_lib.UHF_measure_scope(AWG_instance = AWG, maxtime = 0.1)  # Collecting the result from UHFLI buffer
+        result = UHFLI_lib.UHF_measure_scope(AWG_instance = AWG, maxtime = 0.3)  # Collecting the result from UHFLI buffer
         ch1 = result[0]         # Taking readout from the first channel
         data.add_data_point(np.linspace(i, i, ch1.size), np.linspace(0, ch1.size, ch1.size), ch1)  # Adding new data point
         qt.msleep(0.05)  # Sleeping for keeping GUI responsive
