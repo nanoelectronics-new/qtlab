@@ -19,7 +19,7 @@ AWG = qt.instruments.get("AWG")
 
 
 Num_of_waveforms = 100 # Sequence length - correspond to number of rows in slice matrix
-Num_of_repetitions = 3
+Num_of_repetitions = 128
  
 
 
@@ -27,98 +27,106 @@ Num_of_repetitions = 3
 UHFLI_lib.UHF_init_scope()  # Initialize UHF LI
 
 qt.mstart()
-data = qt.Data(name = "_testmeasurement")
+data = qt.Data(name = "average flagplot 100 traces over 128")
 data.create_file()
 
-for j in xrange(Num_of_repetitions):
+try:
 
-    
-
-
-        # Now you provide the information of what data will be saved in the
-        # datafile. A distinction is made between 'coordinates', and 'values'.
-        # Coordinates are the parameters that you sweep, values are the
-        # parameters that you readout (the result of an experiment). This
-        # information is used later for plotting purposes.
-        # Adding coordinate and value info is optional, but recommended.
-        # If you don't supply it, the data class will guess your data format.
-        #data.add_coordinate('Line_num')
-        #data.add_coordinate('Num of samples')
-        #data.add_value('Reflection [Arb. U.]')
-        #data.add_value('Pulse Voltage [V]')
+    for j in xrange(Num_of_repetitions):
+        print j
 
         
-       
 
-    try:   
+
+            # Now you provide the information of what data will be saved in the
+            # datafile. A distinction is made between 'coordinates', and 'values'.
+            # Coordinates are the parameters that you sweep, values are the
+            # parameters that you readout (the result of an experiment). This
+            # information is used later for plotting purposes.
+            # Adding coordinate and value info is optional, but recommended.
+            # If you don't supply it, the data class will guess your data format.
+            #data.add_coordinate('Line_num')
+            #data.add_coordinate('Num of samples')
+            #data.add_value('Reflection [Arb. U.]')
+            #data.add_value('Pulse Voltage [V]')
+
             
+           
 
-            # Next two plot-objects are created. First argument is the data object
-            # that needs to be plotted. To prevent new windows from popping up each
-            # measurement a 'name' can be provided so that window can be reused.
-            # If the 'name' doesn't already exists, a new window with that name
-            # will be created. For 3d plots, a plotting style is set.
+           
+                
 
-            #
+                # Next two plot-objects are created. First argument is the data object
+                # that needs to be plotted. To prevent new windows from popping up each
+                # measurement a 'name' can be provided so that window can be reused.
+                # If the 'name' doesn't already exists, a new window with that name
+                # will be created. For 3d plots, a plotting style is set.
 
-            #plot2d = qt.Plot2D(data, name=name, autoupdate=True)
-            #plot2d.set_style('lines')
+                #
 
-            #AWG._ins.stop()
+                #plot2d = qt.Plot2D(data, name=name, autoupdate=True)
+                #plot2d.set_style('lines')
+
+                #AWG._ins.stop()
         AWG._ins.run()  # Run AWG - Run must be before do_set_output
         AWG._ins.do_set_output(1,1)   # Turn on AWG ch1
         AWG._ins.do_set_output(1,2)   # Turn on AWG ch1
 
 
 
-                # readout
+        # readout
         for i in xrange(Num_of_waveforms):
-            print i 
-            result = UHFLI_lib.UHF_measure_scope(AWG_instance = AWG, maxtime = 0.3)  # Collecting the result from UHFLI buffer
-            if i == 0:
-                ch1 = result[0]         # Taking readout from the first channel, first vector
-            else:
-                ch1 = np.c_[ch1, result[0]]    # Adding next vectors   
-
+            #print i 
+            qt.msleep(0.05)  # Sleeping for keeping GUI responsive
+            try:
+                result = UHFLI_lib.UHF_measure_scope(AWG_instance = AWG, maxtime = 0.3)  # Collecting the result from UHFLI buffer
+                if i == 0:
+                    ch1 = result[0]         # Taking readout from the first channel, first vector
+                else:
+                    ch1 = np.c_[ch1, result[0]]    # Adding next vectors 
+            except:                    
+                pass   
+            
 
                 
-            qt.msleep(0.05)  # Sleeping for keeping GUI responsive
                     
+                
+                        
 
         if j == 0:
             aver = ch1
         else:       
             aver = aver + ch1  # Summing all the intermediate results for the average
 
-            
+                
         AWG._ins.stop()  # Stop AWG to restart the sequencer
-            
-            
-            
+                
+                
+                
 
-           
-
-    except:
-            
-        pass
+               
+        
+        
             
 
+finally:
 
-# after the measurement ends, you need to close the data file.
-data.close_file()
 
-aver /=float(Num_of_repetitions)  # Calucalting the average result
+    # after the measurement ends, you need to close the data file.
+    data.close_file()
 
-# Saving UHFLI setting to the measurement data folder
-# You can load this settings file from UHFLI user interface 
-data_path = data.get_dir()
-UHFLI_lib.UHF_save_settings(path = data_path)
-data.add_data_point(aver)
-#np.savetxt(fname=data_path + "/result_CH1matrix", X=average, fmt='%1.4e', delimiter=' ', newline='\n') 
+    aver /=float(Num_of_repetitions)  # Calucalting the average result
 
-## Maybe add plot here
+    # Saving UHFLI setting to the measurement data folder
+    # You can load this settings file from UHFLI user interface 
+    data_path = data.get_dir()
+    UHFLI_lib.UHF_save_settings(path = data_path)
+    data.add_data_point(aver)
+    #np.savetxt(fname=data_path + "/result_CH1matrix", X=average, fmt='%1.4e', delimiter=' ', newline='\n') 
 
-AWG._ins.do_set_output(0,1)   # Turn off AWG ch1
-AWG._ins.do_set_output(0,2)   # Turn off AWG ch1
-# lastly tell the secondary processes (if any) that they are allowed to start again.
-qt.mend()
+    ## Maybe add plot here
+
+    AWG._ins.do_set_output(0,1)   # Turn off AWG ch1
+    AWG._ins.do_set_output(0,2)   # Turn off AWG ch1
+    # lastly tell the secondary processes (if any) that they are allowed to start again.
+    qt.mend()
