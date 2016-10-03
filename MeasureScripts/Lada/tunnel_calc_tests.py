@@ -4,7 +4,7 @@ from scipy.optimize import curve_fit
 import matplotlib.lines as mlines
 
 
-def Tunnel_calc(fname = None, path = None, sampling_rate = 7.03e6, load_time = 500e-6, read_time = 500e-6, a = True):
+def Tunnel_calc(fname = None, path = None, sampling_rate = 7.03e6, load_time = 500e-6, read_time = 500e-6):
     '''
     Function for calculating the tunneling time.
     
@@ -15,7 +15,6 @@ def Tunnel_calc(fname = None, path = None, sampling_rate = 7.03e6, load_time = 5
             sampling_rate (float) : Scope sampling rate in Samples/second
             load_time (float) : Duration of load time in seconds
             read_time (float) : Duration of read time in seconds
-            a (bool) :  Determines if tunnel in or tunnel out time is calculated
                       
             
     Output:
@@ -37,12 +36,12 @@ def Tunnel_calc(fname = None, path = None, sampling_rate = 7.03e6, load_time = 5
     
     
     nums = int(sampling_rate * load_time)    
-    numend = int(nums + sampling_rate * read_time) 
+    numend = int(nums + sampling_rate * read_time)
     
-    if a:
-        new_mat = mat[nums:numend, :] #First part of the graph
-    else:
-        new_mat = mat[numend:-1,:] #Second part of the graph
+
+    
+    #new_mat = mat[nums:numend, :]
+    new_mat = mat[numend:-1,:]
     
     mean_trace = new_mat.mean(axis = 1)
     
