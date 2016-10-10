@@ -1,5 +1,5 @@
 # 04.05.2016. Added lines 82 to 89 - Uploading sequence to specified channel recognition
-
+##
 
 #import Tektronix_AWG5014 as ArbWG
 #import InverseHPfilterSeq as INV   # ADDED
