@@ -136,7 +136,7 @@ class AMI430(Instrument):
         #quick and dirty solution to flush startup message from buffer
         print self._receive()
         
-        self.get_all()
+        #self.get_all()
         
     def reset(self):                                                          ###TODO
         pass
