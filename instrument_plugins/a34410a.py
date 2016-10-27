@@ -52,7 +52,7 @@ class a34410a(Instrument):
             
         self.add_parameter('NPLC',
             flags=Instrument.FLAG_GETSET,
-            units='#', type=types.FloatType, minval=0.01, maxval=50)     
+            units='#', type=types.FloatType, minval=0.01, maxval=200)     
             
             
 
@@ -60,7 +60,7 @@ class a34410a(Instrument):
         self._visainstrument.write(com)
 
     def _query(self,com):
-        return self._visainstrument.query(com)
+        return self._visainstrument.query(com, delay = 4)
 
     def SCPI(self, command):
         if command[-1]!='?':

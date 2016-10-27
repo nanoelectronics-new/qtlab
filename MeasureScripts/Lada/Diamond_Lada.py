@@ -18,9 +18,9 @@ import convert_for_diamond_plot as cnv
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = '5-24 diamond test'
+file_name = '5-24 diamond'
 
-gain = 100e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 #bias = 80
 
@@ -28,8 +28,8 @@ gain = 100e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 f
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(2500,2200,-2)     #V_g
-v2_vec = arange(-250,250,0.25)  #V_sd  
+v1_vec = arange(4000,0,-2)     #V_g
+v2_vec = arange(-500,500,2)  #V_sd  
 
 
 

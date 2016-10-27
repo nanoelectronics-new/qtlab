@@ -19,15 +19,14 @@ AWG = qt.instruments.get("AWG")
 
 
 Num_of_waveforms = 10 # Sequence length - correspond to number of rows in slice matrix
-Num_of_repetitions = 256
- 
+Num_of_repetitions = 50
 
 
 
 UHFLI_lib.UHF_init_scope()  # Initialize UHF LI
 
 qt.mstart()
-data = qt.Data(name = "T1_meas 10 traces over 256")
+data = qt.Data(name = "T1_meas 10 traces over 50 50kHz By=2T read 1,9mV no compensation")
 data.create_file()
 data_path = data.get_dir()
 
@@ -68,7 +67,7 @@ try:
                 #plot2d = qt.Plot2D(data, name=name, autoupdate=True)
                 #plot2d.set_style('lines')
 
-                #AWG._ins.stop()
+        AWG._ins.stop()  # Stop AWG to restart the sequencer       
         AWG._ins.run()  # Run AWG - Run must be before do_set_output
         AWG._ins.do_set_output(1,1)   # Turn on AWG ch1
         AWG._ins.do_set_output(1,2)   # Turn on AWG ch1
@@ -92,16 +91,18 @@ try:
                 
                     
                 
-                        
-        np.savetxt(fname=data_path + "/result_CH1matrix%d"%j, X=ch1, fmt='%1.4e', delimiter=' ', newline='\n')  # Saving matrix file after each repeteition
+        try:                
+            #np.savetxt(fname=data_path + "/result_CH1matrix%d"%j, X=ch1, fmt='%1.4e', delimiter=' ', newline='\n')  # Saving matrix file after each repeteition
 
-        if j == 0:
-            aver = ch1
-        else:       
-            aver = aver + ch1  # Summing all the intermediate results for the average
-
+            if j == 0:
+                aver = ch1
+            else:       
+                aver = aver + ch1  # Summing all the intermediate results for the average
+            AWG._ins.stop()  # Stop AWG to restart the sequencer
+        except:
+            pass
                 
-        AWG._ins.stop()  # Stop AWG to restart the sequencer
+            
                 
                 
                 

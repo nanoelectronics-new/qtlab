@@ -13,14 +13,14 @@ UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = 80
+bias = 100
 
 leak_test = True
 
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 # Sweeping vector
-v_vec = arange(0,4000,0.06)  ##''' !! Take care about step sign '''
+v_vec = arange(4000,0,-4)  ##''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -35,7 +35,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data_reflectometry = qt.Data(name='5-24 manually set stuff+trigger -45dBm, 1Mhz (2), 80uV')  # Put one space before name
+data_reflectometry = qt.Data(name='5-24 sensor gate f=114.855MHz -35dBm')  # Put one space before name
 #data_current = qt.Data(name='5-24 current vs sensor gate')  # Put one space before name
 
 
@@ -84,7 +84,7 @@ IVVI.set_dac1(bias)
 start = time()
 for v in v_vec:
     # set the voltage
-    IVVI.set_dac8(v)
+    IVVI.set_dac5(v)
 
     # readout form UHFLI
     # argument Num_of_TC represents number of time constants to wait before raeding the value
