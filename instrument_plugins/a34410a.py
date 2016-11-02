@@ -60,7 +60,7 @@ class a34410a(Instrument):
         self._visainstrument.write(com)
 
     def _query(self,com):
-        return self._visainstrument.query(com, delay = 4)
+        return self._visainstrument.query(com)
 
     def SCPI(self, command):
         if command[-1]!='?':

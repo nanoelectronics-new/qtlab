@@ -18,9 +18,9 @@ import convert_for_diamond_plot as cnv
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = '5-24 diamond'
+file_name = 'grenoble_temperature'
 
-gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 #bias = 80
 
@@ -28,8 +28,8 @@ gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 fo
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(4000,0,-2)     #V_g
-v2_vec = arange(-500,500,2)  #V_sd  
+v1_vec = arange(-440,-430,0.06)     #V_g
+v2_vec = arange(-100,100,0.1)  #V_sd  
 
 
 
@@ -88,12 +88,12 @@ for v1 in v1_vec:
     
     start = time()
     # set the voltage
-    IVVI.set_dac5(v1)
+    IVVI.set_dac13(v1)
 
 
     for v2 in v2_vec:
 
-        IVVI.set_dac1(v2)
+        IVVI.set_dac2(v2)
 
         # readout
         result = dmm.get_readval()/gain*1e12
