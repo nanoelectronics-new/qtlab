@@ -20,7 +20,11 @@ leak_test = True
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 # Sweeping vector
+<<<<<<< HEAD
 v_vec = arange(0,4000,0.06)  ##''' !! Take care about step sign '''
+=======
+v_vec = arange(1452,0,-4)  ##''' !! Take care about step sign '''
+>>>>>>> 67e8801... Matrix file direct saving in Diamond_reflectometry_Lada
 
 
 # you indicate that a measurement is about to start and other
@@ -35,7 +39,11 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
+<<<<<<< HEAD
 data_reflectometry = qt.Data(name='5-24 manually set stuff+trigger -45dBm, 1Mhz (2), 80uV')  # Put one space before name
+=======
+data_reflectometry = qt.Data(name='5-24 B=0,5T sensor gate')  # Put one space before name
+>>>>>>> 67e8801... Matrix file direct saving in Diamond_reflectometry_Lada
 #data_current = qt.Data(name='5-24 current vs sensor gate')  # Put one space before name
 
 
@@ -70,7 +78,7 @@ data_path = data_reflectometry.get_dir()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d_relflectometry = qt.Plot2D(data_reflectometry, name='reflection10', autoupdate=False)
+plot2d_relflectometry = qt.Plot2D(data_reflectometry, name='reflection1', autoupdate=False)
 plot2d_relflectometry.set_style('lines')
 
 #plot2d_current = qt.Plot2D(data_current, name='current', autoupdate=False)

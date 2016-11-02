@@ -16,8 +16,13 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 
 # Sweeping vector
 
+<<<<<<< HEAD
 #bias = 200
 v_vec = arange(4000,800,-1)  #''' !! Take care about step sign '''
+=======
+bias = 100
+v_vec = arange(0,4000,4)  #''' !! Take care about step sign '''
+>>>>>>> 67e8801... Matrix file direct saving in Diamond_reflectometry_Lada
 
 
 # you indicate that a measurement is about to start and other
@@ -32,7 +37,11 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
+<<<<<<< HEAD
 data = qt.Data(name='6-11 test')  # Put one space before name
+=======
+data = qt.Data(name='5-24 B=0,5T dot gate f=114,53MHz -35dBm')  # Put one space before name
+>>>>>>> 67e8801... Matrix file direct saving in Diamond_reflectometry_Lada
 
 
 # Now you provide the information of what data will be saved in the
@@ -62,11 +71,19 @@ data_path = data.get_dir()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
+<<<<<<< HEAD
 plot2d_lockin = qt.Plot2D(data, name='lockin', autoupdate=False, valdim =1 )
 plot2d_lockin.set_style('lines')
 
 #plot2d_dmm = qt.Plot2D(data, name='dmm', autoupdate=False, valdim =2)
 #plot2d_dmm.set_style('lines')
+=======
+plot2d = qt.Plot2D(data, name='lockin3', autoupdate=False, valdim =1)
+plot2d.set_style('lines')
+
+plot2d_dmm = qt.Plot2D(data, name='dmm3', autoupdate=False, valdim =2)
+plot2d_dmm.set_style('lines')
+>>>>>>> 67e8801... Matrix file direct saving in Diamond_reflectometry_Lada
 
 
 
