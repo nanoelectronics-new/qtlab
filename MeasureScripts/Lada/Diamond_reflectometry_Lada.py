@@ -16,11 +16,8 @@ import UHFLI_lib
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 
-<<<<<<< HEAD
-file_name = '5-24 By=2T gate vs gate'
-=======
 file_name = '5-24 By=0,5T g vs g f=114,53MHz -35dBm'
->>>>>>> 67e8801... Matrix file direct saving in Diamond_reflectometry_Lada
+
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -30,13 +27,9 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-<<<<<<< HEAD
 v1_vec = arange(2480,2420,-0.4)     #V_g
 v2_vec = arange(2320,2250,-0.4)  #V_sd 
-=======
-v1_vec = arange(4000,1000,-2)     #V_g
-v2_vec = arange(3000,2500,-2)  #V_sd 
->>>>>>> 67e8801... Matrix file direct saving in Diamond_reflectometry_Lada
+
 
 
 # you indicate that a measurement is about to start and other
@@ -79,12 +72,11 @@ new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for stori
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-<<<<<<< HEAD
-plot3d = qt.Plot3D(data, name='p9', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-=======
 
-plot3d = qt.Plot3D(data, name='5-24plot3', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
->>>>>>> 67e8801... Matrix file direct saving in Diamond_reflectometry_Lada
+plot3d = qt.Plot3D(data, name='p9', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+
+
+
 
 
 
