@@ -29,8 +29,8 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(1600,1660,0.1)     #V_g
-v2_vec = arange(3190,3170,-0.1)  #V_sd 
+v1_vec = arange(1659,1660,0.05)     #V_g
+v2_vec = arange(3171,3170,-0.01)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -131,8 +131,15 @@ try:
 
 finally:
 
-    # Saving the matrix to the matrix file
-    np.savetxt(fname=data.get_filepath + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')  
+    # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)
+    for i, el in enumerate(new_mat[0]):     
+        all_zeros = not np.any(new_mat[:,i])    # Finiding first column with all zeros
+        if all_zeros:
+            new_mat = new_mat[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
+            break
+
+    # Saving the matrix to the matrix filedata.get_filepath
+    np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')  
 
        
     # Saving UHFLI setting to the measurement data folder
@@ -145,3 +152,4 @@ finally:
     #data_current.close_file()
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
+
