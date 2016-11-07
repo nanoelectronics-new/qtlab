@@ -13,9 +13,9 @@ import data
 #AWG = qt.instruments.get("AWG")
 #name='pulsing,80uV -35dBm, -+500, +-600, 200us200us three-part-pulse 1000#' 
 
-name = "5-24 tbt By=2T 50kHz #100 tunneltest"
+name = "file_saving_test"
 
-Num_of_waveforms = 100 # Sequence length - correspond to number of rows in slice matrix
+Num_of_waveforms = 10 # Sequence length - correspond to number of rows in slice matrix
 
  
 
@@ -24,7 +24,7 @@ Num_of_waveforms = 100 # Sequence length - correspond to number of rows in slice
 UHFLI_lib.UHF_init_scope()  # Initialize UHF LI
 # you indicate that a measurement is about to start and other
 # processes should stop (like batterycheckers, or temperature
-# monitors)
+# monitors
 qt.mstart()
 
 # Next a new data object is made.
@@ -56,6 +56,7 @@ data.create_file()
 try:   
     data_path = data.get_dir()
 
+
     # Next two plot-objects are created. First argument is the data object
     # that needs to be plotted. To prevent new windows from popping up each
     # measurement a 'name' can be provided so that window can be reused.
@@ -80,6 +81,15 @@ try:
         result = UHFLI_lib.UHF_measure_scope(AWG_instance = AWG, maxtime = 0.3)  # Collecting the result from UHFLI buffer
         ch1 = result[0]         # Taking readout from the first channel
         data.add_data_point(np.linspace(i, i, ch1.size), np.linspace(0, ch1.size, ch1.size), ch1)  # Adding new data point
+
+
+        if i==0:   # Initializing the matrix   # ADD THIS BLOCK FOR MATRIX FILE SAVING
+            mat = np.array([ch1])
+            mat = mat.transpose()
+        else:
+            mat = np.insert(mat, i, ch1, axis=1)  # every next scope trace (shot) is inserted as next column in matrix
+
+
         qt.msleep(0.05)  # Sleeping for keeping GUI responsive
         data.new_block()  # Need to be here
 
@@ -87,9 +97,7 @@ try:
 
     
 
-    # Saving UHFLI setting to the measurement data folder
-    # You can load this settings file from UHFLI user interface 
-    UHFLI_lib.UHF_save_settings(path = data_path)  
+
     
 
    
@@ -98,6 +106,13 @@ finally:
     plot3d.update()  
     AWG._ins.do_set_output(0,1)   # Turn off AWG ch1
     AWG._ins.do_set_output(0,2)   # Turn off AWG ch1
+
+    # Saving UHFLI setting to the measurement data folder
+    # You can load this settings file from UHFLI user interface 
+    UHFLI_lib.UHF_save_settings(path = data_path)  
+
+    # Saving the matrix to the matrix filedata.get_filepath
+    np.savetxt(fname=data.get_filepath() + "_matrix", X=mat, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
 
    
     # after the measurement ends, you need to close the data file.

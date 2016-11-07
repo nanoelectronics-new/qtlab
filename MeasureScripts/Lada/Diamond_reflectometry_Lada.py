@@ -65,7 +65,7 @@ data.create_file()
 data_path = data.get_dir()
 
 #saving directly in matrix format for diamond program
-new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data 
+new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data   - ADD THIS LINE FOR MATRIX FILE SAVING, PUT APPROPRIATE VECTOR NAMES
 
 # Next two plot-objects are created. First argument is the data object
 # that needs to be plotted. To prevent new windows from popping up each
@@ -87,7 +87,7 @@ init_start = time()
 vec_count = 0
 
 try:
-    for i,v1 in enumerate(v1_vec):
+    for i,v1 in enumerate(v1_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
         
         
         start = time()
@@ -95,7 +95,7 @@ try:
         IVVI.set_dac7(v1)
 
 
-        for j,v2 in enumerate(v2_vec):
+        for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
 
             IVVI.set_dac5(v2)
 
@@ -103,7 +103,7 @@ try:
             result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
 
             # Save to the matrix
-            new_mat[j,i] = result_reflectometry
+            new_mat[j,i] = result_reflectometry   # ADD THIS LINE FOR MATRIX FILE SAVING
 
             data.add_data_point(v2, v1, result_reflectometry) 
             qt.msleep(0.001)
@@ -131,7 +131,7 @@ try:
 
 finally:
 
-    # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)
+    # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)  # ADD THIS BLOCK FOR MATRIX FILE SAVING
     for i, el in enumerate(new_mat[0]):     
         all_zeros = not np.any(new_mat[:,i])    # Finiding first column with all zeros
         if all_zeros:
@@ -139,7 +139,7 @@ finally:
             break
 
     # Saving the matrix to the matrix filedata.get_filepath
-    np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')  
+    np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
 
        
     # Saving UHFLI setting to the measurement data folder
