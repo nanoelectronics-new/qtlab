@@ -19,18 +19,18 @@ import data
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 
-file_name = '5-24 By=0,5T g vs g f=114,53MHz -35dBm'
+file_name = 'file_saving_test'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-#bias = 80
+#bias = 0
 
 
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(4000,1000,-2)     #V_g
-v2_vec = arange(3000,2500,-2)  #V_sd 
+v1_vec = arange(1600,1660,0.1)     #V_g
+v2_vec = arange(3190,3170,-0.1)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -74,12 +74,14 @@ new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for stori
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
 
-plot3d = qt.Plot3D(data, name='5-24plot3', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='5-24plot15', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
 # preparation is done, now start the measurement.
 # It is actually a simple loop.
+
+#IVVI.set_dac1(bias)
 
 init_start = time()
 vec_count = 0
@@ -130,11 +132,11 @@ try:
 finally:
 
     # Saving the matrix to the matrix file
-    np.savetxt(fname=data_path + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')  
+    np.savetxt(fname=data.get_filepath + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')  
 
        
     # Saving UHFLI setting to the measurement data folder
-    # You can load this settings file from UHFLI user interface 
+    # You can load this settings file from UHFLI user interface 3
     UHFLI_lib.UHF_save_settings(path = data_path)
 
 

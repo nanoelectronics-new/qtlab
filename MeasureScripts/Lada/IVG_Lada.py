@@ -26,7 +26,7 @@ leak_test = False
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(1000,4000,4)
+v_vec = arange(3176,3000,-1)
 #v_vec = arange(-300,300,0.06)
 
 
@@ -41,7 +41,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name='5-24 B=0,5T dot')
+data = qt.Data(name='5-24 B=2T offset test')
 
 
 # Now you provide the information of what data will be saved in the
@@ -78,7 +78,7 @@ start = time()
 for v in v_vec:
     # set the voltage
 
-    IVVI.set_dac7(v)
+    IVVI.set_dac5(v)
     # readout
     result = dmm.get_readval()/(gain)*1e12 # Remove Lockin gain if you are not measuring with it
 

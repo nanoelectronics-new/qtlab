@@ -18,18 +18,18 @@ import convert_for_diamond_plot as cnv
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = 'grenoble_temperature'
+file_name = '5-24 By=2T g vs g current'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-#bias = 80
+bias =0
 
 
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(-440,-430,0.06)     #V_g
-v2_vec = arange(-100,100,0.1)  #V_sd  
+v1_vec = arange(1600,1660,0.1)     #V_g
+v2_vec = arange(3190,3170,-0.1)  #V_sd 
 
 
 
@@ -70,14 +70,14 @@ data_path = data.get_dir()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-plot3d = qt.Plot3D(data, name='plot1', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='plot3', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
 # preparation is done, now start the measurement.
 # It is actually a simple loop.
 
-#IVVI.set_dac1(bias)
+IVVI.set_dac1(bias)
 
 init_start = time()
 vec_count = 0
@@ -88,12 +88,12 @@ for v1 in v1_vec:
     
     start = time()
     # set the voltage
-    IVVI.set_dac13(v1)
+    IVVI.set_dac7(v1)
 
 
     for v2 in v2_vec:
 
-        IVVI.set_dac2(v2)
+        IVVI.set_dac5(v2)
 
         # readout
         result = dmm.get_readval()/gain*1e12
