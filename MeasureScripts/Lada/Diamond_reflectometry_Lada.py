@@ -19,18 +19,18 @@ import data
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 
-file_name = '5-24 By=15T gate vs gate'
+file_name = 'file_saving_test'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-#bias = 80
+#bias = 0
 
 
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(1540,1565,0.3)     #V_g
-v2_vec = arange(2495,2475,-0.3)  #V_sd 
+v1_vec = arange(1659,1660,0.05)     #V_g
+v2_vec = arange(3171,3170,-0.01)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -64,6 +64,9 @@ data.create_file()
 
 data_path = data.get_dir()
 
+#saving directly in matrix format for diamond program
+new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data   - ADD THIS LINE FOR MATRIX FILE SAVING, PUT APPROPRIATE VECTOR NAMES
+
 # Next two plot-objects are created. First argument is the data object
 # that needs to be plotted. To prevent new windows from popping up each
 # measurement a 'name' can be provided so that window can be reused.
@@ -71,64 +74,82 @@ data_path = data.get_dir()
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
 
-plot3d = qt.Plot3D(data, name='plot5', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='5-24plot15', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
 # preparation is done, now start the measurement.
 # It is actually a simple loop.
 
+#IVVI.set_dac1(bias)
+
 init_start = time()
 vec_count = 0
 
-
-for v1 in v1_vec:
-    
-    
-    start = time()
-    # set the voltage
-    IVVI.set_dac7(v1)
-
-
-    for v2 in v2_vec:
-
-        IVVI.set_dac5(v2)
-
-        # readout
-        result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
-
-        data.add_data_point(v2, v1, result_reflectometry) 
-        qt.msleep(0.001)
-        # save the data point to the file, this will automatically trigger
-        # the plot windows to update
-       
-        # the next function is necessary to keep the gui responsive. It
-        # checks for instance if the 'stop' button is pushed. It also checks
-        # if the plots need updating.
+try:
+    for i,v1 in enumerate(v1_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
         
-    data.new_block()
-    stop = time()
+        
+        start = time()
+        # set the voltage
+        IVVI.set_dac7(v1)
+
+
+        for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
+
+            IVVI.set_dac5(v2)
+
+            # readout
+            result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
+
+            # Save to the matrix
+            new_mat[j,i] = result_reflectometry   # ADD THIS LINE FOR MATRIX FILE SAVING
+
+            data.add_data_point(v2, v1, result_reflectometry) 
+            qt.msleep(0.001)
+            # save the data point to the file, this will automatically trigger
+            # the plot windows to update
+           
+            # the next function is necessary to keep the gui responsive. It
+            # checks for instance if the 'stop' button is pushed. It also checks
+            # if the plots need updating.
+            
+        data.new_block()
+        stop = time()
+        
+
+        plot2d.update()
+
+        plot3d.update()
+
+        vec_count = vec_count + 1
+        print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
+        
     
 
-    plot2d.update()
+    print 'Overall duration: %s sec' % (stop - init_start, )
 
-    plot3d.update()
+finally:
 
-    vec_count = vec_count + 1
-    print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
-    
-    
+    # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)  # ADD THIS BLOCK FOR MATRIX FILE SAVING
+    for i, el in enumerate(new_mat[0]):     
+        all_zeros = not np.any(new_mat[:,i])    # Finiding first column with all zeros
+        if all_zeros:
+            new_mat = new_mat[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
+            break
 
-print 'Overall duration: %s sec' % (stop - init_start, )
+    # Saving the matrix to the matrix filedata.get_filepath
+    np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
 
-   
-# Saving UHFLI setting to the measurement data folder
-# You can load this settings file from UHFLI user interface 
-UHFLI_lib.UHF_save_settings(path = data_path)
+       
+    # Saving UHFLI setting to the measurement data folder
+    # You can load this settings file from UHFLI user interface 3
+    UHFLI_lib.UHF_save_settings(path = data_path)
 
 
-# after the measurement ends, you need to close the data file.
-data.close_file()
-#data_current.close_file()
-# lastly tell the secondary processes (if any) that they are allowed to start again.
-qt.mend()
+    # after the measurement ends, you need to close the data file.
+    data.close_file()
+    #data_current.close_file()
+    # lastly tell the secondary processes (if any) that they are allowed to start again.
+    qt.mend()
+

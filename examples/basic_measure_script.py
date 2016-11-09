@@ -39,8 +39,8 @@ def fake_readout_psw():
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
-f_vec = arange(0,10,0.01)
-b_vec = arange(-5,5,0.1)
+f_vec = arange(0,10,1)
+b_vec = arange(-5,5,1)
 
 # you indicate that a measurement is about to start and other
 # processes should stop (like batterycheckers, or temperature
