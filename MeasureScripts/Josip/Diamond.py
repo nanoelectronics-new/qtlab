@@ -32,7 +32,7 @@ init_dict = {'Address': 'TCPIP::10.21.41.103::hislip0::INSTR',
                     }
 VNA = qt.instruments.create('VNA','RS_ZNB20',address = 'TCPIP::10.21.41.148::hislip0::INSTR', init_dict_update = init_dict)
 
-file_name = 'Diamond_GS_N6_24-03'
+file_name = 'test_file_saving'
 
 gain = 1e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -42,7 +42,7 @@ gain = 1e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 
 
 v1_vec = arange(-3000,-1000,0.5)     #V_g
-v2_vec = arange(-2000,2000,100)  #V_sd 
+v2_vec = arange(-20,20,5)  #V_sd 
 
 
 
@@ -85,6 +85,10 @@ data_refl.create_file()
 
 #data_path = data.get_dir()
 
+#saving directly in matrix format for diamond program
+new_mat_cur = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data  
+new_mat_refl = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data  
+
 # Next two plot-objects are created. First argument is the data object
 # that needs to be plotted. To prevent new windows from popping up each
 # measurement a 'name' can be provided so that window can be reused.
@@ -103,53 +107,77 @@ plot3d_refl = qt.Plot3D(data_refl, name='measure3D_reflection2', coorddims=(1,0)
 init_start = time()
 vec_count = 0
 
+try:
+    for i,v1 in enumerate(v1_vec):
+        
+        
+        start = time()
+        # set the voltage
+        IVVI.set_dac5(v1)
 
-for v1 in v1_vec:
-    
-    
-    start = time()
-    # set the voltage
-    IVVI.set_dac5(v1)
 
+        for j,v2 in enumerate(v2_vec):
 
-    for v2 in v2_vec:
+            IVVI.set_dac1(v2)
 
-        IVVI.set_dac1(v2)
+            # readout
+            result = dmm.get_readval()/gain*1e12
+            result_reflection = VNA.get_point()
+        
+            # save the data point to the file, this will automatically trigger
+            # the plot windows to update
+            data.add_data_point(v2,v1, result)  
+            data_refl.add_data_point(v2,v1, result_reflection)
 
-        # readout
-        result = dmm.get_readval()/gain*1e12
-        result_reflection = VNA.get_point()
-    
-        # save the data point to the file, this will automatically trigger
-        # the plot windows to update
-        data.add_data_point(v2,v1, result)  
-        data_refl.add_data_point(v2,v1, result_reflection)
-        # the next function is necessary to keep the gui responsive. It
-        # checks for instance if the 'stop' button is pushed. It also checks
-        # if the plots need updating.
-        qt.msleep(0.001)
-    data.new_block()
-    data_refl.new_block()
-    stop = time()
-    
+            # Save to the matrix
+            new_mat_cur[j,i] = result
+            new_mat_refl[j,i] = result_reflection  
 
-    plot2d.update()
-    plot3d.update()
-    plot2d_refl.update()
-    plot3d_refl.update()
+            # the next function is necessary to keep the gui responsive. It
+            # checks for instance if the 'stop' button is pushed. It also checks
+            # if the plots need updating.
+            qt.msleep(0.001)
+        data.new_block()
+        data_refl.new_block()
+        stop = time()
+        
 
-    vec_count = vec_count + 1
-    print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
-    
-    
+        plot2d.update()
+        plot3d.update()
+        plot2d_refl.update()
+        plot3d_refl.update()
 
-print 'Overall duration: %s sec' % (stop - init_start, )
+        vec_count = vec_count + 1
+        print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
+        
+        
 
+    print 'Overall duration: %s sec' % (stop - init_start, )
+
+finally:
    
-# Converting the output file into matrix format which can be read with Diamond plot tool. It is in the same folder as original file.   
-#cnv.convert_to_matrix_file(fname = file_name, path = data_path)
+    # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)  
+    for i, el in enumerate(new_mat_cur[0]):     
+        all_zeros = not np.any(new_mat_cur[:,i])    # Finiding first column with all zeros
+        if all_zeros:
+            new_mat_cur = new_mat_cur[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
+            break
 
-# after the measurement ends, you need to close the data file.
-data.close_file()
-# lastly tell the secondary processes (if any) that they are allowed to start again.
-qt.mend()
+   # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle) 
+    for i, el in enumerate(new_mat_refl[0]):     
+        all_zeros = not np.any(new_mat_refl[:,i])    # Finiding first column with all zeros
+        if all_zeros:
+            new_mat_refl = new_mat_refl[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
+            break
+
+
+    # Saving the matrix to the matrix filedata.get_filepath
+    np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat_cur, fmt='%1.4e', delimiter=' ', newline='\n')  
+
+    # Saving the matrix to the matrix filedata.get_filepath
+    np.savetxt(fname=data_refl.get_filepath() + "_matrix", X=new_mat_refl, fmt='%1.4e', delimiter=' ', newline='\n')  
+
+    # after the measurement ends, you need to close the data file.
+    data.close_file()
+    # lastly tell the secondary processes (if any) that they are allowed to start again.
+    qt.mend()
