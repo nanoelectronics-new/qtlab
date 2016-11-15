@@ -26,7 +26,7 @@ config['instrument_server'] = False
 
 ## This sets a default location for data-storage
 config['tempdir'] = 'tmp'
-config['datadir'] = 'D:\Measurements\Lada'
+config['datadir'] = 'D:\Measurements\Hannes'
 ## This sets a default directory for qtlab to start in
 #config['startdir'] = 'd:/scripts'
 

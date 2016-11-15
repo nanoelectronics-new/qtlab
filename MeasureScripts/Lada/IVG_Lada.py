@@ -24,7 +24,7 @@ leak_test = True
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(-300,300,10)
+v_vec = arange(0,2550,4)
 
 
 
@@ -39,7 +39,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name='5-24 iv')
+data = qt.Data(name='5-24 ungrounding')
 
 
 # Now you provide the information of what data will be saved in the
@@ -75,7 +75,7 @@ plot2d.set_style('lines')
 start = time()
 for v in v_vec:
     # set the voltage
-    IVVI.set_dac1(v)
+    IVVI.set_dac5(v)
     # readout
     result = dmm.get_readval()/(gain)*1e12 # Remove Lockin gain if you are not measuring with it
 
