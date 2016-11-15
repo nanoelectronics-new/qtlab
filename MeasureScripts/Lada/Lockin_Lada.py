@@ -11,14 +11,14 @@ import UHFLI_lib
 #####################################################
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)  # Initialize IVVI
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')   # Initialize dmm
-UHFLI_lib.UHF_init_demod(demod_c = 7)  # Initialize UHF LI  # Initialize UHF LI
+UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI  # Initialize UHF LI
 
-gain = 100e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-#bias = 500
+bias = 80
 
 # Sweeping vectors
-v_vec = arange(-250,250,1)
+v_vec = arange(4000,0,-4)
 
 
 # you indicate that a measurement is about to start and other
@@ -32,7 +32,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name='5-24 lockin iv')
+data = qt.Data(name='5-24 from 30mK sensor gate sweeper test')
 
 
 # Now you provide the information of what data will be saved in the
@@ -66,16 +66,16 @@ plot2d_lockin.set_style('lines')
 
 # preparation is done, now start the measurement.
 
-#IVVI.set_dac1(bias)
+IVVI.set_dac1(bias)
 
 # It is actually a simple loop.
 start = time()
 for v in v_vec:
     # set the voltage
-    IVVI.set_dac1(v)
+    IVVI.set_dac5(v)
 
     # readout
-    result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 1)/gain  # Reading the lockin and correcting for M1b gain
+    result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)/gain  # Reading the lockin and correcting for M1b gain
 
     # save the data point to the file
     data.add_data_point(v, result_lockin)  

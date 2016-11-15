@@ -52,7 +52,7 @@ class a34410a(Instrument):
             
         self.add_parameter('NPLC',
             flags=Instrument.FLAG_GETSET,
-            units='#', type=types.FloatType, minval=0.01, maxval=50)     
+            units='#', type=types.FloatType, minval=0.01, maxval=200)     
             
             
 

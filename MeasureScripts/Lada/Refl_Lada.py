@@ -16,8 +16,8 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 
 # Sweeping vector
 
-#bias = 200
-v_vec = arange(4000,800,-1)  #''' !! Take care about step sign '''
+bias = 0
+v_vec = arange(3176,3000,-1)  #''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -32,7 +32,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data = qt.Data(name='6-11 test')  # Put one space before name
+data = qt.Data(name='5-24 B=2T offset test')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the
@@ -62,21 +62,21 @@ data_path = data.get_dir()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d_lockin = qt.Plot2D(data, name='lockin', autoupdate=False, valdim =1 )
-plot2d_lockin.set_style('lines')
+plot2d = qt.Plot2D(data, name='lockin3', autoupdate=False, valdim =1)
+plot2d.set_style('lines')
 
-#plot2d_dmm = qt.Plot2D(data, name='dmm', autoupdate=False, valdim =2)
-#plot2d_dmm.set_style('lines')
+plot2d_dmm = qt.Plot2D(data, name='dmm3', autoupdate=False, valdim =2)
+plot2d_dmm.set_style('lines')
 
 
 
 # preparation is done, now start the measurement.
-#IVVI.set_dac1(bias)
+IVVI.set_dac1(bias)
 # It is actually a simple loop.
 start = time()
 for v in v_vec:
     # set the voltage
-    IVVI.set_dac7(v)
+    IVVI.set_dac5(v)
 
     # readout form UHFLI
     # argument Num_of_TC represents number of time constants to wait before raeding the value
@@ -84,13 +84,13 @@ for v in v_vec:
     result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
 
     # readout_dmm
-    #result_dmm = dmm.get_readval()/gain*1e12
+    result_dmm = dmm.get_readval()/gain*1e12
 
     # save the data point to the file
-    #data.add_data_point(v, result_lockin, result_dmm)  
+    data.add_data_point(v, result_lockin, result_dmm)  
 
-    plot2d_lockin.update()
-    #plot2d_dmm.update()
+    plot2d.update()
+    plot2d_dmm.update()
 
     # the next function is necessary to keep the gui responsive. It
     # checks for instance if the 'stop' button is pushed. It also checks

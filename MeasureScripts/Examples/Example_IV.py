@@ -7,8 +7,8 @@ from time import time,sleep
 #####################################################
 # EXAMPLE SCRIPT SHOWING HOW TO SET UP STANDARD 1D (IV) DMM MEASUREMENT
 #####################################################
-IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)  # Initialize IVVI
-dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')  # Initialize dmm
+IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM5', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)  # Initialize IVVI
+dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502785::INSTR')  # Initialize dmm
 dmm.set_NPLC = 0.1  # Setting PLCs of dmm
 
 gain = 1e6 # hoose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -16,7 +16,7 @@ gain = 1e6 # hoose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 bias = 500
 
 # Sweeping vector
-v_vec = arange(600,0,-10)  #''' !! Take care about step sign '''
+v_vec = arange(-1000,1000,10)  #''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
