@@ -2,6 +2,7 @@ from numpy import pi, random, arange, size
 from time import time,sleep
 import datetime
 import convert_for_diamond_plot as cnv
+import numpy as np
 
 #####################################################
 # this part is to simulate some data, you can skip it
@@ -62,6 +63,9 @@ data.create_file()
 
 data_path = data.get_dir()
 
+#saving directly in matrix format for diamond program
+new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data   - ADD THIS LINE FOR MATRIX FILE SAVING, PUT APPROPRIATE VECTOR NAMES
+
 # Next two plot-objects are created. First argument is the data object
 # that needs to be plotted. To prevent new windows from popping up each
 # measurement a 'name' can be provided so that window can be reused.
@@ -78,51 +82,67 @@ plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='ima
 init_start = time()
 vec_count = 0
 
+try:
+    for i,v1 in enumerate(v1_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
+        
+        
+        start = time()
+        # set the voltage
+        IVVI.set_dac4(v1)
+        IVVI.set_dac5(v1)
+        IVVI.set_dac6(v1)
 
-for v1 in v1_vec:
-    
-    
-    start = time()
-    # set the voltage
-    IVVI.set_dac4(v1)
-    IVVI.set_dac5(v1)
-    IVVI.set_dac6(v1)
+        
+        for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
 
-    
-    for v2 in v2_vec:
+            IVVI.set_dac1(v2)
 
-        IVVI.set_dac1(v2)
+            # readout
+            result = dmm.get_readval()/gain*1e12
+        
+            # save the data point to the file, this will automatically trigger
+            # the plot windows to update
+            data.add_data_point(v2,v1, result)  
 
-        # readout
-        result = dmm.get_readval()/gain*1e12
-    
-        # save the data point to the file, this will automatically trigger
-        # the plot windows to update
-        data.add_data_point(v2,v1, result)  
-        # the next function is necessary to keep the gui responsive. It
-        # checks for instance if the 'stop' button is pushed. It also checks
-        # if the plots need updating.
-        qt.msleep(0.001)
-    data.new_block()
-    stop = time()
-    
+            # Save to the matrix
+            new_mat[j,i] = result   # ADD THIS LINE FOR MATRIX FILE SAVING
 
-    plot2d.update()
+            # the next function is necessary to keep the gui responsive. It
+            # checks for instance if the 'stop' button is pushed. It also checks
+            # if the plots need updating.
+            qt.msleep(0.001)
+        data.new_block()
+        stop = time()
+        
 
-    plot3d.update()
+        plot2d.update()
 
-    vec_count = vec_count + 1
-    print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
-    
-    
+        plot3d.update()
 
-print 'Overall duration: %s sec' % (stop - init_start, )
+        vec_count = vec_count + 1
+        print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
+        
+        
+
+    print 'Overall duration: %s sec' % (stop - init_start, )
+
+finally:
+
+    # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)  # ADD THIS BLOCK FOR MATRIX FILE SAVING
+    for i, el in enumerate(new_mat[0]):     
+        all_zeros = not np.any(new_mat[:,i])    # Finiding first column with all zeros
+        if all_zeros:
+            new_mat = new_mat[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
+            break
+
+    # Saving the matrix to the matrix filedata.get_filepath
+    np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
 
    
-# Converting the output file into matrix format which can be read with Diamond plot tool. It is in the same folder as original file.   
-#cnv.convert_to_matrix_file(fname = file_name, path = data_path)
+    # Converting the output file into matrix format which can be read with Diamond plot tool. It is in the same folder as original file.   
+    #cnv.convert_to_matrix_file(fname = file_name, path = data_path)
 
-# after the measurement ends, you need to close the data file.
-data.close_file()
-# lastly tell the secondary processes (if any) that they are allowed to start again.
-qt.mend()
+    # after the measurement ends, you need to close the data file.
+    data.close_file()
+    # lastly tell the secondary processes (if any) that they are allowed to start again.
+    qt.mend()
