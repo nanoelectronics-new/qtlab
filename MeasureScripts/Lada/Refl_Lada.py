@@ -16,8 +16,8 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 
 # Sweeping vector
 
-bias = 0
-v_vec = arange(3176,3000,-1)  #''' !! Take care about step sign '''
+#bias = 500
+v_vec = arange(-1000,1,1)  #''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -32,7 +32,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data = qt.Data(name='5-24 B=2T offset test')  # Put one space before name
+data = qt.Data(name='12-8 ivg B=0T eff temp refl')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the
@@ -62,21 +62,21 @@ data_path = data.get_dir()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='lockin3', autoupdate=False, valdim =1)
+plot2d = qt.Plot2D(data, name='lockin8', autoupdate=False, valdim =1)
 plot2d.set_style('lines')
 
-plot2d_dmm = qt.Plot2D(data, name='dmm3', autoupdate=False, valdim =2)
+plot2d_dmm = qt.Plot2D(data, name='dmm8', autoupdate=False, valdim =2)
 plot2d_dmm.set_style('lines')
 
 
 
 # preparation is done, now start the measurement.
-IVVI.set_dac1(bias)
+#IVVI.set_dac1(bias)
 # It is actually a simple loop.
 start = time()
 for v in v_vec:
     # set the voltage
-    IVVI.set_dac5(v)
+    IVVI.set_dac2(v)
 
     # readout form UHFLI
     # argument Num_of_TC represents number of time constants to wait before raeding the value

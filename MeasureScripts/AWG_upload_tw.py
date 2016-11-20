@@ -39,8 +39,8 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     #deltaT = deltaT**3*10
     
 
-    A1 = np.array([0.0,-3.0,-1.9,0.0,0.0])*31.25 # Initial amplitudes, 31.25 is factor of attenuation
-    A2 = np.array([0.0,3.0,1.9,0.0,0.0])*31.25*0.81 # Initial amplitudes, 31.25 is factor of attenuation, 1.2 is factor for diagonal pulsing
+    A1 = np.array([0.0,-4.0,-1.55,0.0,0.0])*31.25 # Initial amplitudes, 31.25 is factor of attenuation
+    A2 = np.array([0.0,4.0,1.55,0.0,0.0])*31.25*0.78 # Initial amplitudes, 31.25 is factor of attenuation, 1.2 is factor for diagonal pulsing
     biasT_correctionCH1 = 0  #A1[1]*(1-exp(-load_time/23000.0)) #tau=RC=18ms correction needed because biasT cuts the signal for long tw
     biasT_correctionCH2 = 0  #A2[1]*(1-exp(-load_time/23000.0)) #tau=RC=18ms correction needed because biasT cuts the signal for long tw
 
