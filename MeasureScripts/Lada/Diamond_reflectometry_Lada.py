@@ -19,7 +19,7 @@ import data
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 
-file_name = '12-8 ivg B=0T eff temp refl bw 1kHz,pow -35dBm'
+file_name = 'diamond 6-10 f=237,667MHz -35dBm 100Hz sensor gate'
 
 #gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -29,8 +29,8 @@ file_name = '12-8 ivg B=0T eff temp refl bw 1kHz,pow -35dBm'
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(-330,-400,-0.06)     #V_g
-v2_vec = arange(-1000,1000,1.5)  #V_sd 
+v1_vec = arange(2000,0,-1)     #V_g
+v2_vec = arange(-700,700,1)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -74,7 +74,7 @@ new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for stori
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
 
-plot3d = qt.Plot3D(data, name='refl_eff_temp', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='diamond 6-10', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
@@ -92,7 +92,7 @@ try:
         
         start = time()
         # set the voltage
-        IVVI.set_dac9(v1)
+        IVVI.set_dac5(v1)
 
 
         for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
