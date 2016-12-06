@@ -18,7 +18,7 @@ import convert_for_diamond_plot as cnv
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = '5-24 diamond'
+file_name = '5-24 diamond dot gate'
 
 gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -28,7 +28,7 @@ gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 fo
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(-292,500,0.8)     #V_g
+v1_vec = arange(528,1000,0.8)     #V_g
 v2_vec = arange(-500,500,4)  #V_sd 
 
 
@@ -73,7 +73,7 @@ data_path = data.get_dir()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-plot3d = qt.Plot3D(data, name='plot3', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='plot_diamond_1', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
@@ -92,7 +92,7 @@ try:
         
         start = time()
         # set the voltage
-        IVVI.set_dac5(v1)
+        IVVI.set_dac7(v1)
 
 
         for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
