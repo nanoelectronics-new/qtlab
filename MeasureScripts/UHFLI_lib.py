@@ -519,13 +519,10 @@ def UHF_measure_demod(Num_of_TC = 3):
     path = path_demod
 
     # Poll data parameters
-    poll_length = 0.001  # [s]
+    poll_length = 1/sampling_rate * 1000  # [s]   # Data aquisition time for recording 1000 samples
     poll_timeout = 500  # [ms]
     poll_flags = 0
     poll_return_flat_dict = True 
-
-    # Data aquisition time for recording 1000 samples
-    acq_time = 1/sampling_rate * 1000
     
 
     #START MEASURE
@@ -533,9 +530,7 @@ def UHF_measure_demod(Num_of_TC = 3):
     # Wait for the demodulator filter to settle
     time.sleep(Num_of_TC*TC)
 
-    daq.flush()  # Getting rid of previous read data in the buffer
-
-    time.sleep(acq_time)  # Waiting a bit to record sufficient number of samples
+    daq.sync()  # Getting rid of previous read data in the buffer
 
     data = daq.poll(poll_length, poll_timeout, poll_flags, poll_return_flat_dict)  # Readout from subscribed node (demodulator)
 
@@ -555,7 +550,7 @@ def UHF_measure_demod(Num_of_TC = 3):
     sample_y = np.array(sample['y'])    # Converting samples to numpy arrays for faster calculation
     sample_r = np.sqrt(sample_x**2 + sample_y**2)   # Calculating R value from X and y values
     
-    
+    print (len(sample_r))
     
     sample_mean = np.mean(sample_r)  # Mean value of recorded data vector
     #measured_ac_conductance = sample_mean/out_ampl
@@ -618,9 +613,9 @@ def UHF_measure_demod_trig(Num_of_TC = 3, trigger = 3, AWG_instr = None, record_
     # Subscribe to the demodulator's sample using global parameter "path demod" from "UHF_init_demod" function
     daq.subscribe(path_demod) 
 
-    daq.flush()  # Getting rid of previous read data in the buffer
-
     daq.setInt(path_demod_enable, 1)  # Enable demodulator 
+
+    daq.sync()  # Getting rid of previous read data in the buffer
 
     # Wait for the demodulator filter to settle
     time.sleep(Num_of_TC*TC) 
@@ -628,12 +623,7 @@ def UHF_measure_demod_trig(Num_of_TC = 3, trigger = 3, AWG_instr = None, record_
     AWG_instr._ins.run()  # Forcing AWG to start output      
 
 
-    time.sleep(record_time)  # Waiting until whole desired data is in buffer
-
-
-
-
-    data = daq.poll(poll_length, poll_timeout, poll_flags, poll_return_flat_dict)  # Readout from subscribed node (demodulator)
+    data = daq.poll(record_time, poll_timeout, poll_flags, poll_return_flat_dict)  # Readout from subscribed node (demodulator)  # Waiting until whole desired data is in buffer (record time)
 
     daq.setInt(path_demod_enable, 0)  # Disable demodulator
 
