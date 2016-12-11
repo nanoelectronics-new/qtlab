@@ -365,7 +365,7 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
 
 
 
-def UHF_init_demod(device_id = 'dev2210', demod_c = 0, out_c = 0):
+def UHF_init_demod(device_id = 'dev2148', demod_c = 0, out_c = 0):
     
     """
     Connecting to the device specified by device_id and setting initial parameters through LabOne GUI
@@ -517,16 +517,12 @@ def UHF_measure_demod(Num_of_TC = 3):
     
     
     path = path_demod
-    acq_time = 1/sampling_rate * 1000
 
     # Poll data parameters
-    poll_length = acq_time  # [s]
+    poll_length = 1/sampling_rate * 1000  # [s]   # Data aquisition time for recording 1000 samples
     poll_timeout = 500  # [ms]
     poll_flags = 0
     poll_return_flat_dict = True 
-
-    # Data aquisition time for recording 1000 samples
-    
     
 
     #START MEASURE
@@ -536,7 +532,7 @@ def UHF_measure_demod(Num_of_TC = 3):
 
     daq.sync()  # Getting rid of previous read data in the buffer
 
-    data = daq.poll(poll_length, poll_timeout, poll_flags, poll_return_flat_dict)  # Readout from subscribed node (demodulator) and waiting a bit to record sufficient number of samples
+    data = daq.poll(poll_length, poll_timeout, poll_flags, poll_return_flat_dict)  # Readout from subscribed node (demodulator)
 
     #END OF MEASURE
 
@@ -554,7 +550,7 @@ def UHF_measure_demod(Num_of_TC = 3):
     sample_y = np.array(sample['y'])    # Converting samples to numpy arrays for faster calculation
     sample_r = np.sqrt(sample_x**2 + sample_y**2)   # Calculating R value from X and y values
     
-    
+    print (len(sample_r))
     
     sample_mean = np.mean(sample_r)  # Mean value of recorded data vector
     #measured_ac_conductance = sample_mean/out_ampl
@@ -617,9 +613,9 @@ def UHF_measure_demod_trig(Num_of_TC = 3, trigger = 3, AWG_instr = None, record_
     # Subscribe to the demodulator's sample using global parameter "path demod" from "UHF_init_demod" function
     daq.subscribe(path_demod) 
 
-    daq.flush()  # Getting rid of previous read data in the buffer
-
     daq.setInt(path_demod_enable, 1)  # Enable demodulator 
+
+    daq.sync()  # Getting rid of previous read data in the buffer
 
     # Wait for the demodulator filter to settle
     time.sleep(Num_of_TC*TC) 
@@ -627,12 +623,7 @@ def UHF_measure_demod_trig(Num_of_TC = 3, trigger = 3, AWG_instr = None, record_
     AWG_instr._ins.run()  # Forcing AWG to start output      
 
 
-    time.sleep(record_time)  # Waiting until whole desired data is in buffer
-
-
-
-
-    data = daq.poll(poll_length, poll_timeout, poll_flags, poll_return_flat_dict)  # Readout from subscribed node (demodulator)
+    data = daq.poll(record_time, poll_timeout, poll_flags, poll_return_flat_dict)  # Readout from subscribed node (demodulator)  # Waiting until whole desired data is in buffer (record time)
 
     daq.setInt(path_demod_enable, 0)  # Disable demodulator
 
