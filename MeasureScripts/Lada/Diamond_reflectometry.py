@@ -19,7 +19,7 @@ import data
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 
-file_name = 'gate vs gate 5-24 f=72,50MHz -35dBm 100Hz B=1T'
+file_name = 'gate vs gate 6-10 f=240,307MHz -35dBm 100Hz B=1T'
 
 #gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -29,8 +29,8 @@ file_name = 'gate vs gate 5-24 f=72,50MHz -35dBm 100Hz B=1T'
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(-500,0,0.2)     #V_g
-v2_vec = arange(-400,-500,-0.2)  #V_sd 
+v1_vec = arange(-4.6,-500,-0.2)     #V_g
+v2_vec = arange(-200,-300,-0.2)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -74,7 +74,7 @@ new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for stori
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
 
-plot3d = qt.Plot3D(data, name='diamond 5-24', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='gatevsgate 6-10', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 

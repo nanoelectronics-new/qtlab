@@ -11,13 +11,13 @@ import UHFLI_lib
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')   # Initialize dmm
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
-gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 
 # Sweeping vector
 
 #bias = 0
-v_vec = arange(839,0,-0.5)  #''' !! Take care about step sign '''
+v_vec = arange(995,-1000,-0.5)  #''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -32,7 +32,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data = qt.Data(name='5-24 ivg f=72,50MHz By=0,5T')  # Put one space before name
+data = qt.Data(name='6-10 ivg sensor f=240,37MHz By=1T')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the
@@ -62,10 +62,10 @@ data_path = data.get_dir()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='lockin3', autoupdate=False, valdim =1)
+plot2d = qt.Plot2D(data, name='lockin5', autoupdate=False, valdim =1)
 plot2d.set_style('lines')
 
-plot2d_dmm = qt.Plot2D(data, name='dmm3', autoupdate=False, valdim =2)
+plot2d_dmm = qt.Plot2D(data, name='dmm5', autoupdate=False, valdim =2)
 plot2d_dmm.set_style('lines')
 
 
@@ -76,7 +76,7 @@ plot2d_dmm.set_style('lines')
 start = time()
 for v in v_vec:
     # set the voltage
-    IVVI.set_dac7(v)
+    IVVI.set_dac5(v)
 
     # readout form UHFLI
     # argument Num_of_TC represents number of time constants to wait before raeding the value

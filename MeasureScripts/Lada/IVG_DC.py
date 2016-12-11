@@ -15,7 +15,7 @@ from time import time,sleep
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505177::INSTR')
 
-gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 
 #bias = 1000
@@ -26,7 +26,7 @@ leak_test = False
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(721,0,-0.5)
+v_vec = arange(-1000,1000,0.5)
 #v_vec = arange(-300,300,0.06)
 
 
@@ -41,7 +41,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name='5-24 ivg dot 5VpV')
+data = qt.Data(name='6-10 ivg sensor 1T')
 
 
 # Now you provide the information of what data will be saved in the
@@ -65,7 +65,7 @@ data.create_file()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='plot4', autoupdate=False)
+plot2d = qt.Plot2D(data, name='plot5', autoupdate=False)
 plot2d.set_style('lines')
 
 
@@ -78,7 +78,7 @@ start = time()
 for v in v_vec:
     # set the voltage
 
-    IVVI.set_dac7(v)
+    IVVI.set_dac5(v)
     # readout
     result = dmm.get_readval()/(gain)*1e12 # Remove Lockin gain if you are not measuring with it
 

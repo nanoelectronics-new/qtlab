@@ -15,11 +15,11 @@ UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 #bias = 100
 
-leak_test = False #decide how often the plot updates
+leak_test = True #decide how often the plot updates
 
 
 # Sweeping vector
-v_vec = arange(800,-500,-0.5)  ##''' !! Take care about step sign '''
+v_vec = arange(0,1000,0.5)  ##''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -28,7 +28,7 @@ v_vec = arange(800,-500,-0.5)  ##''' !! Take care about step sign '''
 qt.mstart()
 
 
-data_reflectometry = qt.Data(name='5-24 B=1T sensor gate f=73,10MHz')  # Put one space before name
+data_reflectometry = qt.Data(name='17-18 B=1T ivg sensor f=119,30MHz')  # Put one space before name
 #data_current = qt.Data(name='5-24 current vs sensor gate')  # Put one space before name
 
 
@@ -60,7 +60,7 @@ data_path = data_reflectometry.get_dir()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d_relflectometry = qt.Plot2D(data_reflectometry, name='reflection1', autoupdate=False)
+plot2d_relflectometry = qt.Plot2D(data_reflectometry, name='reflection2', autoupdate=False)
 plot2d_relflectometry.set_style('lines')
 
 
