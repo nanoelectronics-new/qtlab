@@ -18,17 +18,17 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '18_21 IV 38'
+file_name = 'GvsG_SAMPLE10_01-17_G24&18_Vsd_05mV'
 
-gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
 
+bias = 500
 
-
-v1_vec = arange(120,-200.5,-0.5)   #V_g
-v2_vec = arange(180,280.25,0.25)  #V_sd 
+v1_vec = arange(-300,-600,-0.5)   #V_g
+v2_vec = arange(-300,-800,-0.5)  #V_sd 
 
 
 
@@ -52,8 +52,8 @@ data = qt.Data(name=file_name)
 # information is used later for plotting purposes.
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
-data.add_coordinate('V_{SD} [mV]')
-data.add_coordinate('V_G [mV]')
+data.add_coordinate('V_{G2} [mV]')
+data.add_coordinate('V_{G1} [mV]')
 data.add_value('Current [pA]')
 
 # The next command will actually create the dirs and files, based
@@ -71,8 +71,8 @@ new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for stori
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot2d = qt.Plot2D(data, name='measure2D_2',autoupdate=False)
+plot3d = qt.Plot3D(data, name='measure3D_2', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
@@ -82,7 +82,9 @@ plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='ima
 init_start = time()
 vec_count = 0
 
+
 try:
+    IVVI.set_dac1(bias)
     for i,v1 in enumerate(v1_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
         
         
@@ -90,8 +92,8 @@ try:
         # set the voltage
         #IVVI.set_dac2(v1)
         #IVVI.set_dac3(v1) 
-        #IVVI.set_dac4(v1)
         IVVI.set_dac5(v1)
+        #IVVI.set_dac6(v1)
         #IVVI.set_dac6(v1)
         #IVVI.set_dac7(v1)
         #IVVI.set_dac8(v1)
@@ -99,7 +101,7 @@ try:
         
         for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
 
-            IVVI.set_dac3(v2)
+            IVVI.set_dac6(v2)
 
             # readout
             result = dmm.get_readval()/gain*1e12

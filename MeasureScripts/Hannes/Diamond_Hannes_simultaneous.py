@@ -14,11 +14,11 @@ import numpy as np
 #####################################################
 # here is where the actual measurement program starts
 #####################################################
-#IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM3', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
+#IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '18_21 IV 38'
+file_name = '3_24 IV 239'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -27,8 +27,16 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 
-v1_vec = arange(120,-200.5,-0.5)   #V_g
-v2_vec = arange(180,280.25,0.25)  #V_sd 
+v1_vec = arange(161,163.55,0.05)   #V_g 1
+
+incl = -3.2  # inclination of sweeping direction
+
+# enter starting point of v2_vec (2 x)
+v2_vec = np.linspace(70.5,70.5+incl*abs(v1_vec[-1]-v1_vec[0]),len(v1_vec))  #V_g 2
+
+
+# set v3 to a dummy DAC for B field value
+v3_vec = arange(0,200.05,0.05)  # B field 
 
 
 
@@ -64,7 +72,7 @@ data.create_file()
 data_path = data.get_dir()
 
 #saving directly in matrix format for diamond program
-new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data   - ADD THIS LINE FOR MATRIX FILE SAVING, PUT APPROPRIATE VECTOR NAMES
+new_mat = np.zeros((len(v1_vec), len(v3_vec))) # Creating empty matrix for storing all data   - ADD THIS LINE FOR MATRIX FILE SAVING, PUT APPROPRIATE VECTOR NAMES
 
 # Next two plot-objects are created. First argument is the data object
 # that needs to be plotted. To prevent new windows from popping up each
@@ -83,30 +91,29 @@ init_start = time()
 vec_count = 0
 
 try:
-    for i,v1 in enumerate(v1_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
+    for i,v3 in enumerate(v3_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
         
         
         start = time()
         # set the voltage
-        #IVVI.set_dac2(v1)
-        #IVVI.set_dac3(v1) 
-        #IVVI.set_dac4(v1)
-        IVVI.set_dac5(v1)
-        #IVVI.set_dac6(v1)
-        #IVVI.set_dac7(v1)
-        #IVVI.set_dac8(v1)
+        IVVI.set_dac9(v3)
+        
 
         
-        for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
+        for j,v1 in enumerate(v1_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
 
-            IVVI.set_dac3(v2)
+            #IVVI.set_dac2(v1)
+            #IVVI.set_dac3(v1) 
+            IVVI.set_dac4(v1_vec[j])
+            IVVI.set_dac5(v2_vec[j])
+            #IVVI.set_dac6(v1)
 
             # readout
             result = dmm.get_readval()/gain*1e12
         
             # save the data point to the file, this will automatically trigger
             # the plot windows to update
-            data.add_data_point(v2,v1, result)  
+            data.add_data_point(v1,v3, result)  
 
             # Save to the matrix
             new_mat[j,i] = result   # ADD THIS LINE FOR MATRIX FILE SAVING

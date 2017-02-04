@@ -365,7 +365,7 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
 
 
 
-def UHF_init_demod(device_id = 'dev2148', demod_c = 0, out_c = 0):
+def UHF_init_demod(device_id = 'dev2210', demod_c = 0, out_c = 0):
     
     """
     Connecting to the device specified by device_id and setting initial parameters through LabOne GUI
@@ -517,15 +517,16 @@ def UHF_measure_demod(Num_of_TC = 3):
     
     
     path = path_demod
+    acq_time = 1/sampling_rate * 1000
 
     # Poll data parameters
-    poll_length = 0.001  # [s]
+    poll_length = acq_time  # [s]
     poll_timeout = 500  # [ms]
     poll_flags = 0
     poll_return_flat_dict = True 
 
     # Data aquisition time for recording 1000 samples
-    acq_time = 1/sampling_rate * 1000
+    
     
 
     #START MEASURE
@@ -533,11 +534,9 @@ def UHF_measure_demod(Num_of_TC = 3):
     # Wait for the demodulator filter to settle
     time.sleep(Num_of_TC*TC)
 
-    daq.flush()  # Getting rid of previous read data in the buffer
+    daq.sync()  # Getting rid of previous read data in the buffer
 
-    time.sleep(acq_time)  # Waiting a bit to record sufficient number of samples
-
-    data = daq.poll(poll_length, poll_timeout, poll_flags, poll_return_flat_dict)  # Readout from subscribed node (demodulator)
+    data = daq.poll(poll_length, poll_timeout, poll_flags, poll_return_flat_dict)  # Readout from subscribed node (demodulator) and waiting a bit to record sufficient number of samples
 
     #END OF MEASURE
 
