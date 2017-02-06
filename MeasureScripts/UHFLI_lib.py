@@ -550,7 +550,7 @@ def UHF_measure_demod(Num_of_TC = 3):
     sample_y = np.array(sample['y'])    # Converting samples to numpy arrays for faster calculation
     sample_r = np.sqrt(sample_x**2 + sample_y**2)   # Calculating R value from X and y values
     
-    print (len(sample_r))
+  
     
     sample_mean = np.mean(sample_r)  # Mean value of recorded data vector
     #measured_ac_conductance = sample_mean/out_ampl

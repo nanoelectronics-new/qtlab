@@ -17,7 +17,7 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 # Sweeping vector
 
 #bias = 0
-v_vec = arange(995,-1000,-0.5)  #''' !! Take care about step sign '''
+v_vec = arange(-400,-800,-0.5)  #''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -32,7 +32,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data = qt.Data(name='6-10 ivg sensor f=240,37MHz By=1T')  # Put one space before name
+data = qt.Data(name='6-23 f=235,587MHz ivg sensor 5VpV')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the
@@ -62,10 +62,10 @@ data_path = data.get_dir()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='lockin5', autoupdate=False, valdim =1)
+plot2d = qt.Plot2D(data, name='lockin1', autoupdate=False, valdim =1)
 plot2d.set_style('lines')
 
-plot2d_dmm = qt.Plot2D(data, name='dmm5', autoupdate=False, valdim =2)
+plot2d_dmm = qt.Plot2D(data, name='dmm1', autoupdate=False, valdim =2)
 plot2d_dmm.set_style('lines')
 
 
