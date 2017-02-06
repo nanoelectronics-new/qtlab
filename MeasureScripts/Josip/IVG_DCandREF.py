@@ -9,18 +9,18 @@ import UHFLI_lib
 #####################################################
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM3', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
-UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
+#UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = 500
+bias = 100
 
-leak_test = True
+leak_test = False
 
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 # Sweeping vector
-v_vec = arange(-1499.02,0,1)  ##''' !! Take care about step sign '''
+v_vec = arange(0,-1200,-1)  ##''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -35,8 +35,8 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data_reflectometry = qt.Data(name='SAMPLE10_IVG_03-13_G12&06_reflection')  # Put one space before name
-data_current = qt.Data(name='SAMPLE10_IVG_03-13_G12&06_current')  # Put one space before name
+data_reflectometry = qt.Data(name='SAMPLE10_IVG_01-17_G24&18_reflection')  # Put one space before name
+data_current = qt.Data(name='SAMPLE10_IVG_01-17_G24&18_current')  # Put one space before name
 
 
 
@@ -70,10 +70,12 @@ data_path = data_reflectometry.get_dir()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d_relflectometry = qt.Plot2D(data_reflectometry, name='reflection10', autoupdate=False)
+next = 0 
+next = next + 1 
+plot2d_relflectometry = qt.Plot2D(data_reflectometry, name='reflection_%d'%next, autoupdate=False)
 plot2d_relflectometry.set_style('lines')
 
-plot2d_current = qt.Plot2D(data_current, name='current10', autoupdate=False)
+plot2d_current = qt.Plot2D(data_current, name='current_%d'%next, autoupdate=False)
 plot2d_current.set_style('lines')
 
 
