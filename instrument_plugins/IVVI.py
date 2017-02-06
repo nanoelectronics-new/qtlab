@@ -88,6 +88,7 @@ class IVVI(Instrument):
             maxstep=100, stepdelay=50,     # CHANGE: Old_first: stepdelay=50, New: stepdelay=0,  Old_second: maxstep=10, New: maxstep=2000
             units='mV', format='%.02f',
             tags=['sweep'])
+
         
         self._open_serial_connection()
 
@@ -273,6 +274,20 @@ class IVVI(Instrument):
         logging.debug('Setting dac%s to %.02f mV', channel, mvoltage)
         (DataH, DataL) = self._mvoltage_to_bytes(mvoltage - self.pol_num[channel-1])
         message = "%c%c%c%c%c%c%c" % (7, 0, 2, 1, channel, DataH, DataL)
+        reply = self._send_and_read(message)
+        return reply
+
+    def do_set_trigger(self):
+        '''
+        Sets the trigger; trigger is 1ms and around 4.2V
+
+        Input:
+            none
+        Output:
+            reply (string) : errormessage
+        '''
+        logging.debug('Trigger out')
+        message = "%c%c%c%c" % (4, 0, 2, 6)
         reply = self._send_and_read(message)
         return reply
 
