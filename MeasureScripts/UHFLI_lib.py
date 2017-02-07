@@ -555,13 +555,15 @@ def UHF_measure_demod(Num_of_TC = 3):
     sample_x = np.array(sample['x'])    # Converting samples to numpy arrays for faster calculation
     sample_y = np.array(sample['y'])    # Converting samples to numpy arrays for faster calculation
     sample_r = np.sqrt(sample_x**2 + sample_y**2)   # Calculating R value from X and y values
+    sample_fi = np.arctan2(sample_y,sample_x) * 180 / np.pi  # Calculating the angle value in degrees
     
     #print (len(sample_r))
     
-    sample_mean = np.mean(sample_r)  # Mean value of recorded data vector
+    sample_mean_r = np.mean(sample_r)  # Mean value of recorded data vector
+    sample_mean_fi = np.mean(sample_fi) 
     #measured_ac_conductance = sample_mean/out_ampl
   
-    return sample_mean
+    return sample_mean_r, sample_mean_fi
 
 
 

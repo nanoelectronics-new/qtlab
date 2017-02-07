@@ -276,6 +276,20 @@ class IVVI(Instrument):
         reply = self._send_and_read(message)
         return reply
 
+    def do_set_trigger(self):
+        '''
+        Sets the trigger; trigger is 1ms and around 4.2V
+
+        Input:
+            none
+        Output:
+            reply (string) : errormessage
+        '''
+        logging.debug('Trigger out')
+        message = "%c%c%c%c" % (4, 0, 2, 6)
+        reply = self._send_and_read(message)
+        return reply
+
     def _get_dacs(self):
         '''
         Reads from device and returns all dacvoltages in a list

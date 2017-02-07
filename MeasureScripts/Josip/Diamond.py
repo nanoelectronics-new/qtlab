@@ -1,4 +1,4 @@
-from numpy import pi, random, arange, size
+from numpy import pi, random, arange, size, linspace
 from time import time,sleep
 import datetime
 import convert_for_diamond_plot as cnv
@@ -43,7 +43,7 @@ for frek in frek_list:
                         }
     #VNA = qt.instruments.create('VNA','RS_ZNB20',address = 'TCPIP::10.21.41.148::hislip0::INSTR', init_dict_update = init_dict)
 
-    file_name = 'SAMPLE10_01-17_G24&18_Power_sweep_on_freq_%sMHz_'%(frek*1e-6)
+    file_name = 'SAMPLE10_01-17_G24&18_foffset_sweep_on_freq_%sMHz_'%(frek*1e-6)
 
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -54,10 +54,13 @@ for frek in frek_list:
 
 
 
-    PdBm = arange(-10,-30,-1)   # Power vector in dBm
-    Pvolt = 10**((PdBm-10)/20.0)  # Power vector converterd to Volts
+    #PdBm = arange(-15,-31,-1)   # Power vector in dBm
+    #Pvolt = 10**((PdBm-10)/20.0)  # Power vector converterd to Volts
 
-    v1_vec = Pvolt     #Power vector
+    foffset = linspace(1000000,-1000000, 20)
+
+    #v1_vec = Pvolt     #Power vector
+    v1_vec = foffset  # Readout frequency offset vector
     v2_vec = arange(-250,-300,-0.1)  #V_g 
 
 
@@ -76,6 +79,7 @@ for frek in frek_list:
 
     data = qt.Data(name=file_name + 'current')
     data_refl = qt.Data(name=file_name + 'reflection')
+    data_refl = qt.Data(name=file_name + 'refl_phase')
 
     # Now you provide the information of what data will be saved in the
     # datafile. A distinction is made between 'coordinates', and 'values'.
@@ -85,12 +89,16 @@ for frek in frek_list:
     # Adding coordinate and value info is optional, but recommended.
     # If you don't supply it, the data class will guess your data format.
     data.add_coordinate('V_G [mV]')
-    data.add_coordinate('UHFLI_Power [V]')
+    data.add_coordinate('UHFLI_frek [V]')
     data.add_value('Current [pA]')
 
     data_refl.add_coordinate('V_G [mV]')
-    data_refl.add_coordinate('UHFLI_Power [V]')
-    data_refl.add_value('Reflection [arb.u.]')
+    data_refl.add_coordinate('UHFLI_frek [V]')
+    data_refl.add_value('Reflection [V]')
+
+    data_phase.add_coordinate('V_G [mV]')
+    data_phase.add_coordinate('UHFLI_frek [V]')
+    data_phase.add_value('Refl_phase [deg]')
 
 
     # The next command will actually create the dirs and files, based
@@ -98,12 +106,14 @@ for frek in frek_list:
     # is created containing the current settings of all the instruments.
     data.create_file()
     data_refl.create_file()
+    data_phase.create_file()
 
     #data_path = data.get_dir()
 
     #saving directly in matrix format for diamond program
     new_mat_cur = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data  
-    new_mat_refl = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data  
+    new_mat_refl = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data 
+    new_mat_phase = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data  
 
     # Next two plot-objects are created. First argument is the data object
     # that needs to be plotted. To prevent new windows from popping up each
@@ -114,7 +124,8 @@ for frek in frek_list:
     plot3d = qt.Plot3D(data, name='measure3D_current3', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
     plot2d_refl = qt.Plot2D(data_refl, name='measure2D_reflection3',autoupdate=False)
     plot3d_refl = qt.Plot3D(data_refl, name='measure3D_reflection3', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-
+    plot2d_phase = qt.Plot2D(data_refl, name='measure2D_phase4',autoupdate=False)
+    plot3d_phase = qt.Plot3D(data_refl, name='measure3D_phase4', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
     # preparation is done, now start the measurement.
@@ -133,7 +144,12 @@ for frek in frek_list:
             start = time()
             # set the voltage
             #IVVI.set_dac5(v1)
-            daq.setDouble('/dev2210/sigouts/0/amplitudes/3', v1) 
+            #daq.setDouble('/dev2210/sigouts/0/amplitudes/3', v1) 
+            daq.setDouble('/dev2210/oscs/3/freq', v1)
+
+            time.sleep(0.2)  # Waiting for the stable amplitude
+            daq.setInt('/dev2210/sigins/0/autorange', 1)  # Autoset amplification
+            
 
             for j,v2 in enumerate(v2_vec):
 
@@ -143,6 +159,7 @@ for frek in frek_list:
                 # readout
                 result = dmm.get_readval()/gain*1e12
                 result_reflection = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin
+                result_phase
             
                 # save the data point to the file, this will automatically trigger
                 # the plot windows to update
