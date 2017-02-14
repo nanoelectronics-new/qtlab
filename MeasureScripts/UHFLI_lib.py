@@ -718,7 +718,8 @@ def UHF_measure_demod_multiple(Num_of_TC = 3):
 
     Returns:
 
-      sample_mean (list of floats): R (amplitude) calulated as mean value of recorded samples (default 1000) af all demods in the list demod_c 
+      result (list of lists of floats): each entry of the list corresponds to the radout of one deomodulator (0 - demod1, 1 - demod2,...)
+                                        this entry itself is a list with the first element (index 0) equal to R and second to phase
 
     Raises:
 
@@ -756,21 +757,23 @@ def UHF_measure_demod_multiple(Num_of_TC = 3):
     
     #assert path in data, "data dictionary has no key '%s'" % path
     # The data returned is a dictionary of dictionaries that reflects the node's path
-
-    return data
-
+    result = []
+    for dem in path:
     # The data returned is a dictionary of dictionaries that reflects the node's path
-    sample = data[path]
-    sample_x = np.array(sample['x'])    # Converting samples to numpy arrays for faster calculation
-    sample_y = np.array(sample['y'])    # Converting samples to numpy arrays for faster calculation
-    sample_r = np.sqrt(sample_x**2 + sample_y**2)   # Calculating R value from X and y values
-    
-    print (len(sample_r))
-    
-    sample_mean = np.mean(sample_r)  # Mean value of recorded data vector
+    # Since we have a list of paths, corresponding to read demodulators, we need to extract the data from each of them 
+        sample = data[dem]
+        sample_x = np.array(sample['x'])    # Converting samples to numpy arrays for faster calculation
+        sample_y = np.array(sample['y'])    # Converting samples to numpy arrays for faster calculation
+        mean_x = np.mean(sample_x)
+        mean_y = np.mean(sample_y)
+        mean_r = np.sqrt(mean_x**2 + mean_y**2)   # Calculating R value from X and y values
+        mean_fi = np.arctan2(mean_y,mean_x) * 180 / np.pi  # Calculating the angle value in degrees
+        result.append([mean_r,mean_fi])
+        
+      # Mean value of recorded data vector
     #measured_ac_conductance = sample_mean/out_ampl
   
-    return sample_mean
+    return result
 
 
 def UHF_measure_demod_trig(Num_of_TC = 3, trigger = 3, AWG_instr = None, record_time = 5):

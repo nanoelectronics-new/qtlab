@@ -11,7 +11,7 @@ import UHFLI_lib
 
 
 daq = UHFLI_lib.UHF_init_demod(demod_c = 3)
-frek_list = [167.24,185.34]
+frek_list = [167.24-0.0526]#,167.24+0.0526,185.34-0.26316,185.34+0.26316]
 
 
 
@@ -20,12 +20,15 @@ for frek in frek_list:
     frek = int(frek)
     daq.setInt('/dev2210/oscs/3/freq', frek)
 
+    sleep(0.2)  # Waiting for the stable amplitude
+    daq.setInt('/dev2210/sigins/0/autorange', 1)  # Autoset amplification
+
 
     #####################################################
     # here is where the actual measurement program starts
     #####################################################
     #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
-    #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
+    #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
     #dmm.set_NPLC = 1  # Setting PLCs of dmm
     init_dict = {'Address': 'TCPIP::10.21.41.103::hislip0::INSTR',
                          'Meas_param':'S21',
@@ -43,25 +46,28 @@ for frek in frek_list:
                         }
     #VNA = qt.instruments.create('VNA','RS_ZNB20',address = 'TCPIP::10.21.41.148::hislip0::INSTR', init_dict_update = init_dict)
 
-    file_name = 'SAMPLE10_01-17_G24&18_foffset_sweep_on_freq_%sMHz_'%(frek*1e-6)
+    file_name = 'GvsG_SAMPLE10_01-17_G24&18_Vsd_1,5mV_on_freq_%sMHz_'%(frek*1e-6) #SAMPLE10_01-17_G24&18_foffset_sweep_on_freq_%sMHz_'%(frek*1e-6)
 
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
     # you define two vectors of what you want to sweep. In this case
     # a magnetic field (b_vec) and a frequency (f_vec)
 
-    bias = 100
+    bias = -150
 
 
 
     #PdBm = arange(-15,-31,-1)   # Power vector in dBm
     #Pvolt = 10**((PdBm-10)/20.0)  # Power vector converterd to Volts
 
-    foffset = linspace(1000000,-1000000, 20)
+    #foffset = linspace(1000000,-1000000, 20)
 
     #v1_vec = Pvolt     #Power vector
-    v1_vec = foffset  # Readout frequency offset vector
-    v2_vec = arange(-250,-300,-0.1)  #V_g 
+    #v1_vec = foffset  # Readout frequency offset vector
+    #v2_vec = arange(-250,-300,-0.1)  #V_g 
+
+    v1_vec = arange(2791,4000,1)   #V_g2
+    v2_vec = arange(400,800,1)  #V_g1
 
 
 
@@ -79,7 +85,7 @@ for frek in frek_list:
 
     data = qt.Data(name=file_name + 'current')
     data_refl = qt.Data(name=file_name + 'reflection')
-    data_refl = qt.Data(name=file_name + 'refl_phase')
+    data_phase = qt.Data(name=file_name + 'refl_phase')
 
     # Now you provide the information of what data will be saved in the
     # datafile. A distinction is made between 'coordinates', and 'values'.
@@ -88,16 +94,16 @@ for frek in frek_list:
     # information is used later for plotting purposes.
     # Adding coordinate and value info is optional, but recommended.
     # If you don't supply it, the data class will guess your data format.
-    data.add_coordinate('V_G [mV]')
-    data.add_coordinate('UHFLI_frek [V]')
+    data.add_coordinate('V_{G1} [mV]')
+    data.add_coordinate('V_{G2} [mV]')
     data.add_value('Current [pA]')
 
-    data_refl.add_coordinate('V_G [mV]')
-    data_refl.add_coordinate('UHFLI_frek [V]')
+    data_refl.add_coordinate('V_{G1} [mV]')
+    data_refl.add_coordinate('V_{G2} [mV]')
     data_refl.add_value('Reflection [V]')
 
-    data_phase.add_coordinate('V_G [mV]')
-    data_phase.add_coordinate('UHFLI_frek [V]')
+    data_phase.add_coordinate('V_{G1} [mV]')
+    data_phase.add_coordinate('V_{G2} [mV]')
     data_phase.add_value('Refl_phase [deg]')
 
 
@@ -124,8 +130,8 @@ for frek in frek_list:
     plot3d = qt.Plot3D(data, name='measure3D_current3', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
     plot2d_refl = qt.Plot2D(data_refl, name='measure2D_reflection3',autoupdate=False)
     plot3d_refl = qt.Plot3D(data_refl, name='measure3D_reflection3', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-    plot2d_phase = qt.Plot2D(data_refl, name='measure2D_phase4',autoupdate=False)
-    plot3d_phase = qt.Plot3D(data_refl, name='measure3D_phase4', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    plot2d_phase = qt.Plot2D(data_phase, name='measure2D_phase4',autoupdate=False)
+    plot3d_phase = qt.Plot3D(data_phase, name='measure3D_phase4', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
     # preparation is done, now start the measurement.
@@ -145,30 +151,34 @@ for frek in frek_list:
             # set the voltage
             #IVVI.set_dac5(v1)
             #daq.setDouble('/dev2210/sigouts/0/amplitudes/3', v1) 
-            daq.setDouble('/dev2210/oscs/3/freq', v1)
+            #daq.setDouble('/dev2210/oscs/3/freq', frek+v1)
+            IVVI.set_dac5(v1)
 
-            time.sleep(0.2)  # Waiting for the stable amplitude
-            daq.setInt('/dev2210/sigins/0/autorange', 1)  # Autoset amplification
+            #sleep(0.2)  # Waiting for the stable amplitude
+            #daq.setInt('/dev2210/sigins/0/autorange', 1)  # Autoset amplification
             
 
             for j,v2 in enumerate(v2_vec):
 
-                IVVI.set_dac5(v2)
                 IVVI.set_dac6(v2)
+                
 
                 # readout
                 result = dmm.get_readval()/gain*1e12
-                result_reflection = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin
-                result_phase
+                result_refl = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin
+                result_phase = result_refl[1]  # Getting phase value form read tuple
+                result_reflection = result_refl[0]  # Getting amplitude value form read tuple
             
                 # save the data point to the file, this will automatically trigger
                 # the plot windows to update
                 data.add_data_point(v2,v1, result)  
                 data_refl.add_data_point(v2,v1, result_reflection)
+                data_phase.add_data_point(v2,v1, result_phase)
 
                 # Save to the matrix
                 new_mat_cur[j,i] = result
                 new_mat_refl[j,i] = result_reflection  
+                new_mat_phase[j,i] = result_phase 
 
                 # the next function is necessary to keep the gui responsive. It
                 # checks for instance if the 'stop' button is pushed. It also checks
@@ -176,6 +186,7 @@ for frek in frek_list:
                 qt.msleep(0.001)
             data.new_block()
             data_refl.new_block()
+            data_phase.new_block()
             stop = time()
             
 
@@ -183,6 +194,8 @@ for frek in frek_list:
             plot3d.update()
             plot2d_refl.update()
             plot3d_refl.update()
+            plot2d_phase.update()
+            plot3d_phase.update()
 
             vec_count = vec_count + 1
             print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
@@ -207,6 +220,13 @@ for frek in frek_list:
                 new_mat_refl = new_mat_refl[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
                 break
 
+        # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle) 
+        for i, el in enumerate(new_mat_phase[0]):     
+            all_zeros = not np.any(new_mat_phase[:,i])    # Finiding first column with all zeros
+            if all_zeros:
+                new_mat_phase = new_mat_phase[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
+                break
+
 
         # Saving the matrix to the matrix filedata.get_filepath
         np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat_cur, fmt='%1.4e', delimiter=' ', newline='\n')  
@@ -214,7 +234,12 @@ for frek in frek_list:
         # Saving the matrix to the matrix filedata.get_filepath
         np.savetxt(fname=data_refl.get_filepath() + "_matrix", X=new_mat_refl, fmt='%1.4e', delimiter=' ', newline='\n')  
 
-        # after the measurement ends, you need to close the data file.
+        # Saving the matrix to the matrix filedata.get_filepath
+        np.savetxt(fname=data_phase.get_filepath() + "_matrix", X=new_mat_phase, fmt='%1.4e', delimiter=' ', newline='\n')  
+
+        # after the measurement ends, you need to close the data files.
         data.close_file()
+        data_refl.close_file()
+        data_phase.close_file()
         # lastly tell the secondary processes (if any) that they are allowed to start again.
         qt.mend()

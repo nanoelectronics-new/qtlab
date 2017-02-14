@@ -18,17 +18,17 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = 'GvsG_SAMPLE10_01-17_G24&18_Vsd_1,5mV'
+file_name = 'GvsG_SAMPLE10_01-17_G24&18_Vsd_1mV'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
 
-bias = 150
+bias = 100
 
-v1_vec = arange(-300,-800,-0.5)   #V_g
-v2_vec = arange(-600,-800,-0.5)  #V_sd 
+v1_vec = arange(0,1500,1)   #V_g2
+v2_vec = arange(180,280,0.5)  #V_g1 
 
 
 
