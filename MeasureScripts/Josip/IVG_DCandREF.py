@@ -9,7 +9,7 @@ import UHFLI_lib
 #####################################################
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM3', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
-#UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
+daq = UHFLI_lib.UHF_init_demod_multiple(demod_c = [4])  # Initialize UHF LI
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -20,7 +20,7 @@ leak_test = False
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 # Sweeping vector
-v_vec = arange(0,-1200,-1)  ##''' !! Take care about step sign '''
+v_vec = arange(0,700,1)  ##''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -35,8 +35,8 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data_reflectometry = qt.Data(name='SAMPLE10_IVG_01-17_G24&18_reflection')  # Put one space before name
-data_current = qt.Data(name='SAMPLE10_IVG_01-17_G24&18_current')  # Put one space before name
+data_reflectometry = qt.Data(name='IVG_13-03_G06&12_reflection')  # Put one space before name
+data_current = qt.Data(name='IVG_13-03_G06&12_current')  # Put one space before name
 
 
 
@@ -93,9 +93,13 @@ for v in v_vec:
     # argument Num_of_TC represents number of time constants to wait before raeding the value
     # it is important because of the settling time of the low pass filter
     result_current = dmm.get_readval()/gain*1e12
-    result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin 
+    result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 3)  # Reading the lockin
+    result_refl = array(result_refl)
+    result_phase = sum(result_refl[:,1])  # Getting phase values from all three demodulators and summing them
+    #result_reflection = sum(result_refl[:,0]) # Getting amolitude values from all three demodulators and summing them
+    #result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin 
     # save the data point to the file
-    data_reflectometry.add_data_point(v, result_reflectometry) 
+    data_reflectometry.add_data_point(v, result_phase) 
     data_current.add_data_point(v, result_current) 
 
     if leak_test:

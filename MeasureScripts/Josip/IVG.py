@@ -17,7 +17,7 @@ from time import time,sleep
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = 200
+bias = -200
 gate = -1000
 
 leak_test = True
@@ -39,7 +39,9 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name='SAMPLE10_IVG_01-17_G18')
+#data = qt.Data(name='IV_19-17')
+data = qt.Data(name='IVG_13-03_G12')
+#data = qt.Data(name='test')
 
 
 # Now you provide the information of what data will be saved in the
@@ -63,7 +65,7 @@ data.create_file()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='Field1_2', autoupdate=False)
+plot2d = qt.Plot2D(data, name='plot23', autoupdate=False)
 plot2d.set_style('lines')
 
 
@@ -77,11 +79,11 @@ start = time()
 for v in v_vec:
     # set the voltage
     
+    #IVVI.set_dac5(v)
+    #IVVI.set_dac1(v)
     IVVI.set_dac6(v)
-    #IVVI.set_dac6(v)
     # readout
     result = dmm._ins.get_readval()/(gain)*1e12 # Remove Lockin gain if you are not measuring with it
-
     # save the data point to the file, this will automatically trigger
     # the plot windows to update
     data.add_data_point(v, result)

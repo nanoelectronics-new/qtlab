@@ -701,6 +701,7 @@ def UHF_init_demod_multiple(device_id = 'dev2210', demod_c = [0], out_c = 0):
     global TC
     TC = daq.getDouble('/%s/demods/%s/timeconstant' % (device, demod_c[0]))
 
+    return daq
 
 
 def UHF_measure_demod_multiple(Num_of_TC = 3):
