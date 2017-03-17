@@ -10,7 +10,7 @@ import UHFLI_lib
 
 
 
-daq = UHFLI_lib.UHF_init_demod_multiple(demod_c = [0,1,2,3,4,5,6])
+daq = UHFLI_lib.UHF_init_demod_multiple(demod_c = [0,1])
 frek_list = [167.24-0.0526]#,167.24+0.0526,185.34-0.26316,185.34+0.26316]
 
 
@@ -46,14 +46,14 @@ for frek in frek_list:
                         }
     #VNA = qt.instruments.create('VNA','RS_ZNB20',address = 'TCPIP::10.21.41.148::hislip0::INSTR', init_dict_update = init_dict)
 
-    file_name = 'GvsG_13-03_G06&12_on_multiple_freq_'#_%sMHz_'%(frek*1e-6) #SAMPLE10_01-17_G24&18_foffset_sweep_on_freq_%sMHz_'%(frek*1e-6)
+    file_name = 'GvsG_13-07_G24&18_on_multiple_freq_'#_%sMHz_'%(frek*1e-6) #SAMPLE10_01-17_G24&18_foffset_sweep_on_freq_%sMHz_'%(frek*1e-6)
 
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
     # you define two vectors of what you want to sweep. In this case
     # a magnetic field (b_vec) and a frequency (f_vec)
 
-    bias = 100
+    bias = -200
 
 
 
@@ -66,8 +66,8 @@ for frek in frek_list:
     #v1_vec = foffset  # Readout frequency offset vector
     #v2_vec = arange(-250,-300,-0.1)  #V_g 
 
-    v2_vec = arange(400,430,0.1)   #V_g2
-    v1_vec = arange(100,2000,0.1)  #V_g1
+    v2_vec = arange(1500,2500,2)   #V_g2
+    v1_vec = arange(0,3000,2)  #V_g1
 
 
 
@@ -94,16 +94,16 @@ for frek in frek_list:
     # information is used later for plotting purposes.
     # Adding coordinate and value info is optional, but recommended.
     # If you don't supply it, the data class will guess your data format.
-    data.add_coordinate('V_{G12} [mV]')
-    data.add_coordinate('V_{G06} [mV]')
+    data.add_coordinate('V_{G1} [mV]')
+    data.add_coordinate('V_{G2} [mV]')
     data.add_value('Current [pA]')
 
-    data_refl.add_coordinate('V_{G12} [mV]')
-    data_refl.add_coordinate('V_{G06} [mV]')
+    data_refl.add_coordinate('V_{G1} [mV]')
+    data_refl.add_coordinate('V_{G2} [mV]')
     data_refl.add_value('Reflection [V]')
 
-    data_phase.add_coordinate('V_{G12} [mV]')
-    data_phase.add_coordinate('V_{G06} [mV]')
+    data_phase.add_coordinate('V_{G1} [mV]')
+    data_phase.add_coordinate('V_{G2} [mV]')
     data_phase.add_value('Refl_phase [deg]')
 
 
