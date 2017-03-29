@@ -10,12 +10,12 @@ from time import time,sleep
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505177::INSTR')  # Initialize dmm
 #dmm.set_NPLC = 0.1  # Setting PLCs of dmm
 
-gain = 10e6 # hoose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e6 # hoose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 bias = 500
 
 # Sweeping vector
-v_vec = arange(-2000,2000,100)  #''' !! Take care about step sign '''
+v_vec = arange(0,-1000,-2)  #''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -30,7 +30,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data = qt.Data(name='IVG_11-08')  # Put one space before name
+data = qt.Data(name='Grenoble_IV22_8_10mV')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the
@@ -55,7 +55,7 @@ data.create_file()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='meas_1', autoupdate=False)
+plot2d = qt.Plot2D(data, name='meas_2', autoupdate=False)
 plot2d.set_style('lines')
 
 
@@ -66,7 +66,7 @@ start = time()
 try:
     for v in v_vec:
         # set the voltage
-        IVVI.set_dac5(v)
+        IVVI.set_dac1(v)
         #IVVI.set_dac6(v)
         #IVVI.set_dac7(v)
 

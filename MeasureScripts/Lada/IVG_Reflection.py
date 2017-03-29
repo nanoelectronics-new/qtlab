@@ -19,7 +19,7 @@ leak_test = True #decide how often the plot updates
 
 
 # Sweeping vector
-v_vec = arange(0,1000,0.5)  ##''' !! Take care about step sign '''
+v_vec = arange(-280,-700,-0.5)  ##''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -28,7 +28,7 @@ v_vec = arange(0,1000,0.5)  ##''' !! Take care about step sign '''
 qt.mstart()
 
 
-data_reflectometry = qt.Data(name='17-18 B=1T ivg sensor f=119,30MHz')  # Put one space before name
+data_reflectometry = qt.Data(name='24-21')  # Put one space before name
 #data_current = qt.Data(name='5-24 current vs sensor gate')  # Put one space before name
 
 

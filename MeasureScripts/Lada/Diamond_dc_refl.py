@@ -16,7 +16,7 @@ UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 #file_name = '5-24 gate vs gate, sensor jumping, bias=300uV reflectometry only, -40dB'
 
-gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 #bias = 300
 
@@ -24,8 +24,8 @@ gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 fo
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(-1800,-1400,0.5)     #V_g
-v2_vec = arange(-500,500,2)  #V_sd 
+v1_vec = arange(-590,-200,0.5)     #V_g
+v2_vec = arange(-500,500,10)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -40,9 +40,9 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data_refl = qt.Data(name='6-7 reflection B=0,5T f=237,20MHz 1kHz -35dBm') #just renamed
+data_refl = qt.Data(name='24-21 reflection var5 -7,5 90Hz -35dBm') #just renamed
 
-data_dc = qt.Data(name='6-7 dc B=0,5T') #added to have current recored as well
+data_dc = qt.Data(name='24-21 dc') #added to have current recored as well
 
 data_path_refl = data_refl.get_dir()
 data_path_dc = data_dc.get_dir()
@@ -108,6 +108,7 @@ for v1 in v1_vec:
 
         # readout
         result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
+        
         result_dc = dmm.get_readval()/gain*1e12
 
         data_refl.add_data_point(v2, v1, result_reflectometry) 
