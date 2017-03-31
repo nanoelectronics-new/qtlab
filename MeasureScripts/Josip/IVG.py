@@ -24,7 +24,7 @@ leak_test = True
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(0,4000,5)
+v_vec = arange(0,-2000,-1)
 
 
 
@@ -39,8 +39,8 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-#data = qt.Data(name='IV_13-07')
-data = qt.Data(name='IVG_13-07_G24&18')
+#data = qt.Data(name='IV_07-11')
+data = qt.Data(name='IVG_07-11_G08&09&10')
 #data = qt.Data(name='test')
 
 
@@ -65,13 +65,13 @@ data.create_file()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='p20', autoupdate=False)
+plot2d = qt.Plot2D(data, name='p30', autoupdate=False)
 plot2d.set_style('lines')
 
 
 # preparation is done, now start the measurement.
 
-IVVI.set_dac1(bias)
+#IVVI.set_dac1(bias)
 #IVVI.set_dac6(gate)
 
 # It is actually a simple loop.
@@ -79,9 +79,9 @@ start = time()
 for v in v_vec:
     # set the voltage
     
-    #IVVI.set_dac5(v)
-    IVVI.set_dac6(v)
-    #IVVI.set_dac1(v)
+    IVVI.set_dac5(v)
+    IVVI.set_dac7(v)
+    #IVVI.set_dac7(v)
     # readout
     result = dmm._ins.get_readval()/(gain)*1e12 # Remove Lockin gain if you are not measuring with it
     # save the data point to the file, this will automatically trigger
