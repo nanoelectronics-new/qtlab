@@ -569,7 +569,7 @@ def UHF_measure_demod(Num_of_TC = 3):
 
 
 
-def UHF_init_demod_multiple(device_id = 'dev2210', demod_c = [0], out_c = 0):
+def UHF_init_demod_multiple(device_id = 'dev2148', demod_c = [0], out_c = 0):
     
     """
     Connecting to the device specified by device_id and setting initial parameters through LabOne GUI

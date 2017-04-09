@@ -10,18 +10,21 @@ import UHFLI_lib
 
 
 
-daq = UHFLI_lib.UHF_init_demod_multiple(demod_c = [0,1])
-frek_list = [167.24-0.0526]#,167.24+0.0526,185.34-0.26316,185.34+0.26316]
+daq = UHFLI_lib.UHF_init_demod_multiple(demod_c = [3])
+#var_list = [0,-1000,-1250,-1500,-1750,-2000]#,167.24+0.0526,185.34-0.26316,185.34+0.26316]
+#frek_list = [271.83,273.37,281.87,286.79,290.40,292.91,150.31]
+var_list = [-1000,-2000,-1500]
+frek_list = [273.37,292.91,286.79]
 
 
 
-for frek in frek_list:
+index = 0
+for index,frek in enumerate(var_list):
     #frek = frek*1000000
     #frek = int(frek)
     #daq.setInt('/dev2210/oscs/3/freq', frek)
 
-    sleep(0.2)  # Waiting for the stable amplitude
-    daq.setInt('/dev2210/sigins/0/autorange', 1)  # Autoset amplification
+    
 
 
     #####################################################
@@ -46,9 +49,9 @@ for frek in frek_list:
                         }
     #VNA = qt.instruments.create('VNA','RS_ZNB20',address = 'TCPIP::10.21.41.148::hislip0::INSTR', init_dict_update = init_dict)
 
-    file_name = 'GvsG_13-07_G24&18_on_multiple_freq_'#_%sMHz_'%(frek*1e-6) #SAMPLE10_01-17_G24&18_foffset_sweep_on_freq_%sMHz_'%(frek*1e-6)
+    file_name = ' Diamond_GS_40mK_06-07_G08_LFfridge_IronWoman_L_220nH_var05_%smV_'%(frek*5) #SAMPLE10_01-17_G24&18_foffset_sweep_on_freq_%sMHz_'%(frek*1e-6)
 
-    gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+    gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
     # you define two vectors of what you want to sweep. In this case
     # a magnetic field (b_vec) and a frequency (f_vec)
@@ -66,8 +69,8 @@ for frek in frek_list:
     #v1_vec = foffset  # Readout frequency offset vector
     #v2_vec = arange(-250,-300,-0.1)  #V_g 
 
-    v2_vec = arange(1500,2500,2)   #V_g2
-    v1_vec = arange(0,3000,2)  #V_g1
+    v2_vec = arange(-300,300,1)   #V_sd
+    v1_vec = arange(-430,-460,-0.06)  #V_g
 
 
 
@@ -94,16 +97,16 @@ for frek in frek_list:
     # information is used later for plotting purposes.
     # Adding coordinate and value info is optional, but recommended.
     # If you don't supply it, the data class will guess your data format.
-    data.add_coordinate('V_{G1} [mV]')
-    data.add_coordinate('V_{G2} [mV]')
+    data.add_coordinate('V_{SD} [mV]')
+    data.add_coordinate('V_{G} [mV]')
     data.add_value('Current [pA]')
 
-    data_refl.add_coordinate('V_{G1} [mV]')
-    data_refl.add_coordinate('V_{G2} [mV]')
+    data_refl.add_coordinate('V_{SD [mV]')
+    data_refl.add_coordinate('V_{G} [mV]')
     data_refl.add_value('Reflection [V]')
 
-    data_phase.add_coordinate('V_{G1} [mV]')
-    data_phase.add_coordinate('V_{G2} [mV]')
+    data_phase.add_coordinate('V_{SD [mV]')
+    data_phase.add_coordinate('V_{G} [mV]')
     data_phase.add_value('Refl_phase [deg]')
 
 
@@ -143,7 +146,13 @@ for frek in frek_list:
 
 
     try:
-        IVVI.set_dac1(bias)
+        IVVI.set_dac6(0)   # First discharge varactor
+        sleep(10)
+        IVVI.set_dac6(frek)   # Setting varactor 5 voltage
+        daq.setDouble('/dev2148/oscs/0/freq',frek_list[index]*1e6)  # Setting the readout frequency on resonance
+        sleep(10)  # Waiting for varactor response
+        daq.setInt('/dev2148/sigins/0/autorange', 1)  # Autoset amplification
+        
         for i,v1 in enumerate(v1_vec):
             
             
@@ -160,7 +169,7 @@ for frek in frek_list:
 
             for j,v2 in enumerate(v2_vec):
 
-                IVVI.set_dac6(v2)
+                IVVI.set_dac1(v2)
                 
 
                 # readout
@@ -168,7 +177,7 @@ for frek in frek_list:
                 result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 3)  # Reading the lockin
                 result_refl = array(result_refl)
                 result_phase = sum(result_refl[:,1])  # Getting phase values from all three demodulators and summing them
-                result_reflection = sum(result_refl[:,0]) # Getting amolitude values from all three demodulators and summing them
+                result_reflection = sum(result_refl[:,0]) # Getting amplitude values from all three demodulators and summing them
             
                 # save the data point to the file, this will automatically trigger
                 # the plot windows to update

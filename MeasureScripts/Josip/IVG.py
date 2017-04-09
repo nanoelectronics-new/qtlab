@@ -14,64 +14,73 @@ from time import time,sleep
 
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM3', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
+#stop = 0
+#while True:
+    
+    #while True:  # Wait five minutes
+        #count_time = time()
+        #if abs(count_time - stop) > 300:
+            #break
 
-gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = -200
+gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+
+bias = 300
+
 gate = -1000
 
 leak_test = True
 
-# you define two vectors of what you want to sweep. In this case
-# a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(0,-2000,-1)
+            # you define two vectors of what you want to sweep. In this case
+            # a magnetic field (b_vec) and a frequency (f_vec)
+v_vec = arange(-500,0,1)
 
 
 
-# you indicate that a measurement is about to start and other
-# processes should stop (like batterycheckers, or temperature
-# monitors)
+            # you indicate that a measurement is about to start and other
+            # processes should stop (like batterycheckers, or temperature
+            # monitors)
 qt.mstart()
 
-# Next a new data object is made.
-# The file will be placed in the folder:
-# <datadir>/<datestamp>/<timestamp>_testmeasurement/
-# and will be called:
-# <timestamp>_testmeasurement.dat
-# to find out what 'datadir' is set to, type: qt.config.get('datadir')
-#data = qt.Data(name='IV_07-11')
-data = qt.Data(name='IVG_07-11_G08&09&10')
-#data = qt.Data(name='test')
+            # Next a new data object is made.
+            # The file will be placed in the folder:
+            # <datadir>/<datestamp>/<timestamp>_testmeasurement/
+            # and will be called:
+            # <timestamp>_testmeasurement.dat
+            # to find out what 'datadir' is set to, type: qt.config.get('datadir')
+            #data = qt.Data(name='IV_07-11')
+data = qt.Data(name=' IVG_GS_39mK_06-07_G08_current')
+            #data = qt.Data(name='test')
 
 
-# Now you provide the information of what data will be saved in the
-# datafile. A distinction is made between 'coordinates', and 'values'.
-# Coordinates are the parameters that you sweep, values are the
-# parameters that you readout (the result of an experiment). This
-# information is used later for plotting purposes.
-# Adding coordinate and value info is optional, but recommended.
-# If you don't supply it, the data class will guess your data format.
+            # Now you provide the information of what data will be saved in the
+            # datafile. A distinction is made between 'coordinates', and 'values'.
+            # Coordinates are the parameters that you sweep, values are the
+            # parameters that you readout (the result of an experiment). This
+            # information is used later for plotting purposes.
+            # Adding coordinate and value info is optional, but recommended.
+            # If you don't supply it, the data class will guess your data format.
 data.add_coordinate('Voltage [mV]')
 
 data.add_value('Current [pA]')
 
-# The next command will actually create the dirs and files, based
-# on the information provided above. Additionally a settingsfile
-# is created containing the current settings of all the instruments.
+            # The next command will actually create the dirs and files, based
+            # on the information provided above. Additionally a settingsfile
+            # is created containing the current settings of all the instruments.
 data.create_file()
 
-# Next two plot-objects are created. First argument is the data object
-# that needs to be plotted. To prevent new windows from popping up each
-# measurement a 'name' can be provided so that window can be reused.
-# If the 'name' doesn't already exists, a new window with that name
-# will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='p30', autoupdate=False)
+            # Next two plot-objects are created. First argument is the data object
+            # that needs to be plotted. To prevent new windows from popping up each
+            # measurement a 'name' can be provided so that window can be reused.
+            # If the 'name' doesn't already exists, a new window with that name
+            # will be created. For 3d plots, a plotting style is set.
+plot2d = qt.Plot2D(data, name='p6', autoupdate=False)
 plot2d.set_style('lines')
 
 
 # preparation is done, now start the measurement.
 
-#IVVI.set_dac1(bias)
+IVVI.set_dac1(bias)
 #IVVI.set_dac6(gate)
 
 # It is actually a simple loop.
@@ -80,7 +89,7 @@ for v in v_vec:
     # set the voltage
     
     IVVI.set_dac5(v)
-    IVVI.set_dac7(v)
+    #IVVI.set_dac7(v)
     #IVVI.set_dac7(v)
     # readout
     result = dmm._ins.get_readval()/(gain)*1e12 # Remove Lockin gain if you are not measuring with it
