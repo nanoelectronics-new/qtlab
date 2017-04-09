@@ -18,7 +18,7 @@ import convert_for_diamond_plot as cnv
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = '5-24 By=2T g vs g current'
+file_name = 'Testing_bias_influence_on_varactor_Guitar_recall'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -28,8 +28,8 @@ bias =0
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(1600,1660,0.1)     #V_g
-v2_vec = arange(3190,3170,-0.1)  #V_sd 
+v1_vec = arange(0,1000,1)    #V_g
+v2_vec = arange(-1000,1000,1)  #V_sd 
 
 
 
@@ -44,7 +44,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name=file_name)
+#data = qt.Data(name=file_name)
 
 # Now you provide the information of what data will be saved in the
 # datafile. A distinction is made between 'coordinates', and 'values'.
@@ -53,31 +53,31 @@ data = qt.Data(name=file_name)
 # information is used later for plotting purposes.
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
-data.add_coordinate('V_{G} (sensor) [mV]')  #v2
-data.add_coordinate('V_G (dot) [mV]')   #v1
-data.add_value('Current [pA]')
+#data.add_coordinate('V_{G} (sensor) [mV]')  #v2
+#data.add_coordinate('V_G (dot) [mV]')   #v1
+#data.add_value('Current [pA]')
 
 # The next command will actually create the dirs and files, based
 # on the information provided above. Additionally a settingsfile
 # is created containing the current settings of all the instruments.
-data.create_file()
+#data.create_file()
 
-data_path = data.get_dir()
+#data_path = data.get_dir()
 
 # Next two plot-objects are created. First argument is the data object
 # that needs to be plotted. To prevent new windows from popping up each
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-plot3d = qt.Plot3D(data, name='plot3', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+#plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
+#plot3d = qt.Plot3D(data, name='plot3', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
 # preparation is done, now start the measurement.
 # It is actually a simple loop.
 
-IVVI.set_dac1(bias)
+#IVVI.set_dac1(bias)
 
 init_start = time()
 vec_count = 0
@@ -88,30 +88,30 @@ for v1 in v1_vec:
     
     start = time()
     # set the voltage
-    IVVI.set_dac7(v1)
+    #IVVI.set_dac7(v1)
 
 
     for v2 in v2_vec:
 
-        IVVI.set_dac5(v2)
+        IVVI.set_dac1(v2)
 
         # readout
-        result = dmm.get_readval()/gain*1e12
+        #result = dmm.get_readval()/gain*1e12
     
         # save the data point to the file, this will automatically trigger
         # the plot windows to update
-        data.add_data_point(v2,v1, result)  
+        #data.add_data_point(v2,v1, result)  
         # the next function is necessary to keep the gui responsive. It
         # checks for instance if the 'stop' button is pushed. It also checks
         # if the plots need updating.
         qt.msleep(0.001)
-    data.new_block()
+    #data.new_block()
     stop = time()
     
 
-    plot2d.update()
+    #plot2d.update()
 
-    plot3d.update()
+    #plot3d.update()
 
     vec_count = vec_count + 1
     print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
@@ -125,6 +125,6 @@ print 'Overall duration: %s sec' % (stop - init_start, )
 #cnv.convert_to_matrix_file(fname = file_name, path = data_path)
 
 # after the measurement ends, you need to close the data file.
-data.close_file()
+#data.close_file()
 # lastly tell the secondary processes (if any) that they are allowed to start again.
 qt.mend()
