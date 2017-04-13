@@ -19,7 +19,7 @@ import data
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 
-file_name = 'diamond 24-21 f=45,5MHz -25dBm 90Hz, 4K, var5 -7,5V'
+file_name = 'diamond 24-23 f=128,5MHz -35dBm 10Hz,var5 -10V var15 -2,5V'
 
 #gain = 10e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -29,7 +29,7 @@ file_name = 'diamond 24-21 f=45,5MHz -25dBm 90Hz, 4K, var5 -7,5V'
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(-500,-280,0.5)     #V_g
+v1_vec = arange(710,-500,-0.5)     #V_g
 v2_vec = arange(-500,500,10)  #V_sd 
 
 
@@ -74,7 +74,7 @@ new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for stori
 # will be created. For 3d plots, a plotting style is set.
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
 
-plot3d = qt.Plot3D(data, name='diamond6', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot3d = qt.Plot3D(data, name='diamond7', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
@@ -92,7 +92,7 @@ try:
         
         start = time()
         # set the voltage
-        IVVI.set_dac5(v1)
+        IVVI.set_dac6(v1)
 
 
         for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING

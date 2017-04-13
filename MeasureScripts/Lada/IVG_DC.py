@@ -13,7 +13,7 @@ from time import time,sleep
 #####################################################
 
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)
-#dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505177::INSTR')
+#dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505188::INSTR')
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -22,11 +22,11 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 
 
 
-leak_test = False 
+leak_test = False
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(-4000,0,2)
-#v_vec = arange(-300,300,0.06)
+v_vec = arange(2000,00,-2)
+#v_vec = arange(-300,30,0.06)
 
 
 # you indicate that a measurement is about to start and other
@@ -40,7 +40,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name='GS 30mK 18-16 G20 IVG')
+data = qt.Data(name='40mK 18-17 ivg sensor 5VpV')
 
 
 # Now you provide the information of what data will be saved in the
@@ -64,7 +64,7 @@ data.create_file()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='plot15', autoupdate=False)
+plot2d = qt.Plot2D(data, name='plot20', autoupdate=False)
 plot2d.set_style('lines')
 
 
@@ -77,7 +77,7 @@ start = time()
 for v in v_vec:
     # set the voltage
 
-    IVVI.set_dac9(v)
+    IVVI.set_dac6(v)
     # readout
     result = dmm.get_readval()/(gain)*1e12 # Remove Lockin gain if you are not measuring with it
 
