@@ -11,16 +11,16 @@ import UHFLI_lib
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 daq = UHFLI_lib.UHF_init_demod_multiple(demod_c = [3])  # Initialize UHF LI
 
-gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = 300
+bias = 500
 
 leak_test = True
 
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 # Sweeping vector
-v_vec = arange(0,-500,-2)  ##''' !! Take care about step sign '''
+v_vec = arange(0,-305,-0.4)  ##''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -35,9 +35,9 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data_refl_mag = qt.Data(name=' IVG_GS_39mK_06-07_G08_refl_mag')  # Put one space before name
-data_refl_ph = qt.Data(name=' IVG_GS_39mK_06-07_G08_refl_ph')  # Put one space before name
-data_current = qt.Data(name=' IVG_GS_39mK_06-07_G08_current')  # Put one space before name
+data_refl_mag = qt.Data(name=' IVG_23-03_G24(dac6)_refl_mag')  # Put one space before name
+data_refl_ph = qt.Data(name=' IVG_23-03_G24(dac6)_refl_ph')  # Put one space before name
+data_current = qt.Data(name=' IVG_23-03_G24(dac6)_current')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the
@@ -96,7 +96,7 @@ try:
     for v in v_vec:
         # set the voltage
         IVVI.set_dac5(v)
-        #IVVI.set_dac6(v)
+        IVVI.set_dac6(v)
 
         # readout form UHFLI
         # argument Num_of_TC represents number of time constants to wait before raeding the value
@@ -104,6 +104,9 @@ try:
         result_current = dmm.get_readval()/gain*1e12
         result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 3)  # Reading the lockin
         result_refl = array(result_refl)
+
+        #result_ph = sum(result_refl[:,1])  # Getting phase values from all three demodulators and summing them
+        #result_mag = sum(result_refl[:,0]) # Getting amolitude values from all three demodulators and summing them
         result_ph = sum(result_refl[:,1])  # Getting phase values from all three demodulators and summing them
         result_mag = sum(result_refl[:,0]) # Getting amolitude values from all three demodulators and summing them
      
