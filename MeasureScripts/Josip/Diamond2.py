@@ -18,17 +18,17 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = 'GvsG_07-11_G08&09&10'
+file_name = 'GvsG_11-13_G12-18'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
 
-bias = 100
+bias = 200
 
-v1_vec = arange(-1600,0,1)   #V_g2
-v2_vec = arange(-1600,0,1)  #V_g1 
+v1_vec = arange(0,200,0.1)   #V_g2
+v2_vec = arange(100,120,0.1)  #V_g1 
 
 
 
@@ -52,8 +52,8 @@ data = qt.Data(name=file_name)
 # information is used later for plotting purposes.
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
-data.add_coordinate('V_{g10} [mV]')
-data.add_coordinate('V_{g05} [mV]')
+data.add_coordinate('V_{G24} [mV]')
+data.add_coordinate('V_{G06} [mV]')
 data.add_value('Current [pA]')
 
 # The next command will actually create the dirs and files, based
@@ -84,7 +84,7 @@ vec_count = 0
 
 
 try:
-    #IVVI.set_dac1(bias)
+    IVVI.set_dac1(bias)
     for i,v1 in enumerate(v1_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
         
         
@@ -101,7 +101,7 @@ try:
         
         for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
 
-            IVVI.set_dac7(v2)
+            IVVI.set_dac6(v2)
 
             # readout
             result = dmm.get_readval()/gain*1e12
