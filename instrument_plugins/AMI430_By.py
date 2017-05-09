@@ -24,7 +24,7 @@ import time
 from math import *
 from numpy import *
 
-class AMI430(Instrument):
+class AMI430_By(Instrument):
     
     #Global parameters
     #Important:
@@ -33,17 +33,17 @@ class AMI430(Instrument):
     MARGIN = 0.0001
     
     #ratio between current and magnetic field
-    COILCONSTANT = 0.1084       #T/A              #0.0510 for Bx            #0.09279 for the center fridge
+    COILCONSTANT = 0.0358       #T/A              #0.09279 for the center fridge
     
     #Rated operating current in A, from spec sheet. A margin of 0.03A is added so that the rated fields fit in.
     #If the magnet quenches regularly, reduce these values!!!!
-    CURRENTRATING = 80      #A            # 78 for Bx
+    CURRENTRATING = 63      #A            #
     
     #Rated magnetic field based on the two previous values
     FIELDRATING = COILCONSTANT*CURRENTRATING    #mT
     
     #Maximum ramp limits from datasheet
-    CURRENTRAMPLIMIT = 0.038     #A/s    0.0025 for Bx
+    CURRENTRAMPLIMIT = 0.024     #A/s   
     FIELDRAMPLIMIT=COILCONSTANT*CURRENTRAMPLIMIT   #T/s
     
     #Persistent switch rated currents. 
@@ -58,13 +58,14 @@ class AMI430(Instrument):
     #buffersize for socket
     BUFSIZE=1024    
     
-    def __init__(self, name, address='10.21.64.152', port=7180):
+    def __init__(self, name, address='10.21.64.175', port=7180):
+        
         Instrument.__init__(self, name, tags=['measure'])
         
         #self.add_parameter('pSwitch', type=types.BooleanType,
         #        flags=Instrument.FLAG_GETSET,
         #        format_map={False:'off',True:'on'})
-                
+				
         self.add_parameter('current', type=types.FloatType,
                 flags=Instrument.FLAG_SET,
                 units='A',
@@ -74,7 +75,7 @@ class AMI430(Instrument):
                 flags=Instrument.FLAG_GET,
                 units='A',
                 format='%.4f')
-                
+				
         self.add_parameter('field', type=types.FloatType,
                 flags=Instrument.FLAG_SET,
                 units='T',
@@ -87,10 +88,10 @@ class AMI430(Instrument):
 
         self.add_parameter('units', type=types.FloatType,
                 flags=Instrument.FLAG_GETSET,
-                format_map={0:'kG',1:'T'})          
+                format_map={0:'kG',1:'T'})			
 
 
-                
+				
         self.add_parameter('setPoint', type=types.FloatType,
                 flags=Instrument.FLAG_GET,
                 units='T',
@@ -143,14 +144,14 @@ class AMI430(Instrument):
     
     def get_all(self):                                                   ### Run this command after interupted the measurements.
         self.get_field_get()
-        self.get_current_get()      
+        self.get_current_get()		
         self.get_rampState()
         #self.get_pSwitch()
         self.get_rampRate_get_T_s()
         #self.get_persistent()
         self.get_quench()
         self.get_setPoint()
-        self.get_units()        
+        self.get_units()		
         
     #Low level functions to handle communication
     #should not be used directly
@@ -282,15 +283,15 @@ class AMI430(Instrument):
         self._send('CONF:FIELD:TARG %0.5f ;'%value)  ### the unit
         self.setRamp() 
         if wait:
-            while math.fabs(value - self.get_field()) > self.MARGIN:
+            while math.fabs(value - self.get_field_get()) > self.MARGIN:
                 time.sleep(0.050)
 
-        return True     
+        return True		
 
     def do_get_current_get(self):                              
         self.get_rampState()                             ### update rampstate as well
-        return float(self._ask('CURR:MAG?\n'))          
-        
+        return float(self._ask('CURR:MAG?\n'))    		
+		
     def do_set_current(self,value):                              ### Set current %0.5f
         self.setPause()
         self._send('CONF:CURR:TARG %0.5f ;'%value)
@@ -299,11 +300,11 @@ class AMI430(Instrument):
     ### Note: get_field always returns actual field, for reading setpoint, see get_setPoint
 
     def do_set_units(self,value):
-            self._send('CONF:FIELD:UNITS %d\n'%value)   
+            self._send('CONF:FIELD:UNITS %d\n'%value)	
 
     def do_get_units(self):
-            self._send(self._ask('FIELD:UNITS?\n'))         
-    
+            self._send(self._ask('FIELD:UNITS?\n'))	    	
+	
     def rampTo(self,value):
         if self._set_magnet_for_ramping() and value <= self.get_parameter_options('field')['maxval'] and value >= self.get_parameter_options('field')['minval']:
             self.setPause()
@@ -379,5 +380,4 @@ class AMI430(Instrument):
                     
                     
     def do_get_error(self):
-        return self._ask('SYST:ERR?\n').rstrip() 
-       
+        return self._ask('SYST:ERR?\n').rstrip()
