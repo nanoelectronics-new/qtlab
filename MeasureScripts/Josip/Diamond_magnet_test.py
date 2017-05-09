@@ -116,7 +116,8 @@ try:
         magnetZ.set_field(BZ_vector[i])
         magnetY.set_field(BY_vector[i])  
 
-        qt.msleep(ramp_time)
+        while math.fabs(BY_vector[i] - magnetY.get_field_get()) > self.MARGIN:
+            qt.msleep(0.050)
 
 
 

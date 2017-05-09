@@ -281,9 +281,9 @@ class AMI430_Bz(Instrument):
         self.setPause()
         self._send('CONF:FIELD:TARG %0.5f ;'%value)  ### the unit
         self.setRamp() 
-        if wait:
-            while math.fabs(value - self.get_field_get()) > self.MARGIN:
-                time.sleep(0.050)
+        #if wait:
+            #while math.fabs(value - self.get_field_get()) > self.MARGIN:
+                #time.sleep(0.050)
 
         return True     
 
