@@ -16,8 +16,8 @@ import convert_for_diamond_plot as cnv
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
-magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.185')
-magnetY = qt.instruments.create('magnetY', 'AMI430_By', address='10.21.64.175')
+#magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.185')
+#magnetY = qt.instruments.create('magnetY', 'AMI430_By', address='10.21.64.175')
 
 
 file_name = 'Magnet_sweep_test'
@@ -33,8 +33,11 @@ ramp_rate_Y = 0.0001 #T/s
 
 step_size_BZ = 1e-3 
 step_size_BY = 0.5e-3 
-BZ_vector = arange(0e-3,10e-3,step_size_BZ) #T  # Those two vectors need to be the same left
-BY_vector = arange(0e-3,5e-3,step_size_BY) #T  #
+BZ_vector = arange(0e-3,10e-3+step_size_BZ,step_size_BZ) #T  # Those two vectors need to be the same left
+BY_vector = arange(0e-3,5e-3+step_size_BY,step_size_BY) #T  #
+
+if len(BZ_vector) != len(BY_vector):
+    raise Exception ("B vectors have different length")
 
 ramp_time = max((float(step_size_BY)/ramp_rate_Y),float(step_size_BZ)/ramp_rate_Z)
 ramp_time = 1.1*ramp_time
@@ -48,7 +51,7 @@ gain_Lockin = 1 # Conversion factor for the Lockin
 
 
 v1_vec = arange(-500,-200,-1)     #V_g
-v2_vec = arange(-500,500,10)  #V_sd 
+v2_vec = arange(1e9,10e9,1e9)  #V_sd 
 
 
 
@@ -75,9 +78,9 @@ data = qt.Data(name=file_name)
 # information is used later for plotting purposes.
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
-data.add_coordinate('V_{sd} [mV]')  #v2
-data.add_coordinate('Bz [mV]')   #v1
-data.add_value('nothing')
+data.add_coordinate('Frequency [Hz]')  #v2
+data.add_coordinate('Bfield [T]')   #v1
+data.add_value('Current [pA]')
 
 # The next command will actually create the dirs and files, based
 # on the information provided above. Additionally a settingsfile
@@ -116,7 +119,9 @@ try:
         magnetZ.set_field(BZ_vector[i])
         magnetY.set_field(BY_vector[i])  
 
-        while math.fabs(BY_vector[i] - magnetY.get_field_get()) > self.MARGIN:
+        total_field = np.sqrt(BZ_vector[i]**2 + BY_vector[i]**2)
+
+        while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:
             qt.msleep(0.050)
 
 
@@ -134,7 +139,7 @@ try:
             # Save to the matrix
             #new_mat[j,i] = result   # ADD THIS LINE FOR MATRIX FILE SAVING
 
-            data.add_data_point(v2, v1, 10) 
+            data.add_data_point(v2, total_field, 10) 
             qt.msleep(0.001)
             # save the data point to the file, this will automatically trigger
             # the plot windows to update

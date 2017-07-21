@@ -533,7 +533,7 @@ def UHF_measure_demod(Num_of_TC = 3):
     daq.sync()  # Getting rid of previous read data in the buffer
 
     data = daq.poll(poll_length, poll_timeout, poll_flags, poll_return_flat_dict)  # Readout from subscribed node (demodulator)
-
+    return data
     #END OF MEASURE
 
     # Check the dictionary returned is non-empty

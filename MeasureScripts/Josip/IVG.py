@@ -23,9 +23,9 @@ from time import time,sleep
             #break
 
 
-gain = 1e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = 1000
+bias = 100
 
 gate = -1000
 
@@ -33,7 +33,7 @@ leak_test = True
 
             # you define two vectors of what you want to sweep. In this case
             # a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(0,-2000,-2)
+v_vec = arange(0,-2000,-1)
 
 
 
