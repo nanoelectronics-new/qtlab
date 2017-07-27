@@ -1,41 +1,24 @@
 from numpy import pi, random, arange, size
 from time import time,sleep
-import datetime
-import convert_for_diamond_plot as cnv
-
-#####################################################
-# added automatic conversion to matrix file
-#####################################################
-
 
 
 
 #####################################################
-# here is where the actual measurement program starts
+# EXAMPLE SCRIPT SHOWING HOW TO SET UP STANDARD 1D (IV) DMM MEASUREMENT
 #####################################################
-#IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
-#dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
-#dmm.set_NPLC = 1  # Setting PLCs of dmm
-
-
-file_name = ' Diamond_13-10_G08_zoom_fast'
-
-gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
-
-#bias =0
-
-
-#gain_Lockin = 1 # Conversion factor for the Lockin
-
-
-v1_vec = arange(0,950,0.2)     #V_g
-v2_vec = arange(92,-8,-0.5)  #V_sd 
+#IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)  # Initialize IVVI
+#dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505188::INSTR')  # Initialize dmm
+#dmm.set_NPLC = 0.1  # Setting PLCs of dmm
+file_name = 'test'
+gain = 1e9 # choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 
 
-# you indicate that a measurement is about to start and other
-# processes should stop (like batterycheckers, or temperature
-# monitors)
+
+v1_vec = arange(-200,200,50) #V_sd
+v2_vec = arange(-50,50,2)   #V_g
+
+
 qt.mstart()
 
 
@@ -45,8 +28,8 @@ data = qt.Data(name=file_name)
 new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data   - ADD THIS LINE FOR MATRIX FILE SAVING, PUT APPROPRIATE VECTOR NAMES
 
 
-data.add_coordinate('V_{SD} [mV]')  #v2
-data.add_coordinate('V_{G} [mV]')   #v1
+data.add_coordinate('V_{G} [mV]')  #v2
+data.add_coordinate('V_{SD} [mV]')   #v1
 data.add_value('Current [pA]')
 
 
@@ -61,24 +44,42 @@ plot3d = qt.Plot3D(data, name='measure3D_2', coorddims=(1,0), valdim=2, style='i
 
 
 
-#IVVI.set_dac1(bias)
-
-init_start = time()
-vec_count = 0
-
 
 try:
+    step = abs(v2_vec[0]) - abs(v2_vec[1])
     for i,v1 in enumerate(v1_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
+
+        if IVVI.get_dac5() > (v2_vec[0] + step):
+            a = IVVI.get_dac5()
+            b = v2_vec[0] + step
+            c = abs(step)*(-1)
+            v_zero = arange(a,b,c)
+        
+        if IVVI.get_dac5() < (v2_vec[0] - step):
+            a = IVVI.get_dac5()
+            b = v2_vec[0] - step
+            c = abs(step)
+            v_zero = arange(a,b,c)
+    
+        for i in v_zero:         #Sweep to the starting value
+            IVVI.set_dac5(i)
+            result = dmm.get_readval()/(gain)*1e12
+            qt.msleep(0.1)
+
+
+        
+
+        print ("swept smoothly :-) b b")
         
         
         start = time()
-        # set the voltage
-        IVVI.set_dac5(v1)
+        # set the bias
+        IVVI.set_dac1(v1)
 
 
         for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
 
-            IVVI.set_dac1(v2)
+            IVVI.set_dac5(v2)
 
             # readout
             result = dmm.get_readval()/gain*1e12
@@ -87,7 +88,7 @@ try:
             new_mat[j,i] = result   # ADD THIS LINE FOR MATRIX FILE SAVING
 
             data.add_data_point(v2, v1, result) 
-            qt.msleep(0.005)
+            qt.msleep(0.001)
        
         data.new_block()
         stop = time()

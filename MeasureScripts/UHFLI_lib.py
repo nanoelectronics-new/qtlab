@@ -166,8 +166,7 @@ def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
     if bool(data[0]) == False:  # If no data is returned
         print("NO DATA RETURNED!")
         return (0,0)
-        
-    56
+
     # HANDLING THE DATA: 
     shots = list() 
     for i in xrange(len(data)):
@@ -539,7 +538,7 @@ def UHF_measure_demod(Num_of_TC = 3):
     daq.sync()  # Getting rid of previous read data in the buffer
 
     data = daq.poll(poll_length, poll_timeout, poll_flags, poll_return_flat_dict)  # Readout from subscribed node (demodulator)
-    return data
+
     #END OF MEASURE
 
     # Check the dictionary returned is non-empty

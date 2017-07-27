@@ -21,11 +21,11 @@ gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 #bias = 300
 
 
-gain_Lockin = 1 # Conversion factor for the Lockin
+#gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(-400,-550,-0.2)     #V_g
-v2_vec = arange(-500,500,2)  #V_sd 
+v1_vec = arange(400,-400,-0.125)     #V_g
+v2_vec = arange(-250,250,2)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -40,9 +40,9 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data_refl = qt.Data(name=' Diamond_GS_45mK_08-19_G20_L_470nH_var13_0V') #just renamed
+data_refl = qt.Data(name='Diamond_12-11_G23_refl') #just renamed
 
-data_dc = qt.Data(name=' Diamond_GS_45mK_08-19_G20') #added to have current recored as well
+data_dc = qt.Data(name='Diamond_12-11_G23') #added to have current recored as well
 
 data_path_refl = data_refl.get_dir()
 data_path_dc = data_dc.get_dir()
