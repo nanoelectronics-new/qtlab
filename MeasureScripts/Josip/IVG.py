@@ -12,12 +12,12 @@ from time import time,sleep
 
 gain = 1e8 # choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = 80
+bias = 36.7
 
 # Sweeping vector
-start = 677.00
-stop = 600.0
-step = -0.5
+start = 679.90
+stop = 580
+step = -0.1
 v_vec = arange(start,stop,step)  #''' !! Take care about step sign '''
 
 #mult_factor = 5
@@ -27,7 +27,7 @@ v_vec = arange(start,stop,step)  #''' !! Take care about step sign '''
 qt.mstart()
 
 
-name = " IVG_13-10_G08_back"
+name = " IVG_13-10_G08_367uV_3_back"
 
 
 data = qt.Data(name=name)  # Put one space before name

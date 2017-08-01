@@ -18,7 +18,7 @@ import convert_for_diamond_plot as cnv
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = ' Diamond_13-10_G08_Vsd_englared'
+file_name = ' test_new_matrix_saving'
 
 gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -28,8 +28,8 @@ gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 #gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(600.0,1000,0.06)     #V_g
-v2_vec = arange(150,-150,-1)  #V_sd 
+v1_vec = np.array([5,10,15])     #V_g
+v2_vec = arange(150,-150,-20)  #V_sd 
 
 
 
@@ -41,8 +41,9 @@ qt.mstart()
 
 data = qt.Data(name=file_name)
 
-#saving directly in matrix format for diamond program
-new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data   - ADD THIS LINE FOR MATRIX FILE SAVING, PUT APPROPRIATE VECTOR NAMES
+
+data_temp = np.zeros((len(v2_vec)))
+new_mat = np.zeros((len(v2_vec)))
 
 
 data.add_coordinate('V_{SD} [mV]')  #v2
@@ -73,29 +74,40 @@ try:
         
         start = time()
         # set the voltage
-        IVVI.set_dac5(v1)
+        #IVVI.set_dac5(v1)
+        
 
 
         for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
 
-            IVVI.set_dac1(v2)
+            #IVVI.set_dac1(v2)
 
             # readout
-            result = dmm.get_readval()/gain*1e12
+            result = i#dmm.get_readval()/gain*1e12
+
 
             # Save to the matrix
-            new_mat[j,i] = result   # ADD THIS LINE FOR MATRIX FILE SAVING
+            data_temp[j] = result
 
             data.add_data_point(v2, v1, result) 
             qt.msleep(0.005)
        
         data.new_block()
         stop = time()
+
         
+        new_mat = np.column_stack((new_mat, data_temp))
+        if not(i):
+            new_mat = new_mat[:,1:]
+        
+
 
         plot2d.update()
 
         plot3d.update()
+
+        # Saving the matrix to the matrix filedata.get_filepath
+        np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
 
         vec_count = vec_count + 1
         print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
@@ -105,20 +117,6 @@ try:
     print 'Overall duration: %s sec' % (stop - init_start, )
 
 finally:
-
-    # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)  # ADD THIS BLOCK FOR MATRIX FILE SAVING
-    for i, el in enumerate(new_mat[0]):     
-        all_zeros = not np.any(new_mat[:,i])    # Finiding first column with all zeros
-        if all_zeros:
-            new_mat = new_mat[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
-            break
-
-    # Saving the matrix to the matrix filedata.get_filepath
-    np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
-
-
-    
-
 
     # after the measurement ends, you need to close the data file.
     data.close_file()

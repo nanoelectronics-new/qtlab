@@ -63,8 +63,10 @@ data_path_refl = data_refl.get_dir()
 data_path_dc = data_dc.get_dir()
 
 #saving directly in matrix format for diamond program
-new_mat_r = np.zeros((len(v2_vec), len(BY_vector))) # Creating empty matrix for storing all data   - ADD THIS LINE FOR MATRIX FILE SAVING, PUT APPROPRIATE VECTOR NAMES
-new_mat_dc = np.zeros((len(v2_vec), len(BY_vector))) # Creating empty matrix for storing all data   - ADD THIS LINE FOR MATRIX FILE SAVING, PUT APPROPRIATE VECTOR NAMES
+data_temp_r = np.zeros((len(v2_vec)))
+new_mat_r = np.zeros((len(v2_vec))) 
+data_temp_dc = np.zeros((len(v2_vec)))
+new_mat_dc = np.zeros((len(v2_vec))) 
 
 
 
@@ -124,11 +126,12 @@ try:
             # readout
             result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)/gain*1e12  # Reading the lockin and correcting for M1b gain
 
-            new_mat_r[j,i] = result_reflectometry #for saving as matrix
+            data_temp_r[j] = result_reflectometry
+
             
             result_dc = dmm.get_readval()/gain*1e12
 
-            new_mat_dc[j,i] = result_dc #for saving as matrix
+            data_temp_dc[j] = result_dc #for saving as matrix
 
             data_refl.add_data_point(v2/div_factor, v1, result_reflectometry) 
             data_dc.add_data_point(v2/div_factor, v1, result_dc) 
@@ -138,6 +141,13 @@ try:
         data_dc.new_block()
 
         stop = time()
+
+        new_mat_r = np.column_stack((new_mat_r, data_temp_r))
+        new_mat_dc = np.column_stack((new_mat_dc, data_temp_dc))
+        if not(i): # Kicking out the first column filled with zeros
+            new_mat_r = new_mat_r[:,1:]
+            new_mat_dc = new_mat_dc[:,1:]
+
         
 
         plot2d_refl.update()
@@ -145,6 +155,12 @@ try:
 
         plot2d_dc.update()
         plot3d_dc.update() 
+
+        # Saving the matrix to the matrix filedata.get_filepath
+        np.savetxt(fname=data_refl.get_filepath() + "_matrix", X=new_mat_r, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
+    
+        # Saving the matrix to the matrix filedata.get_filepath
+        np.savetxt(fname=data_dc.get_filepath() + "_matrix", X=new_mat_dc, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
 
         vec_count = vec_count + 1
         print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(BY_vector.size - vec_count))))
@@ -156,24 +172,8 @@ try:
    
 finally:
 
-    # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)  # ADD THIS BLOCK FOR MATRIX FILE SAVING
-    for i, el in enumerate(new_mat_r[0]):     
-        all_zeros = not np.any(new_mat_r[:,i])    # Finiding first column with all zeros
-        if all_zeros:
-            new_mat_r = new_mat_r[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
-            break
+  
 
-    # Saving the matrix to the matrix filedata.get_filepath
-    np.savetxt(fname=data_refl.get_filepath() + "_matrix", X=new_mat_r, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
-
-    for i, el in enumerate(new_mat_dc[0]):     
-        all_zeros = not np.any(new_mat_dc[:,i])    # Finiding first column with all zeros
-        if all_zeros:
-            new_mat_dc = new_mat_dc[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
-            break
-
-    # Saving the matrix to the matrix filedata.get_filepath
-    np.savetxt(fname=data_dc.get_filepath() + "_matrix", X=new_mat_dc, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
        
     #magnetZ.set_field(0.0)  # Sweeping the field back to zero
     magnetY.set_field(0.0)  # Sweeping the field back to zero
