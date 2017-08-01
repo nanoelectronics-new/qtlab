@@ -10,13 +10,13 @@ from time import time,sleep
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505188::INSTR')  # Initialize dmm
 #dmm.set_NPLC = 0.1  # Setting PLCs of dmm
 
-gain = 1e9 # choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e8 # choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 bias = 80
 
 # Sweeping vector
-start = 794.00
-stop = 0
+start = 677.00
+stop = 600.0
 step = -0.5
 v_vec = arange(start,stop,step)  #''' !! Take care about step sign '''
 

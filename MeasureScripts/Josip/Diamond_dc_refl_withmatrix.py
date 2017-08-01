@@ -24,8 +24,8 @@ gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 #gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(400,-400,-0.125)     #V_g
-v2_vec = arange(-250,250,2)  #V_sd 
+v1_vec = arange(600,700,1)     #V_g
+v2_vec = arange(-100,100,2.5)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -40,9 +40,9 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data_refl = qt.Data(name='Diamond_12-11_G23_refl') #just renamed
+data_refl = qt.Data(name=' Diamond_13-10_G08_LF_lockin') #just renamed
 
-data_dc = qt.Data(name='Diamond_12-11_G23') #added to have current recored as well
+data_dc = qt.Data(name=' Diamond_13-10_G08_current') #added to have current recored as well
 
 data_path_refl = data_refl.get_dir()
 data_path_dc = data_dc.get_dir()
@@ -83,8 +83,8 @@ data_refl.create_file()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 
-plot2d_refl = qt.Plot2D(data_refl, name='refl',autoupdate=False)
-plot3d_refl = qt.Plot3D(data_refl, name='refl3D', coorddims=(1,0), valdim=2, style='image')
+plot2d_refl = qt.Plot2D(data_refl, name='lockin',autoupdate=False)
+plot3d_refl = qt.Plot3D(data_refl, name='lockin3D', coorddims=(1,0), valdim=2, style='image')
 
 plot2d_dc = qt.Plot2D(data_dc, name='measure2D',autoupdate=False)
 plot3d_dc = qt.Plot3D(data_dc, name='measure3D', coorddims=(1,0), valdim=2, style='image')
@@ -111,7 +111,7 @@ try:
             IVVI.set_dac1(v2)
 
             # readout
-            result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
+            result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)/gain*1e12  # Reading the lockin and correcting for M1b gain
 
             new_mat_r[j,i] = result_reflectometry #for saving as matrix
             

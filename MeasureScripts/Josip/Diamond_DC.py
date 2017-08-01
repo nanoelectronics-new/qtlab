@@ -18,9 +18,9 @@ import convert_for_diamond_plot as cnv
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = ' Diamond_13-10_G08_zoom_fast'
+file_name = ' Diamond_13-10_G08_Vsd_englared'
 
-gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 #bias =0
 
@@ -28,8 +28,8 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 #gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(0,950,0.2)     #V_g
-v2_vec = arange(92,-8,-0.5)  #V_sd 
+v1_vec = arange(600.0,1000,0.06)     #V_g
+v2_vec = arange(150,-150,-1)  #V_sd 
 
 
 

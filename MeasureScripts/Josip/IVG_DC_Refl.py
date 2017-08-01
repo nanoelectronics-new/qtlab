@@ -17,16 +17,16 @@ UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 #file_name = '5-24 gate vs gate, sensor jumping, bias=300uV reflectometry only, -40dB'
 
-gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 #bias = 300
 
 
-gain_Lockin = 1 # Conversion factor for the Lockin
+#gain_Lockin = 1 # Conversion factor for the Lockin
 
 leak_test = False
 
-v_vec = arange(0,-400,-1)
+v_vec = arange(-200,200,2)
 
 bias = 100
 
@@ -43,9 +43,9 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data_refl1 = qt.Data(name=' IVG_12-11_G23 refl') #just renamed
+data_refl1 = qt.Data(name=' IV_13-10_G08_lockin_exc=2,5uV') #value give in Vrms
 
-data_dc = qt.Data(name=' IVG_12-11_G23') #added to have current recored as well
+data_dc = qt.Data(name=' IV_13-10_G08') #added to have current recored as well
 
 data_path_refl1 = data_refl1.get_dir()
 data_path_dc = data_dc.get_dir()
@@ -82,9 +82,9 @@ data_refl1.create_file()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 
-plot2d_refl1 = qt.Plot2D(data_refl1, name='refl3',autoupdate=False)
+plot2d_refl1 = qt.Plot2D(data_refl1, name='lockin',autoupdate=False)
 
-plot2d_dc = qt.Plot2D(data_dc, name='dc3',autoupdate=False)
+plot2d_dc = qt.Plot2D(data_dc, name='dc',autoupdate=False)
 
 
 
@@ -92,16 +92,16 @@ plot2d_dc = qt.Plot2D(data_dc, name='dc3',autoupdate=False)
 # preparation is done, now start the measurement.
 # It is actually a simple loop.
 
-IVVI.set_dac1(bias)
+#IVVI.set_dac1(bias)
     
     
 start = time()
 for v in v_vec:
 
-    IVVI.set_dac5(v)
+    IVVI.set_dac1(v)
 
     # readout
-    result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
+    result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)/gain*1e12  # Reading the lockin and correcting for M1b gain
 
     result_dc = dmm.get_readval()/gain*1e12
 

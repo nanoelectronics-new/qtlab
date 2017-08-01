@@ -58,8 +58,8 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
             #p.setMarkersCH1([0],[0])   # Starting element in sequence with zero marker amp for synchronization reasons
         #else:
 
-        p.setValuesCH1([500.0, 0],[500.0, 500],[500.0, 0],[500.0, 500],[500.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
-        p.setMarkersCH1([1,0,0,0,0],[0,0,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
+        p.setValuesCH1([500.0, 0],[5.0, 500],[500.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
+        p.setMarkersCH1([0,1,0],[0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
         #A1[2] = A1[2] - delta_A1 # Defining amplitude change between wavefroms in sequence
 
 
@@ -70,8 +70,8 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
             #p.setMarkersCH2([0],[0])   # Starting element in sequence with zero marker amp for synchronization reasons
         #else:
 
-        p.setValuesCH2([500.0, 0],[500.0, 1000],[500.0, 0],[500.0, 1000],[500.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
-        p.setMarkersCH2([0,0,0,0,0],[0,0,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
+        p.setValuesCH2([500.0, 0],[5.0, 1000],[500.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
+        p.setMarkersCH2([0,0,0],[0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
         #A2[2] = A2[2] - delta_A2 # Defining amplitude change between wavefroms in sequence
 
     
