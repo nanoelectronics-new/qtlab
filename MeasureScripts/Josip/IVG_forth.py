@@ -15,9 +15,9 @@ gain = 1e8 # choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 fo
 bias = 36.7
 
 # Sweeping vector
-start = 651.06
-stop = 643.40
-step = -0.06
+start = IVVI.get_dac5()
+stop = 730.0
+step = 0.06
 v_vec = arange(start,stop,step)  #''' !! Take care about step sign '''
 
 #mult_factor = 5
@@ -27,7 +27,7 @@ v_vec = arange(start,stop,step)  #''' !! Take care about step sign '''
 qt.mstart()
 
 
-name = " IVG_13-10_G08_367uV_D6_Bz_positioning_2"
+name = " IVG_13-10_G08_367uV_after_B_sweep"
 
 
 data = qt.Data(name=name)  # Put one space before name

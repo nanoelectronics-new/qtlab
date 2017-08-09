@@ -13,41 +13,41 @@ import convert_for_diamond_plot as cnv
 #####################################################
 # here is where the actual measurement program starts
 #####################################################
-#IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
-#dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
-#dmm.set_NPLC = 1  # Setting PLCs of dmm
-#magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.185')
+#IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM1', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)
+#dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505188::INSTR')
+
+#magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.109')
 #magnetY = qt.instruments.create('magnetY', 'AMI430_By', address='10.21.64.175')
 
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-v2_vec = arange(-50,51,0.5)  #V_sd
+v2_vec = arange(-60,60.5,0.5)  #V_sd
 
 div_factor = 100.0
 
 #bias =0
 
 #magnet
-#ramp_rate_Z = 0.0002 #T/s
-ramp_rate_Y = 0.00005 #T/s
+ramp_rate_Z = 0.0013 #T/s
+#ramp_rate_Y = 0.00005 #T/s
 
 
-#step_size_BZ = 1e-3 
-step_size_BY = 20e-3 
-#BZ_vector = arange(0e-3,10e-3+step_size_BZ,step_size_BZ) #T  # Those two vectors need to be the same left
-BY_vector = arange(0e-3,2,step_size_BY) #T  #
+step_size_BZ = 60e-3 
+#step_size_BY = 20e-3 
+BZ_vector = arange(0e-3,7.5+step_size_BZ,step_size_BZ) #T  # Those two vectors need to be the same left
+#BY_vector = arange(0e-3,2,step_size_BY) #T  #
 
 #if len(BZ_vector) != len(BY_vector):
     #raise Exception ("B vectors have different length")
 
 #ramp_time = max((float(step_size_BY)/ramp_rate_Y),float(step_size_BZ)/ramp_rate_Z)
-ramp_time = 1.1*(float(step_size_BY)/ramp_rate_Y)
+ramp_time = 1.1*(float(step_size_BZ)/ramp_rate_Z)
 
 
-#magnetZ.set_rampRate_T_s(ramp_rate_Z)
-magnetY.set_rampRate_T_s(ramp_rate_Y)
+magnetZ.set_rampRate_T_s(ramp_rate_Z)
+#magnetY.set_rampRate_T_s(ramp_rate_Y)
 
 
 
@@ -55,9 +55,9 @@ magnetY.set_rampRate_T_s(ramp_rate_Y)
 qt.mstart()
 
 
-data_refl = qt.Data(name='_IV_Bsweep_13-10_G08_LF_lockin') #just renamed
+data_refl = qt.Data(name='IV_BZsweep_D7_653.04mV_13-10_G08_LF_lockin') #just renamed
 
-data_dc = qt.Data(name='_IV_Bsweep_13-10_G08_current') #added to have current recored as well
+data_dc = qt.Data(name='IV_BZsweep_D7_653.04mV_13-10_G08_current') #added to have current recored as well
 
 data_path_refl = data_refl.get_dir()
 data_path_dc = data_dc.get_dir()
@@ -101,17 +101,20 @@ vec_count = 0
 
 
 try:
-    for i,v1 in enumerate(BY_vector):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
+    for i,v1 in enumerate(BZ_vector):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
         
         
         start = time()
 
-        #magnetZ.set_field(BZ_vector[i])
-        magnetY.set_field(BY_vector[i])  
+        magnetZ.set_field(BZ_vector[i])
+        #magnetY.set_field(BY_vector[i])  
 
         #total_field = np.sqrt(BZ_vector[i]**2 + BY_vector[i]**2)
 
-        while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:
+        #while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:
+            #qt.msleep(0.050)
+
+        while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:
             qt.msleep(0.050)
 
 
@@ -163,7 +166,7 @@ try:
         np.savetxt(fname=data_dc.get_filepath() + "_matrix", X=new_mat_dc, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
 
         vec_count = vec_count + 1
-        print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(BY_vector.size - vec_count))))
+        print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(BZ_vector.size - vec_count))))
         
         
 
@@ -174,9 +177,6 @@ finally:
 
   
 
-       
-    #magnetZ.set_field(0.0)  # Sweeping the field back to zero
-    magnetY.set_field(0.0)  # Sweeping the field back to zero
 
 
     # after the measurement ends, you need to close the data file.
@@ -185,6 +185,17 @@ finally:
     #data_current.close_file()
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
+
+    magnetZ.set_field(0.0)  # Sweeping the field back to zero
+    #magnetY.set_field(0.0)  # Sweeping the field back to zero
+
+    while math.fabs(0.0 - magnetZ.get_field_get()) > 0.0001:   #Wait until field drops to zero
+        qt.msleep(0.050)
+
+    execfile('C:\QTLab\qtlab\MeasureScripts\Josip\IVG_forth.py')       # Taking the IVGs to determine if it shifted
+    execfile('C:\QTLab\qtlab\MeasureScripts\Josip\IVG_back.py')
+
+ 
 
     # Saving UHFLI setting to the measurement data folder
     # You can load this settings file from UHFLI user interface 3

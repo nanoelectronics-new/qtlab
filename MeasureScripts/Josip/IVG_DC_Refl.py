@@ -26,7 +26,9 @@ gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 
 leak_test = False
 
-v_vec = arange(-200,200,2)
+v_vec = arange(-50,50,0.5)
+
+div_factor = 100
 
 bias = 100
 
@@ -65,7 +67,7 @@ data_dc.add_value('Current [pA]')
 
 data_refl1.add_coordinate('V_G [mV]')
 
-data_refl1.add_value('Reflection [Arb. U.]')
+data_refl1.add_value('Locin out [pA]')
 
 
 # The next command will actually create the dirs and files, based
@@ -105,8 +107,8 @@ for v in v_vec:
 
     result_dc = dmm.get_readval()/gain*1e12
 
-    data_refl1.add_data_point(v, result_reflectometry) 
-    data_dc.add_data_point(v, result_dc) 
+    data_refl1.add_data_point(v/div_factor, result_reflectometry) 
+    data_dc.add_data_point(v/div_factor, result_dc) 
 
     if leak_test:
         plot2d_refl1.update()
