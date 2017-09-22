@@ -10,24 +10,24 @@ from time import time,sleep
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505188::INSTR')  # Initialize dmm
 #dmm.set_NPLC = 0.1  # Setting PLCs of dmm
 
-gain = 1e8 # choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 # choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = 36.7
+bias = 10.0
 
 # Sweeping vector
-start = 651.06
-stop = 643.40
-step = -0.06
+start = -630.00
+stop = 600.0
+step = 2.0
 v_vec = arange(start,stop,step)  #''' !! Take care about step sign '''
 
-#mult_factor = 5
+mult_factor = 1.0
 
 
 
 qt.mstart()
 
 
-name = " IVG_13-10_G08_367uV_D6_Bz_positioning_2"
+name = " IVG_22-03_G04_3"
 
 
 data = qt.Data(name=name)  # Put one space before name
@@ -71,25 +71,25 @@ plot2d.set_style('lines')
 
 
 
-IVVI.set_dac1(bias)
+IVVI.set_dac2(bias)
 
 start = time()
 try:
     for v in v_vec:
         # set the voltage
-        IVVI.set_dac5(v)
-        #IVVI.set_dac6(v)
+        #IVVI.set_dac5(v)
+        IVVI.set_dac6(v)
         #IVVI.set_dac7(v)
 
         # readout
-        result = dmm.get_readval()/(gain)*1e12
+        result = dmm03.get_readval()/(gain)*1e12
 
         #if result > 50:
             #raise Exception("Leak treshold reached") 
 
         # save the data point to the file, this will automatically trigger
         # the plot windows to update
-        data.add_data_point(v, result)
+        data.add_data_point(v*mult_factor, result)
         plot2d.update()
         # the next function is necessary to keep the gui responsive. It
         # checks for instance if the 'stop' button is pushed. It also checks

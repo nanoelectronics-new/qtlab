@@ -2,6 +2,7 @@ from numpy import pi, random, arange, size
 from time import time,sleep
 import datetime
 import convert_for_diamond_plot as cnv
+import UHFLI_lib
 
 #####################################################
 # added automatic conversion to matrix file
@@ -23,9 +24,9 @@ UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-v2_vec = arange(-60,60.5,0.5)  #V_sd
+v2_vec = arange(-600,610,10)  #V_sd
 
-div_factor = 100.0
+div_factor = 1000.0
 
 #bias =0
 
@@ -35,9 +36,9 @@ ramp_rate_Y = 0.00054 #T/s
 
 
 #step_size_BZ = 60e-3 
-step_size_BY = 30e-3 
+step_size_BY = 60e-3 
 #BZ_vector = arange(0e-3,7.5+step_size_BZ,step_size_BZ) #T  # Those two vectors need to be the same left
-BY_vector = arange(0.0,2.0+step_size_BY,step_size_BY) #T  #
+BY_vector = arange(0,2.0+step_size_BY,step_size_BY) #T  #
 
 #if len(BZ_vector) != len(BY_vector):
     #raise Exception ("B vectors have different length")
@@ -55,9 +56,9 @@ magnetY.set_rampRate_T_s(ramp_rate_Y)
 qt.mstart()
 
 
-data_refl = qt.Data(name='IV_BYsweep_D11_690.53mV_13-10_G08_LF_lockin') #just renamed
+data_refl = qt.Data(name='IV_BYsweep_D_491.04mV_13-10_G08_LF_lockin') #just renamed
 
-data_dc = qt.Data(name='IV_BYsweep_D11_690.53mV_13-10_G08_current') #added to have current recored as well
+data_dc = qt.Data(name='IV_BYsweep_D_491.04mV_13-10_G08_current') #added to have current recored as well
 
 data_path_refl = data_refl.get_dir()
 data_path_dc = data_dc.get_dir()
@@ -192,8 +193,8 @@ finally:
     while math.fabs(0.0 - magnetY.get_field_get()) > 0.0001:   #Wait until field drops to zero
         qt.msleep(0.050)
 
-    execfile('C:\QTLab\qtlab\MeasureScripts\Josip\IVG_forth.py')       # Taking the IVGs to determine if it shifted
-    execfile('C:\QTLab\qtlab\MeasureScripts\Josip\IVG_back.py')
+    #execfile('C:\QTLab\qtlab\MeasureScripts\Josip\IVG_forth.py')       # Taking the IVGs to determine if it shifted
+    #execfile('C:\QTLab\qtlab\MeasureScripts\Josip\IVG_back.py')
  
 
     # Saving UHFLI setting to the measurement data folder

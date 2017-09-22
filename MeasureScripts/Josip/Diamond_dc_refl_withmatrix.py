@@ -24,8 +24,8 @@ gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 #gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(600,700,1)     #V_g
-v2_vec = arange(-100,100,2.5)  #V_sd 
+v1_vec = arange(2000,4000,0.5)     #V_g
+v2_vec = arange(-200,204,4)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -40,9 +40,9 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data_refl = qt.Data(name=' Diamond_13-10_G08_LF_lockin') #just renamed
+data_refl = qt.Data(name=' diamond_13-10_G08_LF_lockin') #just renamed
 
-data_dc = qt.Data(name=' Diamond_13-10_G08_current') #added to have current recored as well
+data_dc = qt.Data(name=' diamond_13-10_G08_current') #added to have current recored as well
 
 data_path_refl = data_refl.get_dir()
 data_path_dc = data_dc.get_dir()
@@ -171,7 +171,7 @@ finally:
        
     # Saving UHFLI setting to the measurement data folder
     # You can load this settings file from UHFLI user interface 3
-    UHFLI_lib.UHF_save_settings(path = data_path_refl)
+    #UHFLI_lib.UHF_save_settings(path = data_path_refl)
 
 
     # after the measurement ends, you need to close the data file.

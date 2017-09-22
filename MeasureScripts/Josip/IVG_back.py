@@ -16,7 +16,7 @@ bias = 36.7
 
 # Sweeping vector
 start = IVVI.get_dac5()
-stop = 580.0
+stop = 413.95
 step = -0.06
 v_vec = arange(start,stop,step)  #''' !! Take care about step sign '''
 

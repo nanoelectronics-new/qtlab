@@ -18,7 +18,7 @@ import convert_for_diamond_plot as cnv
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = ' test_new_matrix_saving'
+file_name = 'Diamond_23-24_G21'
 
 gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -28,8 +28,8 @@ gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 #gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = np.array([5,10,15])     #V_g
-v2_vec = arange(150,-150,-20)  #V_sd 
+v1_vec = arange(0.0,1000.0,2.0)     #V_g
+v2_vec = arange(-200.0,200.0,2.0)  #V_sd 
 
 
 
@@ -56,8 +56,8 @@ data.create_file()
 data_path = data.get_dir()
 
 
-plot2d = qt.Plot2D(data, name='measure2D_2',autoupdate=False)
-plot3d = qt.Plot3D(data, name='measure3D_2', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
+plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
@@ -74,16 +74,16 @@ try:
         
         start = time()
         # set the voltage
-        #IVVI.set_dac5(v1)
+        IVVI.set_dac5(v1)
         
 
 
         for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
 
-            #IVVI.set_dac1(v2)
+            IVVI.set_dac1(v2)
 
             # readout
-            result = i#dmm.get_readval()/gain*1e12
+            result = dmm.get_readval()/gain*1e12
 
 
             # Save to the matrix
