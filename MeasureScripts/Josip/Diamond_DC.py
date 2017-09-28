@@ -18,9 +18,9 @@ import convert_for_diamond_plot as cnv
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = 'Diamond_23-24_G21'
+file_name = 'Diamond_07-08_G09_2'
 
-gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 #bias =0
 
@@ -28,8 +28,8 @@ gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 #gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(0.0,1000.0,2.0)     #V_g
-v2_vec = arange(-200.0,200.0,2.0)  #V_sd 
+v1_vec = arange(0.0,-1000,-0.5)     #V_g
+v2_vec = arange(-500.0,500.0,2.0)  #V_sd 
 
 
 
@@ -83,7 +83,7 @@ try:
             IVVI.set_dac1(v2)
 
             # readout
-            result = dmm.get_readval()/gain*1e12
+            result = dmm03.get_readval()/gain*1e12
 
 
             # Save to the matrix

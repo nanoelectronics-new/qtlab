@@ -12,12 +12,12 @@ from time import time,sleep
 
 gain = 1e9 # choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = 10.0
+bias = 300.0
 
 # Sweeping vector
-start = -630.00
-stop = 600.0
-step = 2.0
+start = 1000.0
+stop = -1000.0
+step = -2.0
 v_vec = arange(start,stop,step)  #''' !! Take care about step sign '''
 
 mult_factor = 1.0
@@ -27,7 +27,7 @@ mult_factor = 1.0
 qt.mstart()
 
 
-name = " IVG_22-03_G04_3"
+name = " IVG_07-08_G09_2"
 
 
 data = qt.Data(name=name)  # Put one space before name
@@ -71,14 +71,14 @@ plot2d.set_style('lines')
 
 
 
-IVVI.set_dac2(bias)
+IVVI.set_dac1(bias)
 
 start = time()
 try:
     for v in v_vec:
         # set the voltage
         #IVVI.set_dac5(v)
-        IVVI.set_dac6(v)
+        IVVI.set_dac5(v)
         #IVVI.set_dac7(v)
 
         # readout

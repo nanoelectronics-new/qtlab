@@ -16,7 +16,7 @@ UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
 #file_name = '5-24 gate vs gate, sensor jumping, bias=300uV reflectometry only, -40dB'
 
-gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 #bias = 300
 
@@ -24,8 +24,8 @@ gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 #gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(2000,4000,0.5)     #V_g
-v2_vec = arange(-200,204,4)  #V_sd 
+v1_vec = arange(300.0,550.0,0.5)     #V_g
+v2_vec = arange(-300,300,2)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -40,9 +40,9 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data_refl = qt.Data(name=' diamond_13-10_G08_LF_lockin') #just renamed
+data_refl = qt.Data(name=' Diamond_23-24_G21_LF_refl') #just renamed
 
-data_dc = qt.Data(name=' diamond_13-10_G08_current') #added to have current recored as well
+data_dc = qt.Data(name=' Diamond_23-24_G21_current') #added to have current recored as well
 
 data_path_refl = data_refl.get_dir()
 data_path_dc = data_dc.get_dir()
@@ -61,13 +61,13 @@ new_mat_dc = np.zeros((len(v2_vec)))
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
 
-data_dc.add_coordinate('V_G (sensor) [mV]')
-data_dc.add_coordinate('V_G (dot) [mV]')
+data_dc.add_coordinate('V_SD [mV]')   #y inner
+data_dc.add_coordinate('V_G  [mV]')      #x outer
 data_dc.add_value('Current [pA]')
 
 
-data_refl.add_coordinate('V_G (sensor) [mV]')
-data_refl.add_coordinate('V_G (dot) [mV]')
+data_refl.add_coordinate('V_SD [mV]')
+data_refl.add_coordinate('V_G [mV]')
 data_refl.add_value('Reflection [Arb. U.]')
 
 
@@ -85,11 +85,11 @@ data_refl.create_file()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 
-plot2d_refl = qt.Plot2D(data_refl, name='lockin',autoupdate=False)
-plot3d_refl = qt.Plot3D(data_refl, name='lockin3D', coorddims=(1,0), valdim=2, style='image')
+plot2d_refl = qt.Plot2D(data_refl, name='reflectometry2D',autoupdate=False)
+plot3d_refl = qt.Plot3D(data_refl, name='reflectometry3D', coorddims=(1,0), valdim=2, style='image')
 
-plot2d_dc = qt.Plot2D(data_dc, name='measure2D',autoupdate=False)
-plot3d_dc = qt.Plot3D(data_dc, name='measure3D', coorddims=(1,0), valdim=2, style='image')
+plot2d_dc = qt.Plot2D(data_dc, name='current2D',autoupdate=False)
+plot3d_dc = qt.Plot3D(data_dc, name='current3D', coorddims=(1,0), valdim=2, style='image')
 
 
 
@@ -105,20 +105,20 @@ try:
         
         start = time()
         # set the voltage
-        IVVI.set_dac5(v1)
+        IVVI.set_dac6(v1)
 
 
         for j,v2 in enumerate(v2_vec):
 
-            IVVI.set_dac1(v2)
+            IVVI.set_dac2(v2)
 
             # readout
-            result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)/gain*1e12  # Reading the lockin and correcting for M1b gain
+            result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
 
             data_temp_r[j] = result_reflectometry
 
             
-            result_dc = dmm.get_readval()/gain*1e12
+            result_dc = dmm24.get_readval()/gain*1e12
 
             data_temp_dc[j] = result_dc #for saving as matrix
             

@@ -12,18 +12,18 @@ from time import time,sleep
 
 gain = 1e9 # hoose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-div_factor = 0.2
+div_factor = 100.0
 
 bias = 500
 
 # Sweeping vector
-v_vec = arange(-263.00,0.0,1.0)  #''' !! Take care about step sign '''
+v_vec = arange(-1000.0,1000.0,10.0)  #''' !! Take care about step sign '''
 
 
 qt.mstart()
 
 
-name = " leak_check_21-23_back"
+name = " IV_18-20"
 
 
 data = qt.Data(name=name)  # Put one space before name
@@ -52,12 +52,12 @@ start = time()
 try:
     for v in v_vec:
         # set the voltage
-        IVVI.set_dac5(v)
+        IVVI.set_dac1(v)
         #IVVI.set_dac6(v)
         #IVVI.set_dac7(v)
 
         # readout
-        result = dmm.get_readval()/(gain)*1e12
+        result = dmm03.get_readval()/(gain)*1e12
 
         #if abs(result) > 50:
             #raise Exception("Leak treshold reached") 
