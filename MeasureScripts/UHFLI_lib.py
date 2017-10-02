@@ -186,6 +186,9 @@ def UHF_measure_scope(device_id = 'dev2210', maxtime = 5, AWG_instance = None):
     
     Amp_scaling_factorCH1 = shots[0]['channelscaling'][0]  # Extracting amplitude scaling factor from read out data dictionary for channel 1 - see output data structure of poll command
     Amp_scaling_factorCH2 = shots[0]['channelscaling'][1]  # Extracting amplitude scaling factor from read out data dictionary for channel 2 - see output data structure of poll command
+
+    Amp_offset_factorCH1 = shots[0]['channeloffset'][0]  # Extracting amplitude offset factor from read out data dictionary for channel 1 - see output data structure of poll command
+    Amp_offset_factorCH2 = shots[0]['channeloffset'][1] # Extracting amplitude offset factor from read out data dictionary for channel 2 - see output data structure of poll command
     
     # If shot is big it is divided in blocks that needs to be connected (concatenated): 
     # For CH1:  
@@ -206,6 +209,8 @@ def UHF_measure_scope(device_id = 'dev2210', maxtime = 5, AWG_instance = None):
     shotCH1 = shotCH1 * Amp_scaling_factorCH1   # Rescaling returned data to get proper values
     shotCH2 = shotCH2 * Amp_scaling_factorCH2
     
+    shotCH1 = shotCH1 + Amp_offset_factorCH1  # Resolving the offset of returned data to get proper values
+    shotCH2 = shotCH2 + Amp_offset_factorCH2
     #plt.figure(1)
     #plt.title("Data from CH1")
     #plt.plot(shotCH1) 
@@ -324,6 +329,9 @@ def UHF_measure_scope_single_shot(device_id = 'dev2210', maxtime = 5, AWG_instan
     
     Amp_scaling_factorCH1 = shots[0]['channelscaling'][0]  # Extracting amplitude scaling factor from read out data dictionary for channel 1 - see output data structure of poll command
     Amp_scaling_factorCH2 = shots[0]['channelscaling'][1]  # Extracting amplitude scaling factor from read out data dictionary for channel 2 - see output data structure of poll command
+
+    Amp_offset_factorCH1 = shots[0]['channeloffset'][0]  # Extracting amplitude offset factor from read out data dictionary for channel 1 - see output data structure of poll command
+    Amp_offset_factorCH2 = shots[0]['channeloffset'][1] # Extracting amplitude offset factor from read out data dictionary for channel 2 - see output data structure of poll command
     
     # If shot is big it is divided in blocks that needs to be connected (concatenated): 
     # For CH1:  
@@ -343,6 +351,9 @@ def UHF_measure_scope_single_shot(device_id = 'dev2210', maxtime = 5, AWG_instan
     
     shotCH1 = shotCH1 * Amp_scaling_factorCH1   # Rescaling returned data to get proper values
     shotCH2 = shotCH2 * Amp_scaling_factorCH2
+
+    shotCH1 = shotCH1 + Amp_offset_factorCH1  # Resolving the offset of returned data to get proper values
+    shotCH2 = shotCH2 + Amp_offset_factorCH2
     
     #plt.figure(1)
     #plt.title("Data from CH1")
