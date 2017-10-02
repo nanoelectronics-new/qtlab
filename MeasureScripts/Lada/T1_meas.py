@@ -26,7 +26,7 @@ Num_of_repetitions = 50
 UHFLI_lib.UHF_init_scope()  # Initialize UHF LI
 
 qt.mstart()
-data = qt.Data(name = "T1_meas 10 traces over 50 50kHz By=2T read 1,9mV no compensation")
+data = qt.Data(name = "T1_meas 10 traces over 50 50kHz By=2T read -1,55mV no compensation")
 data.create_file()
 data_path = data.get_dir()
 
@@ -92,7 +92,7 @@ try:
                     
                 
         try:                
-            #np.savetxt(fname=data_path + "/result_CH1matrix%d"%j, X=ch1, fmt='%1.4e', delimiter=' ', newline='\n')  # Saving matrix file after each repeteition
+            np.savetxt(fname=data_path + "/result_CH1matrix%d"%j, X=ch1, fmt='%1.4e', delimiter=' ', newline='\n')  # Saving matrix file after each repeteition
 
             if j == 0:
                 aver = ch1

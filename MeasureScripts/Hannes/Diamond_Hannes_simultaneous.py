@@ -18,7 +18,7 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '3_24 IV 239'
+file_name = '15_17 IV 340'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -27,16 +27,16 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 
-v1_vec = arange(161,163.55,0.05)   #V_g 1
+v1_vec = arange(39.5,41.04,0.05)   #V_g 1
 
-incl = -3.2  # inclination of sweeping direction
+incl = -2.333  # inclination of sweeping direction
 
 # enter starting point of v2_vec (2 x)
-v2_vec = np.linspace(70.5,70.5+incl*abs(v1_vec[-1]-v1_vec[0]),len(v1_vec))  #V_g 2
+v2_vec = np.linspace(165,165+incl*abs(v1_vec[-1]-v1_vec[0]),len(v1_vec))  #V_g 2
 
 
 # set v3 to a dummy DAC for B field value
-v3_vec = arange(0,200.05,0.05)  # B field 
+v3_vec = arange(0,1000.01,0.01)  # B field 
 
 
 
@@ -104,8 +104,8 @@ try:
 
             #IVVI.set_dac2(v1)
             #IVVI.set_dac3(v1) 
-            IVVI.set_dac4(v1_vec[j])
-            IVVI.set_dac5(v2_vec[j])
+            IVVI.set_dac6(v2_vec[j])
+            IVVI.set_dac5(v1_vec[j])
             #IVVI.set_dac6(v1)
 
             # readout

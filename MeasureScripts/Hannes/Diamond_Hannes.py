@@ -18,7 +18,7 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '18_21 IV 38'
+file_name = '11_18 IV 37'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -27,8 +27,8 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 
-v1_vec = arange(120,-200.5,-0.5)   #V_g
-v2_vec = arange(180,280.25,0.25)  #V_sd 
+v1_vec = arange(1500,-200.5,-0.5)   #V_g
+v2_vec = arange(50,150.2,0.4)  #V_sd 
 
 
 
@@ -89,17 +89,17 @@ try:
         start = time()
         # set the voltage
         #IVVI.set_dac2(v1)
-        #IVVI.set_dac3(v1) 
-        #IVVI.set_dac4(v1)
-        IVVI.set_dac5(v1)
+        #IVVI.set_dac12(v1) 
+        IVVI.set_dac4(v1)
+        #IVVI.set_dac5(v1)
         #IVVI.set_dac6(v1)
-        #IVVI.set_dac7(v1)
+        #IVVI.set_dac2(v1)
         #IVVI.set_dac8(v1)
 
         
         for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
 
-            IVVI.set_dac3(v2)
+            IVVI.set_dac6(v2)
 
             # readout
             result = dmm.get_readval()/gain*1e12

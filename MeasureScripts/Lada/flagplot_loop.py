@@ -18,8 +18,8 @@ AWG = qt.instruments.get("AWG")
 
 
 
-Num_of_waveforms = 100 # Sequence length - correspond to number of rows in slice matrix
-Num_of_repetitions = 128
+Num_of_waveforms = 50 # Sequence length - correspond to number of rows in slice matrix
+Num_of_repetitions = 10
  
 
 
@@ -27,8 +27,9 @@ Num_of_repetitions = 128
 UHFLI_lib.UHF_init_scope()  # Initialize UHF LI
 
 qt.mstart()
-data = qt.Data(name = "average flagplot 100 traces over 128")
+data = qt.Data(name = " average flagplot 50 waveforms over 10 10kHz")
 data.create_file()
+data_path = data.get_dir()
 
 try:
 
@@ -92,14 +93,16 @@ try:
                     
                 
                         
+        try:                
+            np.savetxt(fname=data_path + "/result_CH1matrix%d"%j, X=ch1, fmt='%1.4e', delimiter=' ', newline='\n')  # Saving matrix file after each repeteition
 
-        if j == 0:
-            aver = ch1
-        else:       
-            aver = aver + ch1  # Summing all the intermediate results for the average
-
-                
-        AWG._ins.stop()  # Stop AWG to restart the sequencer
+            if j == 0:
+                aver = ch1
+            else:       
+                aver = aver + ch1  # Summing all the intermediate results for the average
+            AWG._ins.stop()  # Stop AWG to restart the sequencer
+        except:
+            pass
                 
                 
                 

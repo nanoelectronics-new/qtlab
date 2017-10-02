@@ -1,7 +1,8 @@
 daq = UHFLI_lib.UHF_init_demod_multiple(demod_c = [1])
 
 
-frek_list = [145.82,173.84,239.78,264.35,277.56,340.47]
+#frek_list = [145.82,173.84,239.78,264.35,277.56,340.47]
+
 
 
 

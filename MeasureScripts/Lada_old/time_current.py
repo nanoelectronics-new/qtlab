@@ -1,35 +1,24 @@
 from numpy import pi, random, arange, size, mod
 from time import time,sleep
-
-#####################################################
-# this part is to simulate some data, you can skip it
-#####################################################
+import datetime
+import UHFLI_lib
 
 
-
-
-#####################################################
-# here is where the actual measurement program starts
-#####################################################
 
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
-#dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505177::INSTR')
+#dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 
-bias = 50
+# interval betweeen each measurement [s]
+dt = 0.001
+#total time [s]
+T = 2
 
-
-
-leak_test = False
-
-# you define two vectors of what you want to sweep. In this case
-# a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(3176,3000,-1)
-#v_vec = arange(-300,300,0.06)
-
-
+N = int(T/dt)
+print "Number of  points",N
+UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 # you indicate that a measurement is about to start and other
 # processes should stop (like batterycheckers, or temperature
 # monitors)
@@ -41,7 +30,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name='5-24 B=2T offset test')
+data = qt.Data(name='5-24 jumptest')
 
 
 # Now you provide the information of what data will be saved in the
@@ -51,7 +40,7 @@ data = qt.Data(name='5-24 B=2T offset test')
 # information is used later for plotting purposes.
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
-data.add_coordinate('Voltage [mV]')
+data.add_coordinate('Time [s]')
 
 data.add_value('Current [pA]')
 
@@ -65,44 +54,42 @@ data.create_file()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='plot1', autoupdate=False)
+plot2d = qt.Plot2D(data, name='noname', autoupdate=False)
 plot2d.set_style('lines')
 
 
 # preparation is done, now start the measurement.
 
-IVVI.set_dac1(bias)
 
 # It is actually a simple loop.
 start = time()
-for v in v_vec:
-    # set the voltage
+for i in range(N):
 
-    IVVI.set_dac5(v)
+
+    sleep(dt)  
     # readout
-    result = dmm.get_readval()/(gain)*1e12 # Remove Lockin gain if you are not measuring with it
-
-  
-
+    #result = dmm.get_readval()/gain*1e12
+    result = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)
 
     # save the data point to the file, this will automatically trigger
     # the plot windows to update
-    data.add_data_point(v, result)
+    data.add_data_point(time()-start, result)
 
-    if leak_test:
-        plot2d.update()   # If leak_test is True update every point 
-    elif not bool(mod(v,20)):    
-        plot2d.update()   # Update every 10 points
+
+
+    #plot2d.update()   # If leak_test is True update every point 
+   
 
     
 
     # the next function is necessary to keep the gui responsive. It
     # checks for instance if the 'stop' button is pushed. It also checks
-    # if the plots need updating.
-    qt.msleep(0.001)
+     # if the plots need updating.
+    #qt.msleep(0.001)
 stop = time()
 print 'Duration: %s sec' % (stop - start, )
-
+print "Sampling rate ", N/(stop - start)," Hz"
+plot2d.update()
 
    
 

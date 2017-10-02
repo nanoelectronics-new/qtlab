@@ -123,6 +123,7 @@ class Pulse():
         self.marker2 = np.array([])  # Erase previous marker 2
         
         for key in sorted(self.amplitudes.iterkeys()):  # Sort amplitudes dict and iterate trough its element from the frist one
+
             
             
             Length = self.rescaleLength(self.timings[key]) # Rescaling length 
@@ -160,9 +161,8 @@ class Pulse():
         #self.waveform = self.waveform - mean   # Substracting mean value in order not to heat up the fridge
 
     def reverse_rescaleAmplitude(self, AWGMaxAmp):
-        wav = self.waveform*AWGMaxAmp
-        wav = wav/self.AmpUnits
-        return wav
+        return (self.waveform)*AWGMaxAmp/float(self.AmpUnits)
+       
         
     
     def InverseHPfilter(self, R,C, F_sample = 10000000, M=None):
@@ -269,7 +269,7 @@ class Pulse():
             
         
     def plotWaveform(self, Name = None, fig = None, waveform = None):    # IN PROGRESS... 
-        #return    # Just to skip plotting
+        return    # Just to skip plotting
                                  # DELETE THIS LINE AFTER!
         if fig is None:  # If no figure is passed create new one
             if type(Name) is str:    

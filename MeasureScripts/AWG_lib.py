@@ -1,5 +1,5 @@
 # 04.05.2016. Added lines 82 to 89 - Uploading sequence to specified channel recognition
-##
+
 
 #import Tektronix_AWG5014 as ArbWG
 #import InverseHPfilterSeq as INV   # ADDED
@@ -21,7 +21,8 @@ import numpy as np
     #AWG._ins._visainstrument.close()   # Trying to close previous AWG session. 
 
        
-#AWG = qt.instruments.create('AWG', 'Tektronix_AWG5014', address='169.254.111.236')  # Changed
+
+#AWG = qt.instruments.create('AWG', 'Tektronix_AWG5014', address='10.21.64.121') #I tried this
 AWG = qt.instruments.get("AWG")
 
 

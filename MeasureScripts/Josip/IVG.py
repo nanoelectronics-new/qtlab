@@ -25,16 +25,17 @@ from time import time,sleep
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = -200
+bias = 200
 
 gate = 1000
 
 leak_test = True    
 
           
-v_vec = arange(-200.20,2000,0.4)
+v_vec = arange(0,-2000,-0.4)
 
-name = ' IVG_11-13_G12'
+name = ' IVG_17-07_G18'
+#name = ' leak_test_G12-18'
 
           
 qt.mstart()
@@ -67,17 +68,17 @@ start = time()
 for v in v_vec:
 
     
-    IVVI.set_dac5(v)
-    #IVVI.set_dac6(v)
+    #IVVI.set_dac5(v)
+    IVVI.set_dac6(v)
     #IVVI.set_dac7(v)
     # readout
     result = dmm._ins.get_readval()/(gain)*1e12 
  
-    #if v < 0 and result < -100:  # leak protection
-        #print "break 1"
-        #break
+    if v < 0 and result < -100:  # leak protection
+        print "break 1"
+        break
 
-    if v > 0 and result > 100:   # leak protection
+    if v > 0 and abs(result) > 200:   # leak protection
         print "break 2"
         break
     
@@ -85,7 +86,7 @@ for v in v_vec:
 
     if leak_test:
         plot2d.update()   # If leak_test is True update every point 
-    elif not bool(mod(int(v),20)):    
+    elif not bool(mod(int(v),10)):    
         plot2d.update()   # Update every 10 points
 
     

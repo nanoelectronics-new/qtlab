@@ -18,7 +18,7 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = 'GvsG_11-13_G12-18'
+file_name = 'GvsG_23-03_G06-24'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -27,8 +27,8 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 
 bias = 200
 
-v1_vec = arange(0,200,0.1)   #V_g2
-v2_vec = arange(100,120,0.1)  #V_g1 
+v1_vec = arange(0,3000,0.15)   #V_g2
+v2_vec = arange(850,900,0.1)  #V_g1 
 
 
 

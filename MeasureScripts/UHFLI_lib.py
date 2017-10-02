@@ -13,7 +13,7 @@ import zhinst.ziPython as ziPython
 
 
 
-def UHF_init_scope(device_id = 'dev2148'):
+def UHF_init_scope(device_id = 'dev2210'):
     
     """
     Connecting to the device specified by device_id and setting initial parameters through LabOne GUI
@@ -94,7 +94,7 @@ def UHF_init_scope(device_id = 'dev2148'):
 
 
 
-def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
+def UHF_measure_scope(device_id = 'dev2210', maxtime = 5, AWG_instance = None):
 
     """
     Obtaining data from UHF LI using ziDAQServer's blocking (synchronous) poll() command
@@ -121,7 +121,7 @@ def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
 
       RuntimeError: If the device is not connected to the Data Server.
     """
-
+    #print "Hello "
     data = list()
     
     # Poll data parameters
@@ -130,7 +130,7 @@ def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
     poll_flags = 0
     poll_return_flat_dict = True
     
-    daq.setInt('/dev2148/scopes/0/enable', 1)  # Enable scope
+    daq.setInt('/dev2210/scopes/0/enable', 1)  # Enable scope
     time.sleep(0.01)  # Wait for everything to be proper initialized
     
     #START MEASURE
@@ -145,6 +145,7 @@ def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
     
     AWG_instance._ins.force_trigger() # This trigger also triggers lockin aquisition/BNC cable 
     #AWG_instance._ins.run()
+    #print "Bye trigg"
     
     start = time.time()  # Starting time counter
     while True:  # Readout data block by block until whole buffer is read out
@@ -162,7 +163,7 @@ def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
     daq.unsubscribe('*')
     
     # Disable the scope
-    daq.setInt('/dev2148/scopes/0/enable', 0)
+    daq.setInt('/dev2210/scopes/0/enable', 0)
     
 
     if bool(data[0]) == False:  # If no data is returned
@@ -227,7 +228,7 @@ def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
 
 
 
-def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
+def UHF_measure_scope_single_shot(device_id = 'dev2210', maxtime = 5, AWG_instance = None):
 
     """
     Obtaining data from UHF LI using ziDAQServer's blocking (synchronous) poll() command
@@ -264,7 +265,7 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
     poll_return_flat_dict = True
     
     
-    daq.setInt('/dev2148/scopes/0/enable', 1)  # Enable scope
+    daq.setInt('/dev2210/scopes/0/enable', 1)  # Enable scope
     time.sleep(0.01)  # Wait for everything to be proper initialized
     
     #START MEASURE
@@ -278,7 +279,7 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
     
  
     #time.sleep(maxtime)   # Empirically proven that here we need to wait at least the scope shot length
-    daq.setInt('/dev2148/scopes/0/trigforce', 1) # Force trigger UHFLI scope
+    daq.setInt('/dev2210/scopes/0/trigforce', 1) # Force trigger UHFLI scope
     #time.sleep(maxtime)   # Empirically proven that here we need to wait at least the scope shot length
     
    
@@ -300,7 +301,7 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
     daq.unsubscribe('*')
     
     # Disable the scope
-    daq.setInt('/dev2148/scopes/0/enable', 0)
+    daq.setInt('/dev2210/scopes/0/enable', 0)
     
 
     if bool(data[0]) == False:  # If no data is returned

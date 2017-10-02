@@ -13,9 +13,9 @@ import data
 #AWG = qt.instruments.get("AWG")
 #name='pulsing,80uV -35dBm, -+500, +-600, 200us200us three-part-pulse 1000#' 
 
-name = "file_saving_test"
+name = " By=2T onoff 13-18 var@-15V f=170MHz -25dBm Vsd=100uV 20kHz #100"
 
-Num_of_waveforms = 10 # Sequence length - correspond to number of rows in slice matrix
+Num_of_waveforms = 100 # Sequence length - correspond to number of rows in slice matrix
 
  
 
@@ -63,7 +63,7 @@ try:
     # If the 'name' doesn't already exists, a new window with that name
     # will be created. For 3d plots, a plotting style is set.
 
-    plot3d = qt.Plot3D(data, name='2909_2', coorddims=(0,1), valdim=2, style='image', autoupdate = False)
+    plot3d = qt.Plot3D(data, name='2909_1', coorddims=(0,1), valdim=2, style='image', autoupdate = False)
 
     #plot2d = qt.Plot2D(data, name=name, autoupdate=True)
     #plot2d.set_style('lines')
@@ -77,8 +77,8 @@ try:
 
     # readout
     for i in xrange(Num_of_waveforms):
-        print i 
-        result = UHFLI_lib.UHF_measure_scope(AWG_instance = AWG, maxtime = 0.3)  # Collecting the result from UHFLI buffer
+        print i
+        result = UHFLI_lib.UHF_measure_scope(AWG_instance = AWG, maxtime = 2)  # Collecting the result from UHFLI buffer
         ch1 = result[0]         # Taking readout from the first channel
         data.add_data_point(np.linspace(i, i, ch1.size), np.linspace(0, ch1.size, ch1.size), ch1)  # Adding new data point
 
