@@ -1,5 +1,5 @@
 from numpy import pi, random, arange, size
-from time import time,sleep
+from time import time, sleep
 import datetime
 import UHFLI_lib
 
@@ -24,8 +24,8 @@ gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 #gain_Lockin = 1 # Conversion factor for the Lockin
 
 
-v1_vec = arange(300.0,550.0,0.5)     #V_g
-v2_vec = arange(-300,300,2)  #V_sd 
+v1_vec = arange(-767.50,600.0,1.0)    #V_g
+v2_vec = arange(-600.0,600.0,20.0)  #V_sd 
 
 
 # you indicate that a measurement is about to start and other
@@ -40,9 +40,9 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data_refl = qt.Data(name=' Diamond_23-24_G21_LF_refl') #just renamed
+data_refl = qt.Data(name=' Diamond_22-03_G04_lockin_2') #just renamed
 
-data_dc = qt.Data(name=' Diamond_23-24_G21_current') #added to have current recored as well
+data_dc = qt.Data(name=' Diamond_22-03_G04_current_2') #added to have current recored as well
 
 data_path_refl = data_refl.get_dir()
 data_path_dc = data_dc.get_dir()
@@ -68,7 +68,7 @@ data_dc.add_value('Current [pA]')
 
 data_refl.add_coordinate('V_SD [mV]')
 data_refl.add_coordinate('V_G [mV]')
-data_refl.add_value('Reflection [Arb. U.]')
+data_refl.add_value('dI [Arb. U.]')
 
 
 # The next command will actually create the dirs and files, based
@@ -85,8 +85,8 @@ data_refl.create_file()
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
 
-plot2d_refl = qt.Plot2D(data_refl, name='reflectometry2D',autoupdate=False)
-plot3d_refl = qt.Plot3D(data_refl, name='reflectometry3D', coorddims=(1,0), valdim=2, style='image')
+plot2d_refl = qt.Plot2D(data_refl, name='dI_2D',autoupdate=False)
+plot3d_refl = qt.Plot3D(data_refl, name='dI_3D', coorddims=(1,0), valdim=2, style='image')
 
 plot2d_dc = qt.Plot2D(data_dc, name='current2D',autoupdate=False)
 plot3d_dc = qt.Plot3D(data_dc, name='current3D', coorddims=(1,0), valdim=2, style='image')
@@ -105,20 +105,20 @@ try:
         
         start = time()
         # set the voltage
-        IVVI.set_dac6(v1)
+        IVVI.set_dac5(v1)
 
 
         for j,v2 in enumerate(v2_vec):
 
-            IVVI.set_dac2(v2)
+            IVVI.set_dac1(v2)
 
             # readout
-            result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
+            result_reflectometry = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)/gain*1e12  # Reading the lockin and correcting for M1b gain
 
             data_temp_r[j] = result_reflectometry
 
             
-            result_dc = dmm24.get_readval()/gain*1e12
+            result_dc = dmm03.get_readval()/gain*1e12
 
             data_temp_dc[j] = result_dc #for saving as matrix
             

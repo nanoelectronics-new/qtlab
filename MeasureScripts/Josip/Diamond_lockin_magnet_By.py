@@ -22,11 +22,11 @@ import UHFLI_lib
 
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
-gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-v2_vec = arange(-600,610,10)  #V_sd
+v2_vec = arange(-400,400,10)  #V_sd
 
-div_factor = 1000.0
+div_factor = 100.0
 
 #bias =0
 
@@ -39,6 +39,7 @@ ramp_rate_Y = 0.00054 #T/s
 step_size_BY = 60e-3 
 #BZ_vector = arange(0e-3,7.5+step_size_BZ,step_size_BZ) #T  # Those two vectors need to be the same left
 BY_vector = arange(0,2.0+step_size_BY,step_size_BY) #T  #
+#BY_vector = arange(2.0,0.0,-step_size_BY) #T  #
 
 #if len(BZ_vector) != len(BY_vector):
     #raise Exception ("B vectors have different length")
@@ -56,9 +57,9 @@ magnetY.set_rampRate_T_s(ramp_rate_Y)
 qt.mstart()
 
 
-data_refl = qt.Data(name='IV_BYsweep_D_491.04mV_13-10_G08_LF_lockin') #just renamed
+data_refl = qt.Data(name='IV_BYsweep_D_-387.49mV_07-08_G09_LF_lockin') #just renamed
 
-data_dc = qt.Data(name='IV_BYsweep_D_491.04mV_13-10_G08_current') #added to have current recored as well
+data_dc = qt.Data(name='IV_BYsweep_D_-387.49mV_07-08_G09_current') #added to have current recored as well
 
 data_path_refl = data_refl.get_dir()
 data_path_dc = data_dc.get_dir()
@@ -107,6 +108,8 @@ try:
         
         start = time()
 
+
+
         #magnetZ.set_field(BZ_vector[i])
         magnetY.set_field(BY_vector[i])  
 
@@ -132,8 +135,8 @@ try:
 
             data_temp_r[j] = result_reflectometry
 
-            
-            result_dc = dmm.get_readval()/gain*1e12
+    
+            result_dc = dmm03.get_readval()/gain*1e12
 
             data_temp_dc[j] = result_dc #for saving as matrix
 
@@ -141,6 +144,7 @@ try:
             data_dc.add_data_point(v2/div_factor, v1, result_dc) 
             
             qt.msleep(0.001)
+
         data_refl.new_block()
         data_dc.new_block()
 
