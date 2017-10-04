@@ -691,8 +691,12 @@ def UHF_init_demod_multiple(device_id = 'dev2148', demod_c = [0], out_c = 0):
 
     # Get time constant in seconds 
     # made globally for using in other functions
+    TC_temp = []
+    for dem in demod_c:
+        TC_temp.append(daq.getDouble('/%s/demods/%s/timeconstant' % (device, dem)))  # reading time comnstants from all initialized demods
+    
     global TC
-    TC = daq.getDouble('/%s/demods/%s/timeconstant' % (device, demod_c[0]))
+    TC = max(TC_temp)  # global TC is the maximum TC of all demods
 
     return daq
 
