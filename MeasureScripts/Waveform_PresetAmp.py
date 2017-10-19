@@ -19,7 +19,7 @@ class Pulse():
     
     
     
-    def __init__(self, waveform_name, AWG_clock, TimeUnits, AmpUnits): 
+    def __init__(self, waveform_name, AWG_clock, TimeUnits, AmpUnits, R = None, C = None): 
         
               
         self.AWG_clock = AWG_clock
@@ -48,6 +48,9 @@ class Pulse():
         self.TimeUnits = self.TimeUnitsDict[self.TimeUnitsKey]
         self.AmpUnitsKey = AmpUnits
         self.AmpUnits = self.AmpUnitsDict[self.AmpUnitsKey]
+
+        self.R = R  # bias tee resistance 
+        self.C = C  # bias tee capacitance 
 
 
         
@@ -139,6 +142,8 @@ class Pulse():
 
         self.unscaled_waveform = self.waveform # Buffer waveform to be scaled - in order to avoid multiple rescalings
         #self.rescaleAmplitude() # Resclaing amplitude for getting correct output on AWG
+        #if (self.R is not None) and (self.C is not None):    # Only if R and C are defined apply the bias tee inverse function
+            #self.InverseHPfilter()
         
         
         
@@ -152,7 +157,6 @@ class Pulse():
         
     def rescaleAmplitude(self, AWGMaxAmp, mean):
         
-
         # Converting from selected units to V
         self.waveform = self.unscaled_waveform*self.AmpUnits
         #self.Max_amp = max(self.waveform)         # Saving Max_amp to be able to set the AWG
@@ -165,19 +169,8 @@ class Pulse():
        
         
     
-    def InverseHPfilter(self, R,C, F_sample = 10000000, M=None):
-        """Filtering on a real signal using inverse FFT
-        
-        Inputs
-        =======
-        
-        X: 1-D numpy array of floats, the real time domain signal (time series) to be filtered
-          
-        
-        Notes
-        =====
-        1. The input signal must be real, not imaginary nor complex
-        2. The Filtered_signal will have only half of original amplitude. Use abs() to restore. 
+    def InverseHPfilter(self, M=None):
+        """
         
         
         """        
@@ -186,27 +179,24 @@ class Pulse():
         import scipy, numpy, cmath
         import matplotlib.pyplot as plt
         
-        X = self.waveform
+        
         if M == None: # if the number of points for FFT is not specified
-            M = X.size # let M be the length of the time series
-        Spectrum = scipy.fft(X, n=M) 
+            M = self.waveform.size # let M be the length of the time series
+        Spectrum = scipy.fft(self.waveform, n=M) 
+        #Spectrum = np.fft.fftshift(Spectrum)
         
-        #plt.figure("Spectrum_real")
-        #plt.plot(scipy.real(Spectrum))
-        #plt.plot(scipy.imag(Spectrum))
+        #plt.figure("Spectrum_abs")
+        #plt.plot(np.abs(Spectrum))
+
         
         
-        """
-        Generating a transfer function for RC filters.
-        Importing modules for complex math and plotting.
-        """
     
-        f = numpy.arange(-len(Spectrum)/2,len(Spectrum)/2, 1)
-        w = 2.0j*numpy.pi*f
+       
+        w = 2.0j*numpy.pi*numpy.arange(-len(Spectrum)/2,len(Spectrum)/2, 1)
     
     
         
-        hp_tf = (w*R*C)/(w*R*C+1)  # High Pass Transfer function
+        hp_tf = (w*self.R*self.C)/(w*self.R*self.C+1)  # High Pass Transfer function
         
     
     
@@ -225,10 +215,10 @@ class Pulse():
         inv_hp_tf = numpy.concatenate((np.array([0]),right_hp_tf_inv,left_hp_tf_inv))
         #print("inv_hp_tf:  ", len(inv_hp_tf))
         
-        #plt.figure("RC_real")
-        #plt.plot(f, scipy.real((hp_tf))) # plot high pass transfer function
+        plt.figure("RC_abs")
+        plt.plot(abs((hp_tf))) # plot high pass transfer function
         #plt.figure("RC_imag")
-        #plt.plot(f, scipy.imag(hp_tf)) # plot high pass transfer function
+        #plt.plot(w, scipy.imag(hp_tf)) # plot high pass transfer function
         
         
         
@@ -251,15 +241,16 @@ class Pulse():
         
         #print("Filtered_spectrum:  ", len(Filtered_spectrum))
         
-        
-        
+        plt.figure("Inv_Filtered_signal")
+        plt.plot(self.waveform) 
         
         Filtered_signal = scipy.ifft(Filtered_spectrum, n=M)  # Construct filtered signal
-        plt.figure("Inv_Filtered_signal")
+
         plt.plot(Filtered_signal) 
         plt.show() 
         
         self.waveform = Filtered_signal  
+
         
         
  
@@ -269,14 +260,13 @@ class Pulse():
             
         
     def plotWaveform(self, Name = None, fig = None, waveform = None):    # IN PROGRESS... 
-        return    # Just to skip plotting
-                                 # DELETE THIS LINE AFTER!
+        
         if fig is None:  # If no figure is passed create new one
             if type(Name) is str:    
                 plt.figure(Name)
             else:
                 plt.figure(self.waveform_name)
-        if waveform is None:  # If no wavefrom is passed use self.wavefrom
+        if waveform is None:  # If no waveform is passed use self.wavefrom
             wav = self.waveform
         else:
             wav = waveform
@@ -365,7 +355,7 @@ class Waveform():
             
     '''
     
-    def __init__(self, waveform_name = 'WAV1', AWG_clock = None, TimeUnits = 'us' , AmpUnits = 'mV'):
+    def __init__(self, waveform_name = 'WAV1', AWG_clock = None, TimeUnits = 'us' , AmpUnits = 'mV', R = None, C = None):
         
         if AWG_clock is None:
             raise Exception('Error: AWG_clcok is not passed')
@@ -378,14 +368,21 @@ class Waveform():
         
         
         self.waveform_name = waveform_name
+
+        self.R = R
+        self.C = C
         
-        self.CH1=Pulse(waveform_name = self.waveform_name+'CH1', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits)   # Changed 09.03_13:00
-        self.CH2=Pulse(waveform_name = self.waveform_name+'CH2', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits)   # Changed 09.03_13:00
-        self.CH3=Pulse(waveform_name = self.waveform_name+'CH3', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits)   # Changed 09.03_13:00
-        self.CH4=Pulse(waveform_name = self.waveform_name+'CH4', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits)   # Changed 09.03_13:00
+        self.CH1=Pulse(waveform_name = self.waveform_name+'CH1', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C)   # Changed 09.03_13:00
+        self.CH2=Pulse(waveform_name = self.waveform_name+'CH2', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C)   # Changed 09.03_13:00
+        self.CH3=Pulse(waveform_name = self.waveform_name+'CH3', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C)   # Changed 09.03_13:00
+        self.CH4=Pulse(waveform_name = self.waveform_name+'CH4', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C)   # Changed 09.03_13:00
                  
         self.lengthV = 0
         self.lengthM = 0
+
+
+
+
         
         
     def setAWG_clock(self, AWG_clock=1e8):    

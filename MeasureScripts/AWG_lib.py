@@ -4,6 +4,7 @@
 #import Tektronix_AWG5014 as ArbWG
 #import InverseHPfilterSeq as INV   # ADDED
 import Waveform_PresetAmp as Wav
+reload(Wav)
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import qt
@@ -225,6 +226,7 @@ def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync):
         fig = plt.figure("CH%d"%(ch_num+1))
         for i,seq_elem in enumerate(seq[ch_num]):
             seq_elem.rescaleAmplitude(AWGMax_amp, mean = 0)  # Argument "mean" added just from compatibility reasons  
+            #seq_elem.InverseHPfilter()
             # Plot start and end element of sequence
             if i == 0 or i == (len(seq[ch_num])-1):
                 seq_elem.plotWaveform(fig = fig, waveform = seq_elem.reverse_rescaleAmplitude(AWGMax_amp)) # Passing reverse rescaled wavefrom to plotWavefrom 
