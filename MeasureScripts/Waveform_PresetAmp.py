@@ -163,7 +163,7 @@ class Pulse():
     def rescaleAmplitude(self, AWGMaxAmp, mean):
         
         # Converting from selected units to V
-        self.waveform = self.unscaled_waveform*self.AmpUnits
+        self.waveform = self.waveform*self.AmpUnits
         #self.Max_amp = max(self.waveform)         # Saving Max_amp to be able to set the AWG
         self.waveform = self.waveform/AWGMaxAmp     # Scaling
         mean = mean*self.AmpUnits/AWGMaxAmp
