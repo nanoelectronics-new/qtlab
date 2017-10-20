@@ -49,7 +49,7 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     
 
     for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
-        p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', R = 0.5, C = 1)  # Generating next object wavefrom in sequnce
+        p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', R = 1.3e6, C = 40e-9)  # Generating next object wavefrom in sequnce
                                                                                                                          # Starting from second element (WAV1elem%d'%(i+1)) 
                                                                                                                          # because sync element is first 
         
@@ -58,8 +58,8 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
             #p.setMarkersCH1([0],[0])   # Starting element in sequence with zero marker amp for synchronization reasons
         #else:
 
-        p.setValuesCH1([50.0, 0],[20.0, 100],[50.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
-        p.setMarkersCH1([0,1,0],[0,1,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
+        p.setValuesCH1([50.0, 0],[20.0, 100],[20.0, 40.0],[50.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
+        p.setMarkersCH1([0,1,0,0],[0,1,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
         #A1[2] = A1[2] - delta_A1 # Defining amplitude change between wavefroms in sequence
 
 

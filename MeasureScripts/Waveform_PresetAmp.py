@@ -23,7 +23,7 @@ class Pulse():
         
               
         self.AWG_clock = AWG_clock
-        self.AWG_period = 1/float(self.AWG_clock)     # Calculating AWG period
+        self.AWG_period = 1/float(self.AWG_clock)     # Calculating AWG period in seconds
         
         self.amplitudes = dict()
         self.timings = dict()
@@ -49,9 +49,9 @@ class Pulse():
         self.AmpUnitsKey = AmpUnits
         self.AmpUnits = self.AmpUnitsDict[self.AmpUnitsKey]
 
-        self.R = R  # bias tee resistance 
-        self.C = C  # bias tee capacitance 
-
+        self.R = R
+        self.C = C
+        self.delta = 0.0
 
         
         self.waveform_name = waveform_name
@@ -132,9 +132,13 @@ class Pulse():
             Length = self.rescaleLength(self.timings[key]) # Rescaling length 
             
             Start_amp = self.amplitudes[key][0]         # Amplitude of starting wavefrom part             
-            End_amp = self.amplitudes[key][1]           # Amplitude of ending wavefrom part   
-            self.waveform = np.concatenate((self.waveform,np.linspace(Start_amp,End_amp,Length)))
-            
+            End_amp = self.amplitudes[key][1]           # Amplitude of ending wavefrom part 
+
+            corrected_chunk = self.bias_tee_correction(np.linspace(Start_amp,End_amp,Length))
+            self.delta += corrected_chunk[-1] - corrected_chunk[0]  # Voltage at the capacitor at the and of the segment, it accumulates
+
+            self.waveform = np.concatenate((self.waveform,corrected_chunk))
+            del corrected_chunk
             Marker1 = self.marker1_dict[key]    # Value of marker1 in current segment
             Marker2 = self.marker2_dict[key]    # Value of marker2 in current segment
             self.marker1 = np.concatenate((self.marker1,np.linspace(Marker1,Marker1,Length))) 
@@ -167,94 +171,15 @@ class Pulse():
     def reverse_rescaleAmplitude(self, AWGMaxAmp):
         return (self.waveform)*AWGMaxAmp/float(self.AmpUnits)
        
-        
     
-    def InverseHPfilter(self, M=None):
-        """
-        
-        
-        """        
-        
-        
-        import scipy, numpy, cmath
-        import matplotlib.pyplot as plt
-        
-        
-        if M == None: # if the number of points for FFT is not specified
-            M = self.waveform.size # let M be the length of the time series
-        Spectrum = scipy.fft(self.waveform, n=M) 
-        #Spectrum = np.fft.fftshift(Spectrum)
-        
-        #plt.figure("Spectrum_abs")
-        #plt.plot(np.abs(Spectrum))
 
-        
-        
-    
-       
-        w = 2.0j*numpy.pi*numpy.arange(-len(Spectrum)/2,len(Spectrum)/2, 1)
-    
-    
-        
-        hp_tf = (w*self.R*self.C)/(w*self.R*self.C+1)  # High Pass Transfer function
-        
-    
-    
-        
-        right_hp_tf = hp_tf[len(hp_tf)/2:len(hp_tf)]
-        right_hp_tf_inv = 1/right_hp_tf[1:len(right_hp_tf)]
-        #print("right_hp_tf:  ", len(right_hp_tf))
-        #print("right_hp_tf_inv:  ", len(right_hp_tf_inv))
-        left_hp_tf = hp_tf[0:len(hp_tf)/2]
-        left_hp_tf_inv = 1/left_hp_tf
-        #print("left_hp_tf:  ", len(left_hp_tf))
-        #print("left_hp_tf_inv:  ", len(left_hp_tf_inv))
-        
-        
-        hp_tf = numpy.concatenate((right_hp_tf,left_hp_tf))
-        inv_hp_tf = numpy.concatenate((np.array([0]),right_hp_tf_inv,left_hp_tf_inv))
-        #print("inv_hp_tf:  ", len(inv_hp_tf))
-        
-        plt.figure("RC_abs")
-        plt.plot(abs((hp_tf))) # plot high pass transfer function
-        #plt.figure("RC_imag")
-        #plt.plot(w, scipy.imag(hp_tf)) # plot high pass transfer function
-        
-        
-        
-        
-    
-    
-        #plt.figure("RCinv_real")
-        #plt.plot(f, scipy.real((inv_hp_tf))) # plot high pass transfer function
-        #plt.figure("RCinv_imag")
-        #plt.plot(f, scipy.imag(inv_hp_tf)) # plot high pass transfer function
-        
-        #plt.show()
-    
-    
-    
-        #Filtered_spectrum = Spectrum*hp_tf  # Filtering with HP
-        #Filtered_spectrum = Filtered_spectrum*inv_hp_tf  # Filtering with inverse HP afterwards
-        Filtered_spectrum = Spectrum*inv_hp_tf # Filtering with inverse HP
-        
-        
-        #print("Filtered_spectrum:  ", len(Filtered_spectrum))
-        
-        plt.figure("Inv_Filtered_signal")
-        plt.plot(self.waveform) 
-        
-        Filtered_signal = scipy.ifft(Filtered_spectrum, n=M)  # Construct filtered signal
 
-        plt.plot(Filtered_signal) 
-        plt.show() 
-        
-        self.waveform = Filtered_signal  
+    def bias_tee_correction(self, chunk):
+        t = np.linspace(0,len(chunk),len(chunk)) * self.AWG_period  # Calculating the time vector in seconds
+        tau = self.R * self.C
+        return (chunk*np.exp(t/tau)+self.delta)
 
-        
-        
- 
-        
+
         
         
             

@@ -293,7 +293,7 @@ def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync):
         for elem_num, seq_elem in enumerate(seq[ch]):   # Iterating trough sequence elements
             
              # Wait for trigger for every element of the sequence
-            AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 1)
+            AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 0)
 
 
             
