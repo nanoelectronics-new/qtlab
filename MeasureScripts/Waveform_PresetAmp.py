@@ -51,6 +51,7 @@ class Pulse():
 
         self.R = R
         self.C = C
+        self.tau = self.R * self.C # Time constatnt of bias tee, should be in seconds
         self.delta = 0.0
 
         
@@ -135,10 +136,10 @@ class Pulse():
             End_amp = self.amplitudes[key][1]           # Amplitude of ending wavefrom part 
 
             corrected_chunk = self.bias_tee_correction(np.linspace(Start_amp,End_amp,Length))
-            self.delta += corrected_chunk[-1] - corrected_chunk[0]  # Voltage at the capacitor at the and of the segment, it accumulates
+            #self.delta += corrected_chunk[-1] - corrected_chunk[0]  # Voltage at the capacitor at the and of the segment, it accumulates
 
-            self.waveform = np.concatenate((self.waveform,corrected_chunk))
-            del corrected_chunk
+            #self.waveform = np.concatenate((self.waveform,corrected_chunk))
+            #del corrected_chunk
             Marker1 = self.marker1_dict[key]    # Value of marker1 in current segment
             Marker2 = self.marker2_dict[key]    # Value of marker2 in current segment
             self.marker1 = np.concatenate((self.marker1,np.linspace(Marker1,Marker1,Length))) 
@@ -178,6 +179,15 @@ class Pulse():
         t = np.linspace(0,len(chunk),len(chunk)) * self.AWG_period  # Calculating the time vector in seconds
         tau = self.R * self.C
         return (chunk*np.exp(t/tau)+self.delta)
+
+    def bt_corr_Filip(self):
+        V_avg = np.mean(self.waveform)
+        integ = 0.0
+        for i,elem in enumerate(self.waveform):
+            integ += ((elem - V_avg) * self.AWG_period)/self.tau
+            self.waveform[i] += integ 
+
+
 
 
         
