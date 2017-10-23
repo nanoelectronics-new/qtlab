@@ -27,7 +27,7 @@ AWG = qt.instruments.get("AWG")
 
 
 
-def set_waveform(seq,AWG_clock,AWGMax_amp, t_sync, sync, p_wait = None):
+def set_waveform(seq,AWG_clock,AWGMax_amp, t_sync, sync):
 
     '''
     This function uploads and loads previously created sequence to the AWG. 
@@ -173,16 +173,16 @@ def set_waveform(seq,AWG_clock,AWGMax_amp, t_sync, sync, p_wait = None):
         for elem_num, seq_elem in enumerate(seq[ch]):   # Iterating trough sequence elements
             
             if elem_num == 0: # If it is the FIRST element set TWAIT = 1 - wait for trigger
-                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 1)
+                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 1, count = seq_elem.repeat)
 
 
             
 
             if elem_num == (len(seq[ch])-1): # If it is the last element set GOTOind=1 - return to first elem
-                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, GOTOind=1)
+                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, GOTOind=1, count = seq_elem.repeat)
                 
             else:
-                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name)
+                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, count = seq_elem.repeat)
                 
                
                            
@@ -198,7 +198,7 @@ def set_waveform(seq,AWG_clock,AWGMax_amp, t_sync, sync, p_wait = None):
     #AWG.run()
      
 
-def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, p_wait = None):
+def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync):
 
     '''
     This function uploads and loads previously created sequence to the AWG. It puts trigger flag on every sequence element.
@@ -293,16 +293,16 @@ def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, p_wait = No
         for elem_num, seq_elem in enumerate(seq[ch]):   # Iterating trough sequence elements
             
              # Wait for trigger for every element of the sequence
-            AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 0)
+            AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 0, count = seq_elem.repeat)
 
 
             
 
             if elem_num == (len(seq[ch])-1): # If it is the last element set GOTOind=1 - return to first elem
-                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, GOTOind=1)
+                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, GOTOind=1, count = seq_elem.repeat)
                 
             else:
-                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name)
+                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, count = seq_elem.repeat)
                 
                
                            
@@ -320,7 +320,7 @@ def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, p_wait = No
     
     
 
-def set_waveform_trigger_all_wait(seq,AWG_clock,AWGMax_amp, t_sync, sync, t_wait=1, p_wait = None):
+def set_waveform_trigger_all_wait(seq,AWG_clock,AWGMax_amp, t_sync, sync, t_wait=1):
 
     '''
     This function uploads and loads previously created sequence to the AWG. It puts trigger flag on every sequence element.
@@ -424,16 +424,16 @@ def set_waveform_trigger_all_wait(seq,AWG_clock,AWGMax_amp, t_sync, sync, t_wait
         for elem_num, seq_elem in enumerate(seq[ch]):   # Iterating trough sequence elements
             
              # Wait for trigger for every element of the sequence
-            AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 1)
+            AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 1, count = seq_elem.repeat)
 
 
             
 
             if elem_num == (len(seq[ch])-1): # If it is the last element set GOTOind=1 - return to first elem
-                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, GOTOind=1)
+                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, GOTOind=1, count = seq_elem.repeat)
                 
             else:
-                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name)
+                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, count = seq_elem.repeat)
                 
                
                            

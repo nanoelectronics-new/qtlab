@@ -19,7 +19,7 @@ class Pulse():
     
     
     
-    def __init__(self, waveform_name, AWG_clock, TimeUnits, AmpUnits, R = None, C = None): 
+    def __init__(self, waveform_name, AWG_clock, TimeUnits, AmpUnits, R = None, C = None, repeat = 1): 
         
               
         self.AWG_clock = AWG_clock
@@ -54,6 +54,8 @@ class Pulse():
         if (self.R is not None) and (self.C is not None):
             self.tau = self.R * self.C # Time constant of the bias tee, should be in seconds
         self.delta = 0.0
+
+        self.repeat = repeat  # defines how many times the pulse will be repeated in the sequence
 
         
         self.waveform_name = waveform_name
@@ -289,7 +291,7 @@ class Waveform():
             
     '''
     
-    def __init__(self, waveform_name = 'WAV1', AWG_clock = None, TimeUnits = 'us' , AmpUnits = 'mV', R = None, C = None):
+    def __init__(self, waveform_name = 'WAV1', AWG_clock = None, TimeUnits = 'us' , AmpUnits = 'mV', R = None, C = None, repeat = 1):
         
         if AWG_clock is None:
             raise Exception('Error: AWG_clcok is not passed')
@@ -306,10 +308,10 @@ class Waveform():
         self.R = R
         self.C = C
         
-        self.CH1=Pulse(waveform_name = self.waveform_name+'CH1', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C)   # Changed 09.03_13:00
-        self.CH2=Pulse(waveform_name = self.waveform_name+'CH2', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C)   # Changed 09.03_13:00
-        self.CH3=Pulse(waveform_name = self.waveform_name+'CH3', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C)   # Changed 09.03_13:00
-        self.CH4=Pulse(waveform_name = self.waveform_name+'CH4', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C)   # Changed 09.03_13:00
+        self.CH1=Pulse(waveform_name = self.waveform_name+'CH1', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C, repeat = repeat)   # Changed 09.03_13:00
+        self.CH2=Pulse(waveform_name = self.waveform_name+'CH2', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C, repeat = repeat)   # Changed 09.03_13:00
+        self.CH3=Pulse(waveform_name = self.waveform_name+'CH3', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C, repeat = repeat)   # Changed 09.03_13:00
+        self.CH4=Pulse(waveform_name = self.waveform_name+'CH4', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C, repeat = repeat)   # Changed 09.03_13:00
                  
         self.lengthV = 0
         self.lengthM = 0

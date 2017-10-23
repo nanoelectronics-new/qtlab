@@ -49,7 +49,7 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     
 
     for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
-        p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', R = 1.0e6, C = 40e-9)  # Generating next object wavefrom in sequnce
+        p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', R = 1.0e6, C = 40e-9, repeat = 10)  # Generating next object wavefrom in sequnce
                                                                                                                          # Starting from second element (WAV1elem%d'%(i+1)) 
                                                                                                                          # because sync element is first 
         
@@ -94,7 +94,7 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     seq.append(seqCH1) # Putting sequence list for channel 1 in list that contain all sequences (all channels)
     #seq.append(seqCH2) # Putting sequence list for channel 2 in list that contain all sequences (all channels)
 
-    AWG_lib.set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, p_wait) # Function for uploading and setting all sequence waveforms to AWG 
+    AWG_lib.set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG 
 
 
     raw_input("Press Enter if uploading to AWG is finished")
