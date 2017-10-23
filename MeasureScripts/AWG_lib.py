@@ -27,7 +27,7 @@ AWG = qt.instruments.get("AWG")
 
 
 
-def set_waveform(seq,AWG_clock,AWGMax_amp, t_sync, sync):
+def set_waveform(seq,AWG_clock,AWGMax_amp, t_sync, sync, p_wait = None):
 
     '''
     This function uploads and loads previously created sequence to the AWG. 
@@ -198,7 +198,7 @@ def set_waveform(seq,AWG_clock,AWGMax_amp, t_sync, sync):
     #AWG.run()
      
 
-def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync):
+def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, p_wait = None):
 
     '''
     This function uploads and loads previously created sequence to the AWG. It puts trigger flag on every sequence element.
@@ -320,7 +320,7 @@ def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync):
     
     
 
-def set_waveform_trigger_all_wait(seq,AWG_clock,AWGMax_amp, t_sync, sync, t_wait=1):
+def set_waveform_trigger_all_wait(seq,AWG_clock,AWGMax_amp, t_sync, sync, t_wait=1, p_wait = None):
 
     '''
     This function uploads and loads previously created sequence to the AWG. It puts trigger flag on every sequence element.

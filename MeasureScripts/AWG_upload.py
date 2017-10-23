@@ -17,12 +17,12 @@ AWG_clock = 10e6        # Wanted AWG clock. Info https://www.google.at/url?sa=t&
 AWGMax_amp = 2          # In Volts!!! Maximum needed amplitude on all channels for your particular experiment (noise reduction) - need to be set at the beginning
 Seq_length = 1     # Sequence length (number of periods - waveforms)
 t_sync = 0              # Duration of synchronization element in sequence in "TimeUnits"
+t_wait = 100  #ms   Waiting time at the end of the sequence
 Automatic_sequence_generation = False   # Flag for determining type of sequence generation: Automatic - True,  Manual - False 
 
 
 sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV') # First element in sequence is synchronization element
 #compensate = Wav.Waveform(waveform_name = 'WAV1elem%d'%1, AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV') # Second element in sequence is element for substracting mean value
-
 
 
 # Here was automatic sequence generation - look for it in previous verisons
@@ -58,7 +58,7 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
             #p.setMarkersCH1([0],[0])   # Starting element in sequence with zero marker amp for synchronization reasons
         #else:
 
-        p.setValuesCH1([50.0, 0],[20.0, 100],[20.0, -40.0],[50.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
+        p.setValuesCH1([50.0, 0],[35.0, 100],[12.0, -40.0],[50.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
         p.setMarkersCH1([1,0,0,0],[1,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
         #A1[2] = A1[2] - delta_A1 # Defining amplitude change between wavefroms in sequence
 
@@ -82,13 +82,19 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     
 
     
-    p_wait = Wav.Waveform(waveform_name = 'WAV1elem%d'%2, AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', R = 1.3e6, C = 40e-9)
+    p_wait = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV')  # Creating the end element
+                                                                                                                          # which will repeat couple of times
+                                                                                                                          # in order to achieve waiting interval
     p_wait.setValuesCH1([20.0, 0.0])
     p_wait.setMarkersCH1([0],[0])
     seqCH1.append(p_wait.CH1)
+
+
+
     seq.append(seqCH1) # Putting sequence list for channel 1 in list that contain all sequences (all channels)
     #seq.append(seqCH2) # Putting sequence list for channel 2 in list that contain all sequences (all channels)
 
-    AWG_lib.set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG 
-    
+    AWG_lib.set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, p_wait) # Function for uploading and setting all sequence waveforms to AWG 
+
+
     raw_input("Press Enter if uploading to AWG is finished")

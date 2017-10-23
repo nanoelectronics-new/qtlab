@@ -142,7 +142,7 @@ class Pulse():
             self.marker1 = np.concatenate((self.marker1,np.linspace(Marker1,Marker1,Length))) 
             self.marker2 = np.concatenate((self.marker2,np.linspace(Marker2,Marker2,Length)))
 
-        self.unscaled_waveform = self.waveform # Buffer waveform to be scaled - in order to avoid multiple rescalings
+        #self.unscaled_waveform = self.waveform # Buffer waveform to be scaled - in order to avoid multiple rescalings
         if (self.R is not None) and (self.C is not None):  # Do the correction only if the bias tee parameters are passed
             self.bt_corr_Filip()
         
@@ -180,7 +180,7 @@ class Pulse():
         '''
         Bias tee correction function according to the similar function by Filip Malinowski, written in Igor
         ''' 
-        V_avg = np.mean(self.waveform)
+        #V_avg = np.mean(self.waveform)
         integ = 0.0
         for i,elem in enumerate(self.waveform):
             integ += (elem * self.AWG_period)/self.tau
