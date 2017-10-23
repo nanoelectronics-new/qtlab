@@ -49,7 +49,7 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     
 
     for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
-        p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', R = 1.3e6, C = 40e-9)  # Generating next object wavefrom in sequnce
+        p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', R = 1.0e6, C = 40e-9)  # Generating next object wavefrom in sequnce
                                                                                                                          # Starting from second element (WAV1elem%d'%(i+1)) 
                                                                                                                          # because sync element is first 
         
@@ -58,8 +58,8 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
             #p.setMarkersCH1([0],[0])   # Starting element in sequence with zero marker amp for synchronization reasons
         #else:
 
-        p.setValuesCH1([50.0, 0],[20.0, 100],[20.0, 40.0],[50.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
-        p.setMarkersCH1([0,1,0,0],[0,1,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
+        p.setValuesCH1([50.0, 0],[20.0, 100],[20.0, -40.0],[50.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
+        p.setMarkersCH1([1,0,0,0],[1,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
         #A1[2] = A1[2] - delta_A1 # Defining amplitude change between wavefroms in sequence
 
 
@@ -81,10 +81,13 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
         #seqCH2.append(p.CH2) # Filing sequence list for channel 2 (seqCH2) with next waveform (period)
     
 
+    
+    p_wait = Wav.Waveform(waveform_name = 'WAV1elem%d'%2, AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', R = 1.3e6, C = 40e-9)
+    p_wait.setValuesCH1([20.0, 0.0])
+    p_wait.setMarkersCH1([0],[0])
+    seqCH1.append(p_wait.CH1)
     seq.append(seqCH1) # Putting sequence list for channel 1 in list that contain all sequences (all channels)
     #seq.append(seqCH2) # Putting sequence list for channel 2 in list that contain all sequences (all channels)
-
-
 
     AWG_lib.set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG 
     

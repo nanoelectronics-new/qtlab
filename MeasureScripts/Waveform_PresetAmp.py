@@ -51,7 +51,8 @@ class Pulse():
 
         self.R = R
         self.C = C
-        self.tau = self.R * self.C # Time constatnt of bias tee, should be in seconds
+        if (self.R is not None) and (self.C is not None):
+            self.tau = self.R * self.C # Time constant of the bias tee, should be in seconds
         self.delta = 0.0
 
         
@@ -134,21 +135,16 @@ class Pulse():
             
             Start_amp = self.amplitudes[key][0]         # Amplitude of starting wavefrom part             
             End_amp = self.amplitudes[key][1]           # Amplitude of ending wavefrom part 
-
-            corrected_chunk = self.bias_tee_correction(np.linspace(Start_amp,End_amp,Length))
-            #self.delta += corrected_chunk[-1] - corrected_chunk[0]  # Voltage at the capacitor at the and of the segment, it accumulates
-
-            #self.waveform = np.concatenate((self.waveform,corrected_chunk))
-            #del corrected_chunk
+            self.waveform = np.concatenate((self.waveform,np.linspace(Start_amp,End_amp,Length)))
+     
             Marker1 = self.marker1_dict[key]    # Value of marker1 in current segment
             Marker2 = self.marker2_dict[key]    # Value of marker2 in current segment
             self.marker1 = np.concatenate((self.marker1,np.linspace(Marker1,Marker1,Length))) 
             self.marker2 = np.concatenate((self.marker2,np.linspace(Marker2,Marker2,Length)))
 
         self.unscaled_waveform = self.waveform # Buffer waveform to be scaled - in order to avoid multiple rescalings
-        #self.rescaleAmplitude() # Resclaing amplitude for getting correct output on AWG
-        #if (self.R is not None) and (self.C is not None):    # Only if R and C are defined apply the bias tee inverse function
-            #self.InverseHPfilter()
+        if (self.R is not None) and (self.C is not None):  # Do the correction only if the bias tee parameters are passed
+            self.bt_corr_Filip()
         
         
         
@@ -181,10 +177,13 @@ class Pulse():
         return (chunk*np.exp(t/tau)+self.delta)
 
     def bt_corr_Filip(self):
+        '''
+        Bias tee correction function according to the similar function by Filip Malinowski, written in Igor
+        ''' 
         V_avg = np.mean(self.waveform)
         integ = 0.0
         for i,elem in enumerate(self.waveform):
-            integ += ((elem - V_avg) * self.AWG_period)/self.tau
+            integ += (elem * self.AWG_period)/self.tau
             self.waveform[i] += integ 
 
 
