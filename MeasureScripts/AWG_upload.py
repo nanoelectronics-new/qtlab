@@ -5,12 +5,12 @@ reload(Wav)
 import numpy as np
 #import qt
 import matplotlib.pyplot as plt
-
+from Waveform_PresetAmp import Pulse as pul
 
 
 ### SETTING AWG
 ##
-AWG_clock = 10e6        # Wanted AWG clock. Info https://www.google.at/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&ved=0ahUKEwjI5KCdy_TLAhXFuxQKHamZAHoQFggcMAA&url=http%3A%2F%2Fwww.tek.com%2Fdl%2F76W-19764-1.pdf&usg=AFQjCNGsPEYMv-JCA5vht2I1cSlzCVVVAA&sig2=RFFJuEw5rKO_uGo69H7U2A&cad=rja
+AWG_clock = 1.2e9        # Wanted AWG clock. Info https://www.google.at/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&ved=0ahUKEwjI5KCdy_TLAhXFuxQKHamZAHoQFggcMAA&url=http%3A%2F%2Fwww.tek.com%2Fdl%2F76W-19764-1.pdf&usg=AFQjCNGsPEYMv-JCA5vht2I1cSlzCVVVAA&sig2=RFFJuEw5rKO_uGo69H7U2A&cad=rja
 											# In pdf on link read section "AWG: Simple Concept, Maximum Flexibility"
 											
 						# Take care about waveform and sequence length and clock rate  - AWG has limited capability
@@ -21,7 +21,7 @@ t_wait = 100  #ms   Waiting time at the end of the sequence
 Automatic_sequence_generation = False   # Flag for determining type of sequence generation: Automatic - True,  Manual - False 
 
 
-sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV') # First element in sequence is synchronization element
+sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV') # First element in sequence is synchronization element
 #compensate = Wav.Waveform(waveform_name = 'WAV1elem%d'%1, AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV') # Second element in sequence is element for substracting mean value
 
 
@@ -49,7 +49,7 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     
 
     for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
-        p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', R = 1.0e6, C = 40e-9, repeat = 10)  # Generating next object wavefrom in sequnce
+        p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV')  # Generating next object wavefrom in sequnce
                                                                                                                          # Starting from second element (WAV1elem%d'%(i+1)) 
                                                                                                                          # because sync element is first 
         
@@ -58,11 +58,21 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
             #p.setMarkersCH1([0],[0])   # Starting element in sequence with zero marker amp for synchronization reasons
         #else:
 
-        p.setValuesCH1([50.0, 0],[35.0, 100],[12.0, -40.0],[50.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
-        p.setMarkersCH1([1,0,0,0],[1,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
+        p.setValuesCH1([50.0, 0],[100.0, 500],[50.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
+        p.setMarkersCH1([1,0,0],[1,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
         #A1[2] = A1[2] - delta_A1 # Defining amplitude change between wavefroms in sequence
 
+        cos_len = pul.rescaleLength(p.CH1,100.0) # length of the cosine part
+        t = np.linspace(0,cos_len,cos_len) 
+        f = 100e6  # cosine frequency is Hz
+        Acos = 1500.0  # cosine amplitude in AmpUnits
+        cos = Acos*np.cos((2*np.pi*f*t)/AWG_clock)
 
+        cos_start = pul.rescaleLength(p.CH1,50.0) - 1
+        cos_end = cos_start + cos_len
+
+        p.CH1.waveform -= p.CH1.waveform
+        p.CH1.waveform[cos_start:cos_end] += cos
         
         #if i == 0:
             
@@ -82,12 +92,12 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     
 
     
-    p_wait = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV')  # Creating the end element
+    #p_wait = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV')  # Creating the end element
                                                                                                                           # which will repeat couple of times
                                                                                                                           # in order to achieve waiting interval
-    p_wait.setValuesCH1([20.0, 0.0])
-    p_wait.setMarkersCH1([0],[0])
-    seqCH1.append(p_wait.CH1)
+    #p_wait.setValuesCH1([20.0, 0.0])
+    #p_wait.setMarkersCH1([0],[0])
+    #seqCH1.append(p_wait.CH1)
 
 
 
