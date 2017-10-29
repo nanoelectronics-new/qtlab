@@ -14,8 +14,8 @@ AWG_clock = 1.2e9        # Wanted AWG clock. Info https://www.google.at/url?sa=t
 											# In pdf on link read section "AWG: Simple Concept, Maximum Flexibility"
 											
 						# Take care about waveform and sequence length and clock rate  - AWG has limited capability
-AWGMax_amp = 2          # In Volts!!! Maximum needed amplitude on all channels for your particular experiment (noise reduction) - need to be set at the beginning
-Seq_length = 1     # Sequence length (number of periods - waveforms)
+AWGMax_amp = 3          # In Volts!!! Maximum needed amplitude on all channels for your particular experiment (noise reduction) - need to be set at the beginning
+Seq_length = 100     # Sequence length (number of periods - waveforms)
 t_sync = 0              # Duration of synchronization element in sequence in "TimeUnits"
 t_wait = 100  #ms   Waiting time at the end of the sequence
 Automatic_sequence_generation = False   # Flag for determining type of sequence generation: Automatic - True,  Manual - False 
@@ -51,28 +51,35 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
     for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
         p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV')  # Generating next object wavefrom in sequnce
                                                                                                                          # Starting from second element (WAV1elem%d'%(i+1)) 
-                                                                                                                         # because sync element is first 
+        p2 = Wav.Waveform(waveform_name = 'WAV2elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV') # helper waveform for creationg the offset for the IQ signal                                                                                                                 # because sync element is first 
         
         #if i == 0:
             #p.setValuesCH1([2,0])  # Starting element in sequence with zero amp for synchronization reasons
             #p.setMarkersCH1([0],[0])   # Starting element in sequence with zero marker amp for synchronization reasons
         #else:
 
-        p.setValuesCH1([50.0, 0],[100.0, 500],[50.0, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
+        p.setValuesCH1([0.0125, 0],[0.025, 1],[0.0125, 0]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
         p.setMarkersCH1([1,0,0],[1,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
         #A1[2] = A1[2] - delta_A1 # Defining amplitude change between wavefroms in sequence
+        p2.setValuesCH1([0.0125, 0],[0.025, i*10],[0.0125, 0])
+        p2.setMarkersCH1([1,0,0],[1,0,0])
 
-        cos_len = pul.rescaleLength(p.CH1,100.0) # length of the cosine part
+        #cos_len = pul.rescaleLength(p.CH1,0.025) # length of the cosine part
+        #t = np.linspace(0,cos_len,cos_len) 
+        cos_len = Seq_length*len(p.CH1.waveform)
         t = np.linspace(0,cos_len,cos_len) 
         f = 100e6  # cosine frequency is Hz
         Acos = 1500.0  # cosine amplitude in AmpUnits
         cos = Acos*np.cos((2*np.pi*f*t)/AWG_clock)
 
-        cos_start = pul.rescaleLength(p.CH1,50.0) - 1
-        cos_end = cos_start + cos_len
-
-        p.CH1.waveform -= p.CH1.waveform
-        p.CH1.waveform[cos_start:cos_end] += cos
+        #cos_start = pul.rescaleLength(p.CH1,0.0125) - 1
+        #cos_end = cos_start + cos_len
+        start_index = i*len(p.CH1.waveform)
+        stop_index = (i+1)*len(p.CH1.waveform)
+        p.CH1.waveform = cos[start_index:stop_index]*p.CH1.waveform
+        p.CH1.waveform += p2.CH1.waveform   # final waveform is offseted with the p2
+        #p.CH1.waveform -= p.CH1.waveform
+        #p.CH1.waveform[cos_start:cos_end] += cos
         
         #if i == 0:
             
