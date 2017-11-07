@@ -14,7 +14,7 @@ AWG_clock = 1e9
 											
 						
 AWGMax_amp = 3         
-Seq_length = 3     
+Seq_length = 20    
 t_sync = 0              
 t_wait = 100  
 Automatic_sequence_generation = False   
@@ -43,11 +43,11 @@ if not(Automatic_sequence_generation):
         #p.setValuesCH2([0.1, Q],[0.2, Q],[0.1, Q])
         #p.setMarkersCH2([1,0,0],[1,0,0])
 
-        p.setValuesCH1([0.1, 0],[0.2, 500*np.sqrt(2)],[0.1, 0]) 
+        p.setValuesCH1([0.01, 0.0],[0.01, 500*np.sqrt(2)],[0.01, 0]) 
         p.setMarkersCH1([1,0,0],[1,0,0])  
 
-        p.setValuesCH2([0.1, 500*np.sqrt(2)],[0.2, 0],[0.1, 500*np.sqrt(2)])
-        p.setMarkersCH2([1,0,0],[1,0,0])
+        p.setValuesCH2([0.01, 0.0],[0.01, 500*np.sqrt(2)],[0.01, 0])
+        p.setMarkersCH2([0,1,0],[0,1,0])
 
    
         seqCH1.append(p.CH1) 
