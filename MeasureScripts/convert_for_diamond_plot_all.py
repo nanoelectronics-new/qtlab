@@ -2,7 +2,7 @@ from memory_profiler import profile
 from os import walk, remove
 import numpy as np
 
-@profile(precision=4)
+#@profile(precision=4)
 
 
 
@@ -20,7 +20,7 @@ def convert_to_matrix_file_all(path = None):
         if fname is None or path is None:
             raise Exception("File name and path must be passed!")
 
-    
+        
 
         def isfloat(value):
             try:

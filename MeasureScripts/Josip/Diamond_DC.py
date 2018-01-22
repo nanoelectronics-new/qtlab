@@ -83,7 +83,7 @@ try:
             IVVI.set_dac1(v2)
 
             # readout
-            result = dmm03.get_readval()/gain*1e12
+            result = dmm.get_readval()/gain*1e12
 
 
             # Save to the matrix
