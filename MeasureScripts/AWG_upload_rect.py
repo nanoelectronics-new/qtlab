@@ -10,10 +10,10 @@ from Waveform_PresetAmp import Pulse as pul
 
 ### SETTING AWG
 ##
-AWG_clock = 10e6        
+AWG_clock = 1.2e9        
 											
 						
-AWGMax_amp = 3         
+AWGMax_amp = 0.5         
 Seq_length = 3   
 t_sync = 0              
 t_wait = 100  
@@ -27,6 +27,7 @@ if not(Automatic_sequence_generation):
 
     seqCH1 = list() 
     seqCH2 = list()	
+    seqCH3 = list() 
     seq = list() 
 
     I = np.linspace(0,500*np.sqrt(2),3) # I vector from 0 until the radius of the sphere
@@ -43,18 +44,24 @@ if not(Automatic_sequence_generation):
         #p.setValuesCH2([0.1, Q],[0.2, Q],[0.1, Q])
         #p.setMarkersCH2([1,0,0],[1,0,0])
 
-        p.setValuesCH1([32.5, 0.0],[37.5, 0.0],[12.5, 1000.0],[12.5, 1000.0],[75.0, 1000.0],[70.0, 0.0]) 
-        p.setMarkersCH1([0,1,1,0,0,0],[0,1,1,0,0,0])  
+        p.setValuesCH1([0.015, 0.0],[0.01, 500.0],[0.015, 0.0]) 
+        p.setMarkersCH1([0,1,0],[0,1,0])  
 
-        p.setValuesCH2([32.5, 0.0],[37.5, 0.0],[12.5, 1000.0],[12.5, 1000.0],[75.0, 1000.0],[70.0, 0.0]) 
-        p.setMarkersCH2([0,0,1,0,0,0],[0,0,1,0,0,0])
+        p.setValuesCH2([0.015, 0.0],[0.01, 500.0],[0.015, 0.0]) 
+        p.setMarkersCH2([0,0,1],[0,0,1])
+
+        p.setValuesCH3([0.01, 0.0],[0.02, 500.0],[0.01, 0.0]) 
+        p.setMarkersCH3([0,0,1],[0,0,1])
+
 
    
         seqCH1.append(p.CH1) 
         seqCH2.append(p.CH2) 
+        seqCH3.append(p.CH3) 
 
     seq.append(seqCH1) 
     seq.append(seqCH2) 
+    seq.append(seqCH3) 
 
     AWG_lib.set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG 
 

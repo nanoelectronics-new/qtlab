@@ -78,20 +78,20 @@ def convert_to_matrix_file_all(path = None):
         
         del new_mat
         
-        #Collecting readout data from channel 2
-        new_mat = np.zeros((iv_count[0], len(iv_count)))
-            
-        left_of = 0
-        
-        for col,iv in enumerate(iv_count[:(len(iv_count)-1)]):
-            new_mat[:,col] = mat[left_of:iv+left_of,3]   # Taking just third column of the data file - ch2 readout
-    
-            left_of += iv
-            
-        
-        np.savetxt(fname=full_name + "_CH2matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')  
-        
-        del new_mat 
+        ##Collecting readout data from channel 2
+        #new_mat = np.zeros((iv_count[0], len(iv_count)))
+        #    
+        #left_of = 0
+        #
+        #for col,iv in enumerate(iv_count[:(len(iv_count)-1)]):
+        #    new_mat[:,col] = mat[left_of:iv+left_of,3]   # Taking just third column of the data file - ch2 readout
+    #
+        #    left_of += iv
+        #    
+        #
+        #np.savetxt(fname=full_name + "_CH2matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')  
+        #
+        #del new_mat 
         
         
         
