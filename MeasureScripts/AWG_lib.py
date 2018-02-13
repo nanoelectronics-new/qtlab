@@ -447,3 +447,153 @@ def set_waveform_trigger_all_wait(seq,AWG_clock,AWGMax_amp, t_sync, sync, t_wait
     
     #Run
     #AWG.run()
+    
+
+
+def set_waveform_trigger_all_wait_mean(seq,AWG_clock,AWGMax_amp, t_sync, sync, t_wait=1):
+
+    '''
+    This function uploads and loads previously created sequence to the AWG. It puts trigger flag on every sequence element.
+    It also adds wait pulse with count flag, in between every pulse in the sequence. It removes mean value for 3rd channel (hard coded)
+       
+        
+        Input:
+            seq (list) : list of sequences for every channel
+            AWG_clock (int) : AWG clock
+            AWGMax_amp : # In Volts!!! Maximum needed amplitude on all channels for your particular experiment (noise reduction) 
+            sync (Waveform object) : just for compatibility with set_waveform function - it is not used
+            t_sync (float) = just for compatibility with set_waveform function - it is not used
+            
+                      
+            
+        Output:
+            None
+    '''
+    
+    # Calculate average of whole sequence and sequence length
+    aver_list = list()  # List for storing average value of whole sequence for all channels
+    weigths = list()  # List containing timings of all elements in the sequence - needed for calculation of weigthed average
+    time_seq =  0 # Sequence time
+    for ch_num in xrange(len(seq)):
+        aver_list.append([])   # Adding element for the channel
+        for i,seq_elem in enumerate(seq[ch_num]):
+            if ch_num == 0:   # Sequence for all channels have same length so we need to take a look at just one
+                time_seq = time_seq + sum(seq_elem.timings.values())
+                weigths.append(sum(seq_elem.timings.values()))   # Storing complete time of single element in sequence 
+            aver_list[ch_num].append(seq_elem.waveform.mean())  # Adding average for every element of one channel in the sequence
+        aver_list[ch_num] = np.average(aver_list[ch_num], weights=weigths)
+        
+
+    print ("aver_list",aver_list)
+    print ("time_seq",time_seq)       
+
+ 
+    
+    
+    #Rescale and plot sequence
+    for ch_num in xrange(len(seq)):
+        fig = plt.figure("CH%d"%(ch_num+1))
+        for i,seq_elem in enumerate(seq[ch_num]):
+            if ch_num == 2:   # Skiping substraction of mean value from the sync element
+                mean = aver_list[ch_num]
+            else:
+                mean = 0.0
+            seq_elem.rescaleAmplitude(AWGMax_amp, mean)
+    
+            # Plot start and end element of sequence
+            if i == 0 or i == (len(seq[ch_num])-1):
+                seq_elem.plotWaveform(fig = fig, waveform = seq_elem.reverse_rescaleAmplitude(AWGMax_amp)) # Passing reverse rescaled wavefrom to plotWavefrom 
+                                                                                                           # function for getting the correct plot
+                blue_line = mlines.Line2D([], [], color='blue',
+                    markersize=15, label='Start')
+                green_line = mlines.Line2D([], [], color='green',
+                    markersize=15, label='End')
+                plt.legend(handles=[blue_line, green_line])
+        plt.show(block=False)
+
+                
+
+
+    # Terminating upload if sequence does not look good enough
+    user_in = raw_input("Press Enter for uploading or T+Enter if you are too picky : ")
+    if user_in.upper() == "T":
+        print("AWG upload terminated")
+        return
+
+   
+    AWG.set_ch1_amplitude(AWGMax_amp)  # Setting maximum needed amp on all channels
+    AWG.set_ch2_amplitude(AWGMax_amp) 
+    AWG.set_ch3_amplitude(AWGMax_amp) 
+    AWG.set_ch4_amplitude(AWGMax_amp) 
+   
+        
+    AWG.del_waveform_all()  # Clear all waveforms in waveform list
+    AWG.set_clock(AWG_clock)  # Set AWG clock
+
+    ## Generating wait pulse
+    #wait = Wav.Waveform(waveform_name = 'wait', AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV')  
+    #wait.setValuesCH1([t_wait, 0]) 
+    #wait.setMarkersCH1([0,0],[0,0]) 
+    #wait.setValuesCH2([t_wait, 0]) 
+    #wait.setMarkersCH2([0,0],[0,0]) 
+
+
+    # UPLOAD Sequence to AWG hard
+    for ch_num in xrange(len(seq)):
+        for i,seq_elem in enumerate(seq[ch_num]):        
+            AWG.send_waveform_object(Wav = seq_elem, path = 'C:\SEQwav\\')
+            AWG.import_waveform_object(Wav = seq_elem, path = 'C:\SEQwav\\')
+     
+    ## UPLOAD Wait element to AWG hard        
+    #AWG.send_waveform_object(Wav = wait, path = 'C:\SEQwav\\')  
+    #AWG.import_waveform_object(Wav = wait, path = 'C:\SEQwav\\')
+            
+            
+    
+    ## SET AWG
+    AWG.set_sequence_mode_on()  # Tell the device to run in sequence mode (run_mode_sequence)
+    AWG.set_seq_length(0)   # Clear all elements of existing sequence   
+    AWG.set_seq_length(len(seq[0]))  # Set wanted sequence length
+    
+    
+    seq = filter(None, seq)  # Remove all empty elements from list
+
+    # Create the sequence from previously uploaded files for wanted channels 
+    
+    for ch in xrange(len(seq)):   # Iterating trough channels
+        
+        if 'CH1' in seq[ch][0].waveform_name:   # Checking to which channel sequence elements needs to be uploaded
+            channel = 1                        # by checking the name of first element dedicated to specified channel
+        elif 'CH2' in seq[ch][0].waveform_name:
+            channel = 2
+        elif 'CH3' in seq[ch][0].waveform_name:
+            channel = 3
+        elif 'CH4' in seq[ch][0].waveform_name:
+            channel = 4
+
+        for elem_num, seq_elem in enumerate(seq[ch]):   # Iterating trough sequence elements
+            
+             # Wait for trigger for every element of the sequence
+            AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 1, count = seq_elem.repeat)
+
+
+            
+
+            if elem_num == (len(seq[ch])-1): # If it is the last element set GOTOind=1 - return to first elem
+                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, GOTOind=1, count = seq_elem.repeat)
+                
+            else:
+                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, count = seq_elem.repeat)
+                
+               
+                           
+    #Turn on the AWG channels
+    #AWG._ins.do_set_output(1,1)
+    #AWG._ins.do_set_output(1,2)
+    #AWG._ins.do_set_output(1,3)
+    #AWG._ins.do_set_output(1,4)
+    
+    
+    
+    #Run
+    #AWG.run()
