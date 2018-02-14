@@ -43,7 +43,7 @@ period = manipulate + init + read # one complete period -> a sequence
 delay = 0.023  # Delay between the gate pulse (CH3) and the burst
 
 for i,t in enumerate(t_burst):   # Creating waveforms for all sequence elements
-    p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV', repeat = 2e6)  
+    p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV')  
           
     t1 = (period[i] - t)/2.0 - delay  # First part of the IQ pulse, with the delay compensation
     t3 = (period[i] - t)/2.0 + delay  # Last (third) part of the IQ pulse, with the delay compensation

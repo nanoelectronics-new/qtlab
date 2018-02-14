@@ -55,7 +55,12 @@ class Pulse():
             self.tau = self.R * self.C # Time constant of the bias tee, should be in seconds
         self.delta = 0.0
 
+        #self.TWAIT = TWAIT
         self.repeat = repeat  # defines how many times the pulse will be repeated in the sequence
+        #self.INF = INF
+
+        #self.GOTOind = GOTOind
+
 
         
         self.waveform_name = waveform_name

@@ -1183,7 +1183,7 @@ class Tektronix_AWG5014(Instrument):
         
 ## SEQUENCE COMMANDS
 
-    def load_seq_elem(self, elem, channel, waveform_name, TWAIT = 0, INF = 0, count = 0, GOTOind = None):    # ADDED FUNCTION (TO TEST)
+    def load_seq_elem(self, elem, channel, waveform_name, TWAIT = 0, INF = 0, count = 0, GOTOind = None, NEXT = False):    # ADDED FUNCTION (TO TEST)
        
         '''
         This command sets the waveform for the specified sequence element on the specified channel. Also parameters such as 
@@ -1230,6 +1230,10 @@ class Tektronix_AWG5014(Instrument):
             #Index of next element for execution 
             if GOTOind:  # If GOTOind is 1 - set GOTOind flag on this element       
                 self._visainstrument.write('SEQUENCE:ELEMENT%d:GOTO:INDEX %d' %(elem, 1))
+
+        if NEXT is True:  # If we want that event brings us to the next element in the sequence
+            self._visainstrument.write('SEQUENCE:ELEMENT%d:JTAR:TYPE NEXT'%(elem))
+
         
     
     def set_seq_length(self,length):   # ADDED FUNCTION (TO TEST)
