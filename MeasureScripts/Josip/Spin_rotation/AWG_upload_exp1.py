@@ -39,13 +39,13 @@ if not(Automatic_sequence_generation):
             
 
 
-        p.setValuesCH1([0.1, 0.0],[0.3, 0.0]) 
+        p.setValuesCH1([1.0, 0.0],[1.0, 0.0]) 
         p.setMarkersCH1([1,0],[1,0])  
 
-        p.setValuesCH2([0.1, 0.0],[0.3, 0.0]) 
+        p.setValuesCH2([1.0, 0.0],[1.0, 0.0]) 
         p.setMarkersCH2([0,0],[0,0])
 
-        p.setValuesCH3([0.1, 500.0],[0.3, 0.0]) 
+        p.setValuesCH3([1.0, 500.0],[1.0, 0.0]) 
         p.setMarkersCH3([1,0],[1,0])
 
 
