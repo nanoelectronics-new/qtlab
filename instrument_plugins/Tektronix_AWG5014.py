@@ -249,6 +249,22 @@ class Tektronix_AWG5014(Instrument):
         logging.debug(__name__ + ' : Do force triggering')
         self._visainstrument.write('*TRG')
 
+    def force_event(self):
+        '''
+        Forcing software event. This is equivalent to pressing
+        Force Event button on the front panel.
+
+        Input:
+            None
+
+        Output:
+            None
+        '''
+        logging.debug(__name__ + ' : Do force event')
+        self._visainstrument.write('EVEN')
+
+
+
     def do_set_output(self, state, channel):
         '''
         This command sets the output state of the AWG.
