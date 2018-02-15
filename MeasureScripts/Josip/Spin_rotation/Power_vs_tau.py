@@ -18,7 +18,7 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 94'
+file_name = '1_3 IV 95'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -29,7 +29,7 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 v1_vec = arange(5.0,-15,-0.5)  #Power
-
+tau_vector_repetitions = 5
 
 
 # you indicate that a measurement is about to start and other
@@ -74,7 +74,7 @@ new_mat = np.zeros((len(t_burst), len(v1_vec))) # Creating empty matrix for stor
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
 plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
-
+tau_vector = np.zeros(len(t_burst)) # Empty vector for averaging intermediate tau result vectors
 VSG.set_status("on") # Turn the RF on 
 # preparation is done, now start the measurement.
 # It is actually a simple loop.
@@ -90,28 +90,33 @@ try:
         VSG.set_power(v1)
   
 
-        
-        for j,v2 in enumerate(t_burst):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
+        for i in xrange(tau_vector_repetitions):  #repeat the one tau vector measurement n times
+            for j,v2 in enumerate(t_burst):  
+    
+                AWG._ins.force_event()
+    
+                # readout
+               
+               
+                tau_vector[j] += dmm.get_readval()/gain*1e12
+                
+                
+                
+                
+    
+                # Save to the matrix
+                
+    
+                # the next function is necessary to keep the gui responsive. It
+                # checks for instance if the 'stop' button is pushed. It also checks
+                # if the plots need updating.
+                qt.msleep(0.002)
 
-            AWG._ins.force_event()
-
-            # readout
-            temp_result = 0.0
-            for i in xrange(5): # Averaging current 
-                temp_result += dmm.get_readval()/gain*1e12
-            result = temp_result/5.0
-        
-            # save the data point to the file, this will automatically trigger
-            # the plot windows to update
-            data.add_data_point(v2*1e3,v1, result)  
-
-            # Save to the matrix
-            new_mat[j,i] = result   # ADD THIS LINE FOR MATRIX FILE SAVING
-
-            # the next function is necessary to keep the gui responsive. It
-            # checks for instance if the 'stop' button is pushed. It also checks
-            # if the plots need updating.
-            qt.msleep(0.001)
+        # Calculate the average value of the recorded tau vector
+        tau_vector = tau_vector/tau_vector_repetitions
+        # save the data point to the file    
+        v111 = np.linspace(v1,v1,len(t_burst))  # Vector with repeating value of v1 for length of tau vector - for saving
+        data.add_data_point(t_burst*1e3,v111,tau_vector)  
         data.new_block()
         stop = time()
         
@@ -129,15 +134,15 @@ try:
 
 finally:
 
-    # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)  # ADD THIS BLOCK FOR MATRIX FILE SAVING
-    for i, el in enumerate(new_mat[0]):     
-        all_zeros = not np.any(new_mat[:,i])    # Finiding first column with all zeros
-        if all_zeros:
-            new_mat = new_mat[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
-            break
-
+    ## This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)  # ADD THIS BLOCK FOR MATRIX FILE SAVING
+    #for i, el in enumerate(new_mat[0]):     
+    #    all_zeros = not np.any(new_mat[:,i])    # Finiding first column with all zeros
+    #    if all_zeros:
+    #        new_mat = new_mat[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
+    #        break
+#
     # Saving the matrix to the matrix filedata.get_filepath
-    np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
+    #np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
 
     VSG.set_status("off") # Switching off the RF 
     # Converting the output file into matrix format which can be read with Diamond plot tool. It is in the same folder as original file.   
