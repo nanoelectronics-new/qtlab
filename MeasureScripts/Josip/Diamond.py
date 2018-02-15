@@ -2,6 +2,7 @@ from numpy import pi, random, arange, size
 from time import time,sleep
 import datetime
 import convert_for_diamond_plot as cnv
+import numpy as np
 
 #####################################################
 # this part is to simulate some data, you can skip it
@@ -13,36 +14,21 @@ import convert_for_diamond_plot as cnv
 #####################################################
 # here is where the actual measurement program starts
 #####################################################
-#IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
+#IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM3', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
-init_dict = {'Address': 'TCPIP::10.21.41.103::hislip0::INSTR',
-                     'Meas_param':'S21',
-                     'Cont_off/on':'OFF',
-                     'Num_of_sweep_points' : 201,  
-                     'Num_of_sweeps' : 1, 
-                     'Averaging' : 'OFF', 
-                     'BW' : 5, 
-                     'Source_power' : -20, 
-                     'Data_format' : 'MLOG', 
-                     'VNA_mode' : 'MLOG',
-                     'Start_freq': 75.38,
-                     'Stop_freq': 75.38,
-                     'Center_freq' : 200 
-                    }
-VNA = qt.instruments.create('VNA','RS_ZNB20',address = 'TCPIP::10.21.41.148::hislip0::INSTR', init_dict_update = init_dict)
 
-file_name = 'test_file_saving'
+file_name = '1_3 IV 92'
 
-gain = 1e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
 
 
 
-v1_vec = arange(-3000,-1000,0.5)     #V_g
-v2_vec = arange(-20,20,5)  #V_sd 
+v1_vec = arange(-365.0,-374.0,-0.1)   #V_G 4
+v2_vec = arange(-260,-263,-0.1)  #V_G 2
 
 
 
@@ -57,9 +43,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-
-data = qt.Data(name=file_name + 'current')
-data_refl = qt.Data(name=file_name + 'reflection_mag')
+data = qt.Data(name=file_name)
 
 # Now you provide the information of what data will be saved in the
 # datafile. A distinction is made between 'coordinates', and 'values'.
@@ -68,36 +52,27 @@ data_refl = qt.Data(name=file_name + 'reflection_mag')
 # information is used later for plotting purposes.
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
-data.add_coordinate('V_SD [mV]')
-data.add_coordinate('V_G [mV]')
+data.add_coordinate('V_G 2 [mV]')
+data.add_coordinate('V_G 4 [mV]')
 data.add_value('Current [pA]')
-
-data_refl.add_coordinate('V_SD [mV]')
-data_refl.add_coordinate('V_G [mV]')
-data_refl.add_value('Reflection [arb.u.]')
-
 
 # The next command will actually create the dirs and files, based
 # on the information provided above. Additionally a settingsfile
 # is created containing the current settings of all the instruments.
 data.create_file()
-data_refl.create_file()
 
-#data_path = data.get_dir()
+data_path = data.get_dir()
 
 #saving directly in matrix format for diamond program
-new_mat_cur = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data  
-new_mat_refl = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data  
+new_mat = np.zeros((len(v2_vec), len(v1_vec))) # Creating empty matrix for storing all data   - ADD THIS LINE FOR MATRIX FILE SAVING, PUT APPROPRIATE VECTOR NAMES
 
 # Next two plot-objects are created. First argument is the data object
 # that needs to be plotted. To prevent new windows from popping up each
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='measure2D_current2',autoupdate=False)
-plot3d = qt.Plot3D(data, name='measure3D_current2', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-plot2d_refl = qt.Plot2D(data_refl, name='measure2D_reflection2',autoupdate=False)
-plot3d_refl = qt.Plot3D(data_refl, name='measure3D_reflection2', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot2d = qt.Plot2D(data, name='measure2D_21',autoupdate=False)
+plot3d = qt.Plot3D(data, name='measure3D_21', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 
@@ -108,44 +83,45 @@ init_start = time()
 vec_count = 0
 
 try:
-    for i,v1 in enumerate(v1_vec):
+    for i,v1 in enumerate(v1_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
         
         
         start = time()
         # set the voltage
+        #IVVI.set_dac2(v1)
+        #IVVI.set_dac12(v1) 
+        #IVVI.set_dac4(v1)
         IVVI.set_dac5(v1)
+        #IVVI.set_dac6(v1)
+        #IVVI.set_dac2(v1)
+        #IVVI.set_dac8(v1)
 
+        
+        for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
 
-        for j,v2 in enumerate(v2_vec):
-
-            IVVI.set_dac1(v2)
+            IVVI.set_dac6(v2)
 
             # readout
             result = dmm.get_readval()/gain*1e12
-            result_reflection = VNA.get_point()
         
             # save the data point to the file, this will automatically trigger
             # the plot windows to update
             data.add_data_point(v2,v1, result)  
-            data_refl.add_data_point(v2,v1, result_reflection)
 
             # Save to the matrix
-            new_mat_cur[j,i] = result
-            new_mat_refl[j,i] = result_reflection  
+            new_mat[j,i] = result   # ADD THIS LINE FOR MATRIX FILE SAVING
 
             # the next function is necessary to keep the gui responsive. It
             # checks for instance if the 'stop' button is pushed. It also checks
             # if the plots need updating.
             qt.msleep(0.001)
         data.new_block()
-        data_refl.new_block()
         stop = time()
         
 
         plot2d.update()
+
         plot3d.update()
-        plot2d_refl.update()
-        plot3d_refl.update()
 
         vec_count = vec_count + 1
         print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(v1_vec.size - vec_count))))
@@ -155,27 +131,20 @@ try:
     print 'Overall duration: %s sec' % (stop - init_start, )
 
 finally:
+
+    # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)  # ADD THIS BLOCK FOR MATRIX FILE SAVING
+    for i, el in enumerate(new_mat[0]):     
+        all_zeros = not np.any(new_mat[:,i])    # Finiding first column with all zeros
+        if all_zeros:
+            new_mat = new_mat[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
+            break
+
+    # Saving the matrix to the matrix filedata.get_filepath
+    np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
+
    
-    # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)  
-    for i, el in enumerate(new_mat_cur[0]):     
-        all_zeros = not np.any(new_mat_cur[:,i])    # Finiding first column with all zeros
-        if all_zeros:
-            new_mat_cur = new_mat_cur[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
-            break
-
-   # This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle) 
-    for i, el in enumerate(new_mat_refl[0]):     
-        all_zeros = not np.any(new_mat_refl[:,i])    # Finiding first column with all zeros
-        if all_zeros:
-            new_mat_refl = new_mat_refl[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
-            break
-
-
-    # Saving the matrix to the matrix filedata.get_filepath
-    np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat_cur, fmt='%1.4e', delimiter=' ', newline='\n')  
-
-    # Saving the matrix to the matrix filedata.get_filepath
-    np.savetxt(fname=data_refl.get_filepath() + "_matrix", X=new_mat_refl, fmt='%1.4e', delimiter=' ', newline='\n')  
+    # Converting the output file into matrix format which can be read with Diamond plot tool. It is in the same folder as original file.   
+    #cnv.convert_to_matrix_file(fname = file_name, path = data_path)
 
     # after the measurement ends, you need to close the data file.
     data.close_file()

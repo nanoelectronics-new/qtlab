@@ -249,6 +249,22 @@ class Tektronix_AWG5014(Instrument):
         logging.debug(__name__ + ' : Do force triggering')
         self._visainstrument.write('*TRG')
 
+    def force_event(self):
+        '''
+        Forcing software event. This is equivalent to pressing
+        Force Event button on the front panel.
+
+        Input:
+            None
+
+        Output:
+            None
+        '''
+        logging.debug(__name__ + ' : Do force event')
+        self._visainstrument.write('EVEN')
+
+
+
     def do_set_output(self, state, channel):
         '''
         This command sets the output state of the AWG.
@@ -1167,7 +1183,7 @@ class Tektronix_AWG5014(Instrument):
         
 ## SEQUENCE COMMANDS
 
-    def load_seq_elem(self, elem, channel, waveform_name, TWAIT = 0, INF = 0,count = 0, GOTOind = None):    # ADDED FUNCTION (TO TEST)
+    def load_seq_elem(self, elem, channel, waveform_name, TWAIT = 0, INF = 0, count = 0, GOTOind = None, NEXT = False):    # ADDED FUNCTION (TO TEST)
        
         '''
         This command sets the waveform for the specified sequence element on the specified channel. Also parameters such as 
@@ -1197,10 +1213,12 @@ class Tektronix_AWG5014(Instrument):
         
         #Infinite loop of this element (ON/OFF)
         self._visainstrument.write('SEQUENCE:ELEMENT%d:LOOP:INFINITE %d' %(elem, INF))
+    
 
         if INF == 0 and count > 0:
             #Loop this element for "count" number of repetitions 
-            self._visainstrument.write('SEQUENCE:ELEMENT%d:LOOP:INFINITE %d' %(elem, count))
+            self._visainstrument.write('SEQUENCE:ELEMENT%d:LOOP:COUN %d' %(elem, count))
+      
 
         
         if GOTOind is not None:  # If we want to specify GOTOind
@@ -1212,6 +1230,10 @@ class Tektronix_AWG5014(Instrument):
             #Index of next element for execution 
             if GOTOind:  # If GOTOind is 1 - set GOTOind flag on this element       
                 self._visainstrument.write('SEQUENCE:ELEMENT%d:GOTO:INDEX %d' %(elem, 1))
+
+        if NEXT is True:  # If we want that event brings us to the next element in the sequence
+            self._visainstrument.write('SEQUENCE:ELEMENT%d:JTAR:TYPE NEXT'%(elem))
+
         
     
     def set_seq_length(self,length):   # ADDED FUNCTION (TO TEST)

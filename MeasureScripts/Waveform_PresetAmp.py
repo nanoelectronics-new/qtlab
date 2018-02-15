@@ -19,11 +19,11 @@ class Pulse():
     
     
     
-    def __init__(self, waveform_name, AWG_clock, TimeUnits, AmpUnits): 
+    def __init__(self, waveform_name, AWG_clock, TimeUnits, AmpUnits, R = None, C = None, repeat = 1): 
         
               
         self.AWG_clock = AWG_clock
-        self.AWG_period = 1/float(self.AWG_clock)     # Calculating AWG period
+        self.AWG_period = 1.0/float(self.AWG_clock)     # Calculating AWG period in seconds
         
         self.amplitudes = dict()
         self.timings = dict()
@@ -48,6 +48,18 @@ class Pulse():
         self.TimeUnits = self.TimeUnitsDict[self.TimeUnitsKey]
         self.AmpUnitsKey = AmpUnits
         self.AmpUnits = self.AmpUnitsDict[self.AmpUnitsKey]
+
+        self.R = R
+        self.C = C
+        if (self.R is not None) and (self.C is not None):
+            self.tau = self.R * self.C # Time constant of the bias tee, should be in seconds
+        self.delta = 0.0
+
+        #self.TWAIT = TWAIT
+        self.repeat = repeat  # defines how many times the pulse will be repeated in the sequence
+        #self.INF = INF
+
+        #self.GOTOind = GOTOind
 
 
         
@@ -123,160 +135,79 @@ class Pulse():
         self.marker2 = np.array([])  # Erase previous marker 2
         
         for key in sorted(self.amplitudes.iterkeys()):  # Sort amplitudes dict and iterate trough its element from the frist one
+
             
             
             Length = self.rescaleLength(self.timings[key]) # Rescaling length 
             
             Start_amp = self.amplitudes[key][0]         # Amplitude of starting wavefrom part             
-            End_amp = self.amplitudes[key][1]           # Amplitude of ending wavefrom part   
+            End_amp = self.amplitudes[key][1]           # Amplitude of ending wavefrom part 
             self.waveform = np.concatenate((self.waveform,np.linspace(Start_amp,End_amp,Length)))
-            
+     
             Marker1 = self.marker1_dict[key]    # Value of marker1 in current segment
             Marker2 = self.marker2_dict[key]    # Value of marker2 in current segment
             self.marker1 = np.concatenate((self.marker1,np.linspace(Marker1,Marker1,Length))) 
             self.marker2 = np.concatenate((self.marker2,np.linspace(Marker2,Marker2,Length)))
 
-        self.unscaled_waveform = self.waveform # Buffer waveform to be scaled - in order to avoid multiple rescalings
-        #self.rescaleAmplitude() # Resclaing amplitude for getting correct output on AWG
+        #self.unscaled_waveform = self.waveform # Buffer waveform to be scaled - in order to avoid multiple rescalings
+        if (self.R is not None) and (self.C is not None):  # Do the correction only if the bias tee parameters are passed
+            self.bt_corr_Filip()
         
         
         
         
     def rescaleLength(self, inp_time):  # Function for rescaling length depending on AWG period and selected time units
         self.AWG_period = 1.0/self.AWG_clock
-        Length = int(inp_time*self.TimeUnits/self.AWG_period)   # Changed 09.03_13:31
-        if Length < 5:                                          # Changed 09.03_13:31
+        Length = int(round(inp_time*self.TimeUnits/self.AWG_period))   # Changed 09.03_13:31
+        if Length < 1:                                          # Changed 09.03_13:31
             raise Exception('AWG sampling rate too small')    # Changed 09.03_13:31
         return Length
         
     def rescaleAmplitude(self, AWGMaxAmp, mean):
         
-
         # Converting from selected units to V
-        self.waveform = self.unscaled_waveform*self.AmpUnits
+        self.waveform = self.waveform*self.AmpUnits
         #self.Max_amp = max(self.waveform)         # Saving Max_amp to be able to set the AWG
         self.waveform = self.waveform/AWGMaxAmp     # Scaling
         mean = mean*self.AmpUnits/AWGMaxAmp
-        #self.waveform = self.waveform - mean   # Substracting mean value in order not to heat up the fridge
+        self.waveform = self.waveform - mean   # Substracting mean value in order not to heat up the fridge
 
     def reverse_rescaleAmplitude(self, AWGMaxAmp):
-        wav = self.waveform*AWGMaxAmp
-        wav = wav/self.AmpUnits
-        return wav
-        
+        return (self.waveform)*AWGMaxAmp/float(self.AmpUnits)
+       
     
-    def InverseHPfilter(self, R,C, F_sample = 10000000, M=None):
-        """Filtering on a real signal using inverse FFT
-        
-        Inputs
-        =======
-        
-        X: 1-D numpy array of floats, the real time domain signal (time series) to be filtered
-          
-        
-        Notes
-        =====
-        1. The input signal must be real, not imaginary nor complex
-        2. The Filtered_signal will have only half of original amplitude. Use abs() to restore. 
-        
-        
-        """        
-        
-        
-        import scipy, numpy, cmath
-        import matplotlib.pyplot as plt
-        
-        X = self.waveform
-        if M == None: # if the number of points for FFT is not specified
-            M = X.size # let M be the length of the time series
-        Spectrum = scipy.fft(X, n=M) 
-        
-        #plt.figure("Spectrum_real")
-        #plt.plot(scipy.real(Spectrum))
-        #plt.plot(scipy.imag(Spectrum))
-        
-        
-        """
-        Generating a transfer function for RC filters.
-        Importing modules for complex math and plotting.
-        """
-    
-        f = numpy.arange(-len(Spectrum)/2,len(Spectrum)/2, 1)
-        w = 2.0j*numpy.pi*f
-    
-    
-        
-        hp_tf = (w*R*C)/(w*R*C+1)  # High Pass Transfer function
-        
-    
-    
-        
-        right_hp_tf = hp_tf[len(hp_tf)/2:len(hp_tf)]
-        right_hp_tf_inv = 1/right_hp_tf[1:len(right_hp_tf)]
-        #print("right_hp_tf:  ", len(right_hp_tf))
-        #print("right_hp_tf_inv:  ", len(right_hp_tf_inv))
-        left_hp_tf = hp_tf[0:len(hp_tf)/2]
-        left_hp_tf_inv = 1/left_hp_tf
-        #print("left_hp_tf:  ", len(left_hp_tf))
-        #print("left_hp_tf_inv:  ", len(left_hp_tf_inv))
-        
-        
-        hp_tf = numpy.concatenate((right_hp_tf,left_hp_tf))
-        inv_hp_tf = numpy.concatenate((np.array([0]),right_hp_tf_inv,left_hp_tf_inv))
-        #print("inv_hp_tf:  ", len(inv_hp_tf))
-        
-        #plt.figure("RC_real")
-        #plt.plot(f, scipy.real((hp_tf))) # plot high pass transfer function
-        #plt.figure("RC_imag")
-        #plt.plot(f, scipy.imag(hp_tf)) # plot high pass transfer function
-        
-        
-        
-        
-    
-    
-        #plt.figure("RCinv_real")
-        #plt.plot(f, scipy.real((inv_hp_tf))) # plot high pass transfer function
-        #plt.figure("RCinv_imag")
-        #plt.plot(f, scipy.imag(inv_hp_tf)) # plot high pass transfer function
-        
-        #plt.show()
-    
-    
-    
-        #Filtered_spectrum = Spectrum*hp_tf  # Filtering with HP
-        #Filtered_spectrum = Filtered_spectrum*inv_hp_tf  # Filtering with inverse HP afterwards
-        Filtered_spectrum = Spectrum*inv_hp_tf # Filtering with inverse HP
-        
-        
-        #print("Filtered_spectrum:  ", len(Filtered_spectrum))
-        
-        
-        
-        
-        Filtered_signal = scipy.ifft(Filtered_spectrum, n=M)  # Construct filtered signal
-        plt.figure("Inv_Filtered_signal")
-        plt.plot(Filtered_signal) 
-        plt.show() 
-        
-        self.waveform = Filtered_signal  
-        
-        
- 
-        
+
+
+    def bias_tee_correction(self, chunk):
+        t = np.linspace(0,len(chunk),len(chunk)) * self.AWG_period  # Calculating the time vector in seconds
+        tau = self.R * self.C
+        return (chunk*np.exp(t/tau)+self.delta)
+
+    def bt_corr_Filip(self):
+        '''
+        Bias tee correction function according to the similar function by Filip Malinowski, written in Igor
+        ''' 
+        #V_avg = np.mean(self.waveform)
+        integ = 0.0
+        for i,elem in enumerate(self.waveform):
+            integ += (elem * self.AWG_period)/self.tau
+            self.waveform[i] += integ 
+
+
+
+
         
         
             
         
     def plotWaveform(self, Name = None, fig = None, waveform = None):    # IN PROGRESS... 
-        #return    # Just to skip plotting
-                                 # DELETE THIS LINE AFTER!
+        
         if fig is None:  # If no figure is passed create new one
             if type(Name) is str:    
                 plt.figure(Name)
             else:
                 plt.figure(self.waveform_name)
-        if waveform is None:  # If no wavefrom is passed use self.wavefrom
+        if waveform is None:  # If no waveform is passed use self.wavefrom
             wav = self.waveform
         else:
             wav = waveform
@@ -365,7 +296,7 @@ class Waveform():
             
     '''
     
-    def __init__(self, waveform_name = 'WAV1', AWG_clock = None, TimeUnits = 'us' , AmpUnits = 'mV'):
+    def __init__(self, waveform_name = 'WAV1', AWG_clock = None, TimeUnits = 'us' , AmpUnits = 'mV', R = None, C = None, repeat = 1):
         
         if AWG_clock is None:
             raise Exception('Error: AWG_clcok is not passed')
@@ -378,14 +309,21 @@ class Waveform():
         
         
         self.waveform_name = waveform_name
+
+        self.R = R
+        self.C = C
         
-        self.CH1=Pulse(waveform_name = self.waveform_name+'CH1', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits)   # Changed 09.03_13:00
-        self.CH2=Pulse(waveform_name = self.waveform_name+'CH2', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits)   # Changed 09.03_13:00
-        self.CH3=Pulse(waveform_name = self.waveform_name+'CH3', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits)   # Changed 09.03_13:00
-        self.CH4=Pulse(waveform_name = self.waveform_name+'CH4', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits)   # Changed 09.03_13:00
+        self.CH1=Pulse(waveform_name = self.waveform_name+'CH1', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C, repeat = repeat)   # Changed 09.03_13:00
+        self.CH2=Pulse(waveform_name = self.waveform_name+'CH2', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C, repeat = repeat)   # Changed 09.03_13:00
+        self.CH3=Pulse(waveform_name = self.waveform_name+'CH3', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C, repeat = repeat)   # Changed 09.03_13:00
+        self.CH4=Pulse(waveform_name = self.waveform_name+'CH4', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C, repeat = repeat)   # Changed 09.03_13:00
                  
         self.lengthV = 0
         self.lengthM = 0
+
+
+
+
         
         
     def setAWG_clock(self, AWG_clock=1e8):    
@@ -558,47 +496,3 @@ class Waveform():
         '''
         seq = [self.CH1.sequence(p2.CH1, NumOfSteps, seqName), self.CH2.sequence(p2.CH2, NumOfSteps, seqName), self.CH3.sequence(p2.CH3, NumOfSteps, seqName), self.CH4.sequence(p2.CH4, NumOfSteps, seqName)]
         return(filter(None, seq))
-        
-        
-        
-    
-  
-        
-            
-
-            
-            
-            
-    
-            
-            
-
-        
-                   
-                         
-            
-            
-            
-            
-
-        
-        
-         
-    
-
-        
-        
-    
-
-
-            
-            
-            
-
-        
-        
-        
-         
-        
-        
-          
