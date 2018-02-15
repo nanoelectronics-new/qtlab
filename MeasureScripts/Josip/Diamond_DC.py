@@ -18,7 +18,7 @@ import convert_for_diamond_plot as cnv
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = 'Diamond_07-08_G09_2'
+file_name = 'Qubit_osc'
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
