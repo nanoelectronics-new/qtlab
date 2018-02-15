@@ -159,7 +159,7 @@ class Pulse():
     def rescaleLength(self, inp_time):  # Function for rescaling length depending on AWG period and selected time units
         self.AWG_period = 1.0/self.AWG_clock
         Length = int(round(inp_time*self.TimeUnits/self.AWG_period))   # Changed 09.03_13:31
-        if Length < 5:                                          # Changed 09.03_13:31
+        if Length < 1:                                          # Changed 09.03_13:31
             raise Exception('AWG sampling rate too small')    # Changed 09.03_13:31
         return Length
         
