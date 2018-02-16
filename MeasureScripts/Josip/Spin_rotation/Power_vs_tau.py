@@ -18,7 +18,7 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 95'
+file_name = 'test_matrix_saving'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -28,8 +28,8 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 
-v1_vec = arange(5.0,-15,-0.5)  #Power
-tau_vector_repetitions = 5
+v1_vec = arange(5.0,-15,-0.2)  #Power
+tau_vector_repetitions = 200
 
 
 # you indicate that a measurement is about to start and other
@@ -64,7 +64,7 @@ data.create_file()
 data_path = data.get_dir()
 
 #saving directly in matrix format for diamond program
-new_mat = np.zeros((len(t_burst), len(v1_vec))) # Creating empty matrix for storing all data   - ADD THIS LINE FOR MATRIX FILE SAVING, PUT APPROPRIATE VECTOR NAMES
+new_mat = np.zeros(len(t_burst)) # Creating empty matrix for storing all data   
 
 # Next two plot-objects are created. First argument is the data object
 # that needs to be plotted. To prevent new windows from popping up each
@@ -83,7 +83,7 @@ init_start = time()
 vec_count = 0
 
 try:
-    for i,v1 in enumerate(v1_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
+    for i,v1 in enumerate(v1_vec): 
         
         
         start = time()
@@ -119,6 +119,12 @@ try:
         data.add_data_point(t_burst*1e3,v111,tau_vector)  
         data.new_block()
         stop = time()
+
+        new_mat = np.column_stack((new_mat,tau_vector))   # Gluing new tau_vector to the present matrix
+        if not(i): #Kicking out the first column filled with zero
+            new_mat = new_mat[:,1:]
+
+        np.savetxt(fname = data.get_filepath()+ "_matrix", X = new_mat, fmt = '%1.4e', delimiter = '', newline = '\n')
         
 
         plot2d.update()
