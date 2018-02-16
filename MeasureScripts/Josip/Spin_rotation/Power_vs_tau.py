@@ -18,18 +18,17 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = 'test_matrix_saving'
+file_name = '1_3 IV 97'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-# you define two vectors of what you want to sweep. In this case
-# a magnetic field (b_vec) and a frequency (f_vec)
 
 
 
 
-v1_vec = arange(5.0,-15,-0.2)  #Power
-tau_vector_repetitions = 200
+
+v1_vec = arange(5.0,-15,-0.5)  #Power
+tau_vector_repetitions = 5
 
 
 # you indicate that a measurement is about to start and other
@@ -61,7 +60,7 @@ data.add_value('Current [pA]')
 # is created containing the current settings of all the instruments.
 data.create_file()
 
-data_path = data.get_dir()
+
 
 #saving directly in matrix format for diamond program
 new_mat = np.zeros(len(t_burst)) # Creating empty matrix for storing all data   
@@ -74,8 +73,9 @@ new_mat = np.zeros(len(t_burst)) # Creating empty matrix for storing all data
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
 plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
-tau_vector = np.zeros(len(t_burst)) # Empty vector for averaging intermediate tau result vectors
+
 VSG.set_status("on") # Turn the RF on 
+AWG
 # preparation is done, now start the measurement.
 # It is actually a simple loop.
 
@@ -89,8 +89,9 @@ try:
         start = time()
         VSG.set_power(v1)
   
+        tau_vector = np.zeros(len(t_burst)) # Empty vector for averaging intermediate tau result vectors
 
-        for i in xrange(tau_vector_repetitions):  #repeat the one tau vector measurement n times
+        for k in xrange(tau_vector_repetitions):  #repeat the one tau vector measurement n times
             for j,v2 in enumerate(t_burst):  
     
                 AWG._ins.force_event()
@@ -102,10 +103,6 @@ try:
                 
                 
                 
-                
-    
-                # Save to the matrix
-                
     
                 # the next function is necessary to keep the gui responsive. It
                 # checks for instance if the 'stop' button is pushed. It also checks
@@ -114,17 +111,18 @@ try:
 
         # Calculate the average value of the recorded tau vector
         tau_vector = tau_vector/tau_vector_repetitions
+
         # save the data point to the file    
-        v111 = np.linspace(v1,v1,len(t_burst))  # Vector with repeating value of v1 for length of tau vector - for saving
+        v111 = np.linspace(v1,v1,len(t_burst)) # Vector with repeating value of v1 for the length of the tau vector - for add_data_point command
         data.add_data_point(t_burst*1e3,v111,tau_vector)  
         data.new_block()
         stop = time()
 
         new_mat = np.column_stack((new_mat,tau_vector))   # Gluing new tau_vector to the present matrix
-        if not(i): #Kicking out the first column filled with zero
+        if i == 0: #Kicking out the first column filled with zero
             new_mat = new_mat[:,1:]
 
-        np.savetxt(fname = data.get_filepath()+ "_matrix", X = new_mat, fmt = '%1.4e', delimiter = '', newline = '\n')
+        np.savetxt(fname = data.get_filepath()+ "_matrix", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')
         
 
         plot2d.update()
@@ -140,19 +138,9 @@ try:
 
 finally:
 
-    ## This part kicks out trailing zeros and last IV if it is not fully finished (stopped somwhere in the middle)  # ADD THIS BLOCK FOR MATRIX FILE SAVING
-    #for i, el in enumerate(new_mat[0]):     
-    #    all_zeros = not np.any(new_mat[:,i])    # Finiding first column with all zeros
-    #    if all_zeros:
-    #        new_mat = new_mat[:,0:i-1]          # Leving all columns until that column, all the other are kicked out
-    #        break
-#
-    # Saving the matrix to the matrix filedata.get_filepath
-    #np.savetxt(fname=data.get_filepath() + "_matrix", X=new_mat, fmt='%1.4e', delimiter=' ', newline='\n')   # ADD THIS LINE FOR MATRIX FILE SAVING
+    # Switching off the RF 
+    VSG.set_status("off") 
 
-    VSG.set_status("off") # Switching off the RF 
-    # Converting the output file into matrix format which can be read with Diamond plot tool. It is in the same folder as original file.   
-    #cnv.convert_to_matrix_file(fname = file_name, path = data_path)
 
     # after the measurement ends, you need to close the data file.
     data.close_file()
