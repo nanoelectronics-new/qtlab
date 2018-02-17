@@ -22,7 +22,7 @@ import numpy as np
 #VSG = qt.instruments.create('VSG','RS_SMW200A',address = 'TCPIP::10.21.64.105::hislip0::INSTR')
 #dmm_lockin = qt.instruments.create('dmm_lockin','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505188::INSTR')
 
-file_name = '1_3 IV 93'
+file_name = '1_3 IV 106'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -32,9 +32,9 @@ ramp_rate_Y = 0.0008 #T/s
 
 
 #step_size_BZ = 2e-3 
-step_size_BY = 1e-3 
+step_size_BY = -1e-3 
 #BZ_vector = arange(425e-3,490e-3+step_size_BZ,step_size_BZ) #T  # Those two vectors need to be the same left
-BY_vector = arange(149e-3,250e-3+step_size_BY,step_size_BY) #T  #
+BY_vector = arange(188e-3,150e-3+step_size_BY,step_size_BY) #T  #
 
 #if len(BZ_vector) != len(BY_vector):
 #    raise Exception ("B vectors have different length")
@@ -46,7 +46,7 @@ BY_vector = arange(149e-3,250e-3+step_size_BY,step_size_BY) #T  #
 magnetY.set_rampRate_T_s(ramp_rate_Y)
 
 
-freq_vec = arange(6.0e9,7.0e9,3e6)  # frequency 
+freq_vec = arange(6.2e9,7.2e9,3e6)  # frequency 
 
 
 
