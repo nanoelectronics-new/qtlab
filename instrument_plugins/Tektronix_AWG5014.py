@@ -264,7 +264,6 @@ class Tektronix_AWG5014(Instrument):
         self._visainstrument.write('EVEN')
 
 
-
     def do_set_output(self, state, channel):
         '''
         This command sets the output state of the AWG.
@@ -1258,4 +1257,18 @@ class Tektronix_AWG5014(Instrument):
         
         #Setting sequence length
         self._visainstrument.write('SEQUENCE:LENGTH %d' %length)
+
+
+    def force_jump(self, index):
+        '''
+        This command forces the sequencer to jump to the specified element index in the sequence.
+
+        Input:
+            index (int) : sequence element index
+                       
+            
+        Output:
+            None
+        '''
+        self._visainstrument.write('SEQUENCE:JUMP:IMMEDIATE %d' %index)
 
