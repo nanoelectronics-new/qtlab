@@ -27,7 +27,7 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 
-v1_vec = arange(-70e8,70e8,2e6)  #Frequency offset in Hz
+v1_vec = arange(-7e8,7e8,2e6)  #Frequency offset in Hz
 f_center = 6.8402e9  # Center frequency in Hz
 tau_vector_repetitions = 100
 
