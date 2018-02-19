@@ -242,10 +242,10 @@ def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync):
 
 
     # Terminating upload if sequence does not look good enough
-    user_in = raw_input("Press Enter for uploading or T+Enter if you are too picky : ")
-    if user_in.upper() == "T":
-        print("AWG upload terminated")
-        return
+    #user_in = raw_input("Press Enter for uploading or T+Enter if you are too picky : ")
+    #if user_in.upper() == "T":
+    #    print("AWG upload terminated")
+    #    return
 
    
     AWG.set_ch1_amplitude(AWGMax_amp)  # Setting maximum needed amp on all channels
