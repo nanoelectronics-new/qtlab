@@ -18,7 +18,7 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 109'
+file_name = '1_3 IV 118'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -27,8 +27,8 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 
-v1_vec = arange(-70e6,70e6,2e6)  #Frequency offset in Hz
-f_center = 6.8402e9  # Center frequency in Hz
+v1_vec = arange(-100e6,100e6,1e6)  #Frequency offset in Hz
+f_center = 6.706e9  # Center frequency in Hz
 tau_vector_repetitions = 100
 
 
@@ -53,7 +53,7 @@ data = qt.Data(name=file_name)
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
 data.add_coordinate('t_burst [ns]')
-data.add_coordinate('Frequency offset (f_center= 6.8402 GHz) [Hz]')
+data.add_coordinate('Frequency offset (f_center= 6.706 GHz) [Hz]')
 data.add_value('Current [pA]')
 
 # The next command will actually create the dirs and files, based
@@ -77,7 +77,7 @@ plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='ima
 
 
 #Turn the RF on
-#VSG.set_status("on") 
+VSG.set_status("on") 
 #Run the AWG sequence 
 AWG.run()
 #Turn ON all necessary AWG channels

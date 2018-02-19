@@ -50,7 +50,7 @@ for i,t in enumerate(t_burst):   # Creating waveforms for all sequence elements
     p.setMarkersCH1([0,1,0],[0,1,0])  
     p.setValuesCH2([t1, 0.0],[t, 500.0],[t3, 0.0])    # Q
     p.setMarkersCH2([0,0,0],[0,0,0])
-    p.setValuesCH3([init, 200.0],[manipulate, 0.0],[read, 200.0])  # Gate
+    p.setValuesCH3([init, 100.0],[manipulate, 0.0],[read, 100.0])  # Gate
     p.setMarkersCH3([0,0,1],[0,0,1])
 
     seqCH1.append(p.CH1) 
