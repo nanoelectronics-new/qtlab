@@ -12,7 +12,7 @@ from Background_correction import Back_corr as bc
 
 ## GENERAL SETTINGS
 
-T = arange(50e-3,150e-3,20e-3) # period pulse in us
+T = arange(70e-3,150e-3,20e-3) # period pulse in us
 ch3_amp = 200.0
 
 
@@ -33,7 +33,7 @@ sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeU
 
 
 
-name_counter = 125
+name_counter = 126
 
 ## UPLOADING TO THE AWG
    

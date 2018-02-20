@@ -10,7 +10,7 @@ from Waveform_PresetAmp import Pulse as pul
 
 ### SETTING AWG
 ##
-AWG_clock = 1.0e9        
+AWG_clock = 1.2e9        
 											
 						
 AWGMax_amp = 0.5         
@@ -46,15 +46,14 @@ if not(Automatic_sequence_generation):
         #p.setMarkersCH2([1,0,0],[1,0,0])
 
 
-        p.setValuesCH1([0.377, 0.0],[0.023, 500.0],[0.377, 500.0],[0.023,0.0]) 
-        p.setMarkersCH1([1,0,0,0],[1,0,0,0])  
+        p.setValuesCH1([0.015,0.0],[0.010,500.0],[0.015,500.0],[0.035,0.0],[0.025,0.0]) 
+        p.setMarkersCH1([1,0,0,0,0],[1,0,0,0,0])  
 
-        p.setValuesCH2([0.377, 0.0],[0.023, 500.0],[0.377, 500.0],[0.023,0.0]) 
-        p.setMarkersCH2([1,0,0,0],[1,0,0,0])
+        p.setValuesCH2([0.015,0.0],[0.010,500.0],[0.015,500.0],[0.035,0.0],[0.025,0.0]) 
+        p.setMarkersCH2([1,0,0,0,0],[1,0,0,0,0])  
 
-        p.setValuesCH3([0.377, 200.0],[0.023, 200.0],[0.377, 0.0],[0.023,0.0]) 
-
-        p.setMarkersCH3([1,0,0,0],[1,0,0,0])
+        p.setValuesCH3([0.015,200.0],[0.010,200.0],[0.015,0.0],[0.035,0.0],[0.025,200.0]) 
+        p.setMarkersCH3([1,0,0,0,0],[1,0,0,0,0])  
 
 
    
