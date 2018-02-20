@@ -191,7 +191,7 @@ try:
 
 finally:
 
-    #bc(path = data.get_filepath()+ "_matrix", fname = "")
+    bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
     # after the measurement ends, you need to close the data file.
     data.close_file()
     # lastly tell the secondary processes (if any) that they are allowed to start again.
