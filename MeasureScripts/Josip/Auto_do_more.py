@@ -93,7 +93,8 @@ for p,period in enumerate(T):
 
         file_name = '1_3 IV %d'%(name_counter+1)
         
-        
+        name_counter += 1 
+
         gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
         
         
