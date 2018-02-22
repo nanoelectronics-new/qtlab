@@ -102,9 +102,9 @@ try:
         
         start = time()
 
-        magnetY.set_field(BY_vector[i])
+        magnetY.set_field(v1)
 
-        while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:
+        while math.fabs(v1 - magnetY.get_field_get()) > 0.0001:
             qt.msleep(0.050)
   
         tau_vector = np.zeros(len(t_burst)) # Empty vector for averaging intermediate tau result vectors
