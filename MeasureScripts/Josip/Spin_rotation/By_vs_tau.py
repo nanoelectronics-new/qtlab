@@ -18,7 +18,7 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 134'
+file_name = '1_3 IV 136'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -28,9 +28,10 @@ step_size_BY = -0.25e-3
 magnetY.set_rampRate_T_s(ramp_rate_Y)
 
 
-v1_vec = arange(140e-3,110e-3,step_size_BY)  #Frequency offset in Hz
+v1_vec = arange(140e-3,110e-3,step_size_BY)  #Bagnetic field in T
+t_burst = arange(0.005,0.151,0.001)   #tau in ns
 
-tau_vector_repetitions = 200
+tau_repetitions = 3
 
 
 # you indicate that a measurement is about to start and other
@@ -54,7 +55,7 @@ data = qt.Data(name=file_name)
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
 data.add_coordinate('t_burst [ns]')
-data.add_coordinate('By [mT]')
+data.add_coordinate('By [T]')
 data.add_value('Current [pA]')
 
 # The next command will actually create the dirs and files, based
@@ -107,17 +108,21 @@ try:
         while math.fabs(v1 - magnetY.get_field_get()) > 0.0001:
             qt.msleep(0.050)
   
-        tau_vector = np.zeros(len(t_burst)) # Empty vector for averaging intermediate tau result vectors
+        tau_vector = np.zeros(len(t_burst)) 
+        
+        for j,v2 in enumerate(t_burst):
 
-        for k in xrange(tau_vector_repetitions):  #repeat the one tau vector measurement n times
-            for j,v2 in enumerate(t_burst):  
-    
-                AWG._ins.force_event()
+            tau_temp = 0.0
+
+            for k in xrange(tau_repetitions):  #repeat the one tau measurement tau_repetitions times 
+
+                
     
                 # readout
-               
-               
-                tau_vector[j] += dmm.get_readval()/gain*1e12
+            
+            
+                tau_temp += dmm.get_readval()/gain*1e12
+            
                 
                 
                 
@@ -127,12 +132,18 @@ try:
                 # if the plots need updating.
                 qt.msleep(0.002)
 
-        # Calculate the average value of the recorded tau vector
-        tau_vector = tau_vector/tau_vector_repetitions
+            # Calculate the average value of the recorded results
+            result = tau_temp/tau_repetitions
 
-        # save the data point to the file    
-        v111 = np.linspace(v1,v1,len(t_burst)) # Vector with repeating value of v1 for the length of the tau vector - for add_data_point command
-        data.add_data_point(t_burst*1e3,v111,tau_vector)  
+            # save the data point to the file 
+            data.add_data_point(v2*1e3,v1,result) 
+            # filling the temporary result vector for the matrix file saving   
+            tau_vector[j] = result 
+
+            AWG._ins.force_event()  # go to the next tau 
+
+        
+        
         data.new_block()
         stop = time()
 
