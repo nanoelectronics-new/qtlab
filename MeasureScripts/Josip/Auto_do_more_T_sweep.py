@@ -33,7 +33,7 @@ sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeU
 
 
 
-name_counter = 137
+name_counter = 139
 
 ## UPLOADING TO THE AWG
    
