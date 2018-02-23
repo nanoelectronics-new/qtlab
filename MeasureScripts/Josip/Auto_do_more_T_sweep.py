@@ -12,7 +12,7 @@ from Background_correction import Back_corr as bc
 
 ## GENERAL SETTINGS
 
-T = arange(70e-3,150e-3,20e-3) # period pulse in us
+T = array([50.0e-3]) # period pulse in us
 ch3_amp = 200.0
 
 
@@ -33,7 +33,7 @@ sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeU
 
 
 
-name_counter = 126
+name_counter = 137
 
 ## UPLOADING TO THE AWG
    
@@ -100,12 +100,12 @@ for per,period in enumerate(T):
     
     step_size_BY = -1e-3 
     
-    BY_vector = arange(167e-3,135e-3+step_size_BY,step_size_BY) #T  #
+    BY_vector = arange(155e-3,105e-3+step_size_BY,step_size_BY) #T  #
     
     magnetY.set_rampRate_T_s(ramp_rate_Y)
     
     
-    freq_vec = arange(6.0e9,7.0e9,3e6)  # frequency 
+    freq_vec = arange(5.3e9,6.3e9,3e6)  # frequency 
     
     qt.mstart()
     
