@@ -28,7 +28,7 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 v1_vec = arange(-365.0,-374.0,-0.1)   #V_G 4
-v2_vec = arange(-260,-263,-0.1)  #V_G 2
+v2_vec = arange(-261.5,-264.5,-0.1)  #V_G 2
 
 
 #
