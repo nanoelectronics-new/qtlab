@@ -55,7 +55,7 @@ for per,period in enumerate(T):
         p.setValuesCH2([period/2.0 - 0.023, 0.0],[0.023, 500.0],[period/2.0 - 0.023, 500.0],[0.023,0.0]) 
         p.setMarkersCH2([1,0,0,0],[1,0,0,0])
 
-        p.setValuesCH3([period/2.0 - 0.023, ch3_amp],[0.023, ch3_amp],[period/2.0 - 0.023, 0.0],[0.023,0.0]) 
+        p.setValuesCH3([period/2.0 - 0.023, 0.0],[0.023, 0.0],[period/2.0 - 0.023, ch3_amp],[0.023,ch3_amp]) 
 
         p.setMarkersCH3([1,0,0,0],[1,0,0,0])
 
@@ -71,7 +71,7 @@ for per,period in enumerate(T):
 
     AWG_lib.set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG 
 
-
+    
     #raw_input("Press Enter if uploading to AWG is finished")
     print("Waiting to upload the sequence to the AWG")
     sleep(10.0)
