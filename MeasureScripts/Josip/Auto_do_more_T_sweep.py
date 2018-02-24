@@ -33,7 +33,7 @@ sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeU
 
 
 
-name_counter = 139
+name_counter = 150
 
 ## UPLOADING TO THE AWG
    
@@ -88,7 +88,7 @@ for per,period in enumerate(T):
 
 
 
-    file_name = '1_3 IV %d'%(name_counter+1)
+    file_name = '1_3 IV %d'%(name_counter)
     
     name_counter += 1 
     gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
