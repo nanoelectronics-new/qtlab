@@ -45,7 +45,7 @@ if not(Automatic_sequence_generation):
         p.setValuesCH2([0.1, 0.0],[0.3, 0.0]) 
         p.setMarkersCH2([0,0],[0,0])
 
-        p.setValuesCH3([0.1, 500.0],[0.3, 0.0]) 
+        p.setValuesCH3([0.1, 200.0],[0.3, 0.0]) 
         p.setMarkersCH3([1,0],[1,0])
 
 
