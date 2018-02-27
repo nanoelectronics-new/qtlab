@@ -18,20 +18,23 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 136'
+file_name = '1_3 IV 174'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 
-ramp_rate_Y = 0.0008 #T/s
+ramp_rate_Y = 0.1e-3 #T/s
 step_size_BY = -0.25e-3 
 magnetY.set_rampRate_T_s(ramp_rate_Y)
 
 
-v1_vec = arange(140e-3,110e-3,step_size_BY)  #Bagnetic field in T
-t_burst = arange(0.005,0.151,0.001)   #tau in ns
+v1_vec = arange(116e-3,128e-3,step_size_BY)  #Bagnetic field in T
+t_burst_local = arange(0.005,0.075,0.001)   #tau in ns
 
-tau_repetitions = 3
+if t_burst_local != t_burst:
+    raise Exception('Local and global t_burst are different - probably something is wrong!')
+
+tau_repetitions = 1
 
 
 # you indicate that a measurement is about to start and other
@@ -66,7 +69,7 @@ data.create_file()
 
 
 #saving directly in matrix format for diamond program
-new_mat = np.zeros(len(t_burst)) # Creating empty matrix for storing all data   
+new_mat = np.zeros(len(t_burst_local)) # Creating empty matrix for storing all data   
 
 # Next two plot-objects are created. First argument is the data object
 # that needs to be plotted. To prevent new windows from popping up each
@@ -108,9 +111,9 @@ try:
         while math.fabs(v1 - magnetY.get_field_get()) > 0.0001:
             qt.msleep(0.050)
   
-        tau_vector = np.zeros(len(t_burst)) 
+        tau_vector = np.zeros(len(t_burst_local)) 
         
-        for j,v2 in enumerate(t_burst):
+        for j,v2 in enumerate(t_burst_local):
 
             tau_temp = 0.0
 
