@@ -23,13 +23,13 @@ file_name = '1_3 IV 174'
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 
-ramp_rate_Y = 0.1e-3 #T/s
+ramp_rate_Y = 0.10e-3 #T/s
 step_size_BY = -0.25e-3 
 magnetY.set_rampRate_T_s(ramp_rate_Y)
 
 
 v1_vec = arange(116e-3,128e-3,step_size_BY)  #Bagnetic field in T
-t_burst_local = arange(0.005,0.075,0.001)   #tau in ns
+t_burst_local = arange(0.005,0.050,0.001)   #tau in ns
 
 if t_burst_local != t_burst:
     raise Exception('Local and global t_burst are different - probably something is wrong!')
