@@ -1,5 +1,6 @@
 import AWG_lib
 reload(AWG_lib)
+from time import time
 import Waveform_PresetAmp as Wav
 reload(Wav)
 import numpy as np
@@ -12,7 +13,7 @@ from Background_correction import Back_corr as bc
 
 ## GENERAL SETTINGS
 
-tau_vector =  arange(0.050,0.100,0.002)# period pulse in us
+tau_vector =  arange(0.084,0.100,0.002)# period pulse in us
 ch3_amp = 200.0
 
 
@@ -33,7 +34,7 @@ sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeU
 
 
 
-name_counter = 197
+name_counter = 214
 
 ## UPLOADING TO THE AWG
    
@@ -128,7 +129,7 @@ for tau_index,tau in enumerate(tau_vector):
 
 
 
-    file_name = '1_3 IV %d'%(name_counter)
+    file_name = '1_3 IV %d_%dns'%(name_counter, tau*1000)
     
     name_counter += 1 
     gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
