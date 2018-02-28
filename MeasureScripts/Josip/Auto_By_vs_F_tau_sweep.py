@@ -12,7 +12,7 @@ from Background_correction import Back_corr as bc
 
 ## GENERAL SETTINGS
 
-tau_vector =  arange(0.005,0.050,0.002)# period pulse in us
+tau_vector =  arange(0.050,0.100,0.002)# period pulse in us
 ch3_amp = 200.0
 
 
@@ -33,7 +33,7 @@ sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeU
 
 
 
-name_counter = 174
+name_counter = 197
 
 ## UPLOADING TO THE AWG
    
@@ -46,11 +46,11 @@ for tau_index,tau in enumerate(tau_vector):
     seq = list() 
 
 
-    period = 0.130
+    period = 0.173
     
-    init = 0.015
-    manipulate = 0.100
-    read = 0.015 
+    init = 0.020
+    manipulate = 0.133
+    read = 0.020 
     delay = 0.023 
 
     for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
@@ -58,14 +58,46 @@ for tau_index,tau in enumerate(tau_vector):
                                                                                                                          
             
 
-        a = (manipulate - tau)/2.0 - delay  # First part of the IQ pulse, with the delay compensation
-        b = (manipulate - tau)/2.0   # Last (third) part of the IQ pulse, with the delay compensation
-        p.setValuesCH1([init,0.0],[a,0.0],[tau,500.0],[b,0.0],[delay,0.0],[read, 0.0])   # I
-        p.setMarkersCH1([0,1,0,0,0,0],[0,1,0,0,0,0])  
-        p.setValuesCH2([init,0.0],[a,0.0],[tau,500.0],[b,0.0],[delay,0.0],[read, 0.0])    # Q
-        p.setMarkersCH2([0,1,0,0,0,0],[0,1,0,0,0,0])
-        p.setValuesCH3([init,ch3_amp],[a,0.0],[tau,0.0],[b,0.0],[delay,0.0],[read, ch3_amp])  # Gate
-        p.setMarkersCH3([0,1,0,0,0,0],[0,1,0,0,0,0])
+        x = (manipulate - tau)/2
+        b = delay - x
+        print b
+    
+        if b >= 0.001000:
+            a = init - b
+            c = tau - b
+            d = delay + x
+            e = read
+            p.setValuesCH1([a, 0.0],[b, 500.0],[c,500.0],[d,0.0],[e,0.0])   # I
+            p.setMarkersCH1([0,1,0,0,0],[0,1,0,0,0])  
+            p.setValuesCH2([a, 0.0],[b, 500.0],[c,500.0],[d,0.0],[e,0.0])    # Q
+            p.setMarkersCH2([0,1,0,0,0],[0,1,0,0,0])
+            p.setValuesCH3([a, 200.0],[b, 200.0],[c,0.0],[d,0.0],[e,200.0])  # Gate
+            p.setMarkersCH3([0,1,0,0,0],[0,1,0,0,0])
+    
+        elif abs(b) < 0.001000:    
+            a = init - b
+            c = tau - b
+            d = delay + x
+            e = read
+            p.setValuesCH1([a, 0.0],[c,500.0],[d,0.0],[e,0.0])   # I
+            p.setMarkersCH1([0,1,0,0],[0,1,0,0])  
+            p.setValuesCH2([a, 0.0],[c,500.0],[d,0.0],[e,0.0])    # Q
+            p.setMarkersCH2([0,1,0,0],[0,1,0,0])
+            p.setValuesCH3([a, 200.0],[c,0.0],[d,0.0],[e,200.0])  # Gate
+            p.setMarkersCH3([0,1,0,0],[0,1,0,0])
+    
+        elif b <= 0.001000:
+            b = abs(b)
+            a = init 
+            c = tau 
+            d = delay + x
+            e = read
+            p.setValuesCH1([a, 0.0],[b, 0.0],[c,500.0],[d,0.0],[e,0.0])   # I
+            p.setMarkersCH1([0,1,0,0,0],[0,1,0,0,0])  
+            p.setValuesCH2([a, 0.0],[b, 0.0],[c,500.0],[d,0.0],[e,0.0])    # Q
+            p.setMarkersCH2([0,1,0,0,0],[0,1,0,0,0])
+            p.setValuesCH3([a, 200.0],[b, 0.0],[c,0.0],[d,0.0],[e,200.0])  # Gate
+            p.setMarkersCH3([0,1,0,0,0],[0,1,0,0,0])
 
 
 
@@ -108,12 +140,12 @@ for tau_index,tau in enumerate(tau_vector):
     
     step_size_BY = -0.5e-3 
     
-    BY_vector = arange(129e-3,120e-3+step_size_BY,step_size_BY) #T  #
+    BY_vector = arange(126e-3,119e-3+step_size_BY,step_size_BY) #T  #
     
     magnetY.set_rampRate_T_s(ramp_rate_Y)
     
     
-    freq_vec = arange(5.75e9,6.00e9,3e6)  # frequency 
+    freq_vec = arange(5.60e9,5.95e9,3e6)  # frequency 
     
     qt.mstart()
     
