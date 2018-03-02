@@ -38,8 +38,9 @@ class a34410a(Instrument):
             self._visainstrument = visa.instrument.open_resource(self._address)
         else:    
             self._visainstrument = None
-            
-            
+        
+        self._visainstrument.timeout = 10000.0    
+           
         # Add parameters to wrapper
         self.add_parameter('readval', flags=Instrument.FLAG_GET,
             units='AU',
