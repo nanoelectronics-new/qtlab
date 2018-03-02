@@ -18,7 +18,7 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 222'
+file_name = '1_3 IV 223'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -27,9 +27,9 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 
-v1_vec = arange(-15,15,0.2)  #Frequency offset in Hz
+v1_vec = arange(-5,10,0.5)  #Frequency offset in Hz
 #f_center = 6.706e9  # Center frequency in Hz
-tau_vector_repetitions = 200
+tau_vector_repetitions = 800
 
 
 # you indicate that a measurement is about to start and other
@@ -77,13 +77,13 @@ plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='ima
 
 
 #Turn the RF on
-#VSG.set_status("on") 
+VSG.set_status("on") 
 ##Run the AWG sequence 
-#AWG.run()
-##Turn ON all necessary AWG channels
-#AWG.set_ch1_output(1)
-#AWG.set_ch2_output(1)
-#AWG.set_ch3_output(1)
+AWG.run()
+#Turn ON all necessary AWG channels
+AWG.set_ch1_output(1)
+AWG.set_ch2_output(1)
+AWG.set_ch3_output(1)
 #Force the AWG to start from the first element of the sequence
 AWG._ins.force_jump(1)
 
@@ -106,9 +106,10 @@ try:
         tau_vector = np.zeros(len(t_burst)) # Empty vector for averaging intermediate tau result vectors
 
         for k in xrange(tau_vector_repetitions):  #repeat the one tau vector measurement n times
+            AWG._ins.force_jump(1)     # Start from the first tau in the sequence
             for j,v2 in enumerate(t_burst):  
     
-                AWG._ins.force_event()
+                
     
                 # readout
                
@@ -116,7 +117,7 @@ try:
                 tau_vector[j] += dmm.get_readval()/gain*1e12
                 
                 
-                
+                AWG._ins.force_event()
     
                 # the next function is necessary to keep the gui responsive. It
                 # checks for instance if the 'stop' button is pushed. It also checks
