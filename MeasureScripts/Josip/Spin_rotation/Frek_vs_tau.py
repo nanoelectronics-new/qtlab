@@ -27,9 +27,9 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 
-v1_vec = arange(-5,10,0.5)  #Frequency offset in Hz
-#f_center = 6.706e9  # Center frequency in Hz
-tau_vector_repetitions = 25
+v1_vec = arange(-1e8,1e8,5e6)  #Frequency offset in Hz
+f_center = 5.792e9  # Center frequency in Hz
+tau_vector_repetitions = 5
 
 
 # you indicate that a measurement is about to start and other
@@ -100,8 +100,8 @@ try:
         
         
         start = time()
-        VSG.set_power(v1)
-        #VSG.set_frequency(f_center + v1)
+        #VSG.set_power(v1)
+        VSG.set_frequency(f_center + v1)
   
         tau_vector = np.zeros(len(t_burst)) # Empty vector for averaging intermediate tau result vectors
 
