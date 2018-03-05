@@ -31,14 +31,14 @@ seqCH3 = list()
 seq = list() 
 #I = np.linspace(0,500*np.sqrt(2),3) # I vector from 0 until the radius of the sphere
 
-period = 0.260
+period = 0.390
   
-init = 0.030
-manipulate = 0.200
-read = 0.030
+init = 0.045
+manipulate = 0.300
+read = 0.045
 delay = 0.023 
 
-t_burst = arange(0.005,0.150,0.001)
+t_burst = arange(0.005,0.280,0.001)
 
 delay = 0.023
 
@@ -47,7 +47,7 @@ for i,t in enumerate(t_burst):   # Creating waveforms for all sequence elements
           
     x = (manipulate - t)/2
     b = delay - x
-    print b
+
 
     if b >= 0.001000:
         a = init - b
