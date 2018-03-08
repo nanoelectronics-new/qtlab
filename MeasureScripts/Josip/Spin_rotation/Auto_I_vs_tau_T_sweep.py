@@ -13,10 +13,10 @@ from Background_correction import Back_corr as bc
 
 ## GENERAL SETTINGS
 
-T_mult_factor =  arange(1.1,1.6,0.1)# period pulse in us
+T_mult_factor =  arange(1.2,1.6,0.1)# period pulse in us
 ch3_amp = 200.0
 
-name_counter = 240
+name_counter = 241
 
 ### SETTING AWG
 ##
@@ -38,7 +38,7 @@ for Tmf_index,Tmf in enumerate(T_mult_factor):
     seq = list() 
     #I = np.linspace(0,500*np.sqrt(2),3) # I vector from 0 until the radius of the sphere
     
-    period = 0.200*Tmf
+    period = 0.260*Tmf
       
     init = 0.030*Tmf
     manipulate = 0.200*Tmf
@@ -205,7 +205,7 @@ for Tmf_index,Tmf in enumerate(T_mult_factor):
         
     
         # Switching off the RF 
-        VSG.set_status("off") 
+        #VSG.set_status("off") 
     
         #Stop the AWG sequence 
         #AWG.stop()
