@@ -597,3 +597,4 @@ def set_waveform_trigger_all_wait_mean(seq,AWG_clock,AWGMax_amp, t_sync, sync, t
     
     #Run
     #AWG.run()
+    return aver_list[2] # return the average value of the pulse on the channel 3

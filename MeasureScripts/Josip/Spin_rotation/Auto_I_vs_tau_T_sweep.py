@@ -13,10 +13,10 @@ from Background_correction import Back_corr as bc
 
 ## GENERAL SETTINGS
 
-T_mult_factor =  arange(1.2,1.6,0.1)# period pulse in us
+T_mult_factor = arange(1.0,10.0,0.5)# period pulse in us
 ch3_amp = 200.0
 
-name_counter = 241
+name_counter = 247
 
 ### SETTING AWG
 ##
@@ -41,7 +41,7 @@ for Tmf_index,Tmf in enumerate(T_mult_factor):
     period = 0.260*Tmf
       
     init = 0.030*Tmf
-    manipulate = 0.200*Tmf
+    manipulate = 0.200
     read = 0.030*Tmf
     delay = 0.023 
     
@@ -99,126 +99,131 @@ for Tmf_index,Tmf in enumerate(T_mult_factor):
     seq.append(seqCH1) 
     seq.append(seqCH2) 
     seq.append(seqCH3) 
-    AWG_lib.set_waveform_trigger_all_wait_mean(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG 
+    avg_ch3 = AWG_lib.set_waveform_trigger_all_wait_mean(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG 
 
     print("Waiting to upload the sequence to the AWG")
-    sleep(10.0)
+    sleep(120.0)
     print("Waiting finished")
             
-
-# Turn on AWG channels and run it
+ 
+    # Turn on AWG channels and run it
     AWG.run()
     AWG.set_ch1_output(1)
     AWG.set_ch2_output(1)
     AWG.set_ch3_output(1)
 
+    # adopt the DC point to take the new average value into account
+    dac5_ref = -358.92
+    dac5_new = (avg_ch3 - 46)*0.008 - 358.92
+    IVVI.set_dac5(dac5_new)
 
 
 
 
-    file_name = '1_3 IV %d_%dns'%(name_counter, period*1000)
+    for bzvz in xrange(3):
+        file_name = '1_3 IV %d'%(name_counter)
     
-    name_counter += 1 
+        name_counter += 1 
     
-    gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
-    tau_vector_repetitions = 15
-    power = 0.0
-    
-    
-    
-    
-    qt.mstart()
+        gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+        tau_vector_repetitions = 5
+        power = 0.0
     
     
-    data = qt.Data(name=file_name)
     
     
-    data.add_coordinate('tau [ns]')
-    data.add_value('Current [pA]')
+        qt.mstart()
     
     
-    data.create_file()
+        data = qt.Data(name=file_name)
+    
+    
+        data.add_coordinate('tau [ns]')
+        data.add_value('Current [pA]')
+    
+    
+        data.create_file()
     
      
     
-    plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
+        plot2d = qt.Plot2D(data, name=file_name,autoupdate=False)
     
     
     
     
-    #Turn the RF on
-    #VSG.set_status("on") 
-    ###Run the AWG sequence 
-    #AWG.run()
-    ##Turn ON all necessary AWG channels
-    #AWG.set_ch1_output(1)
-    #AWG.set_ch2_output(1)
-    #AWG.set_ch3_output(1)
-    #Force the AWG to start from the first element of the sequence
-    AWG._ins.force_jump(1)
+        #Turn the RF on
+        #VSG.set_status("on") 
+        ###Run the AWG sequence 
+        #AWG.run()
+        ##Turn ON all necessary AWG channels
+        #AWG.set_ch1_output(1)
+        #AWG.set_ch2_output(1)
+        #AWG.set_ch3_output(1)
+        #Force the AWG to start from the first element of the sequence
+        AWG._ins.force_jump(1)
     
     
     
-    # preparation is done, now start the measurement.
-    # It is actually a simple loop.
-    VSG.set_power(power)
+        # preparation is done, now start the measurement.
+        # It is actually a simple loop.
+        VSG.set_power(power)
     
       
-    tau_vector = np.zeros(len(t_burst)) # Empty vector for averaging intermediate tau result vectors
+        tau_vector = np.zeros(len(t_burst)) # Empty vector for averaging intermediate tau result vectors
     
-    start = time()
-    try: 
-        for k in xrange(tau_vector_repetitions):  #repeat the one tau vector measurement n times
-            AWG._ins.force_jump(1)     # Start from the first tau in the sequence
-            for j,v2 in enumerate(t_burst):  
+        start = time()
+        try: 
+            for k in xrange(tau_vector_repetitions):  #repeat the one tau vector measurement n times
+                AWG._ins.force_jump(1)     # Start from the first tau in the sequence
+                for j,v2 in enumerate(t_burst):  
             
                 
             
-                # readout
+                    # readout
                
                
-                tau_vector[j] += dmm.get_readval()/gain*1e12
+                    tau_vector[j] += dmm.get_readval()/gain*1e12
                 
                 
-                AWG._ins.force_event()
+                    AWG._ins.force_event()
             
-                # the next function is necessary to keep the gui responsive. It
-                # checks for instance if the 'stop' button is pushed. It also checks
-                # if the plots need updating.
-                qt.msleep(0.002)
+                    # the next function is necessary to keep the gui responsive. It
+                    # checks for instance if the 'stop' button is pushed. It also checks
+                    # if the plots need updating.
+                    qt.msleep(0.002)
         
-        # Calculate the average value of the recorded tau vector
-        tau_vector = tau_vector/tau_vector_repetitions
-        # save the data point to the file    
+            # Calculate the average value of the recorded tau vector
+            tau_vector = tau_vector/tau_vector_repetitions
+            # save the data point to the file    
     
-        data.add_data_point(t_burst*1e3,tau_vector)  
-        data.new_block()
-        stop = time()
+            data.add_data_point(t_burst*1e3,tau_vector)  
+            data.new_block()
+            stop = time()
         
-        plot2d.update()
+            plot2d.update()
         
-        stop = time()
-        print 'Duration: %s sec' % (stop - start, )
+            stop = time()
+            print 'Duration: %s sec' % (stop - start, )
     
     
-    finally:
+        finally:
         
     
-        # Switching off the RF 
-        #VSG.set_status("off") 
+            # Switching off the RF 
+            #VSG.set_status("off") 
     
-        #Stop the AWG sequence 
-        #AWG.stop()
-        #Turn OFF all necessary AWG channels
-        #AWG.set_ch1_output(0)
-        #AWG.set_ch2_output(0)
-        #AWG.set_ch3_output(0)
+            #Stop the AWG sequence 
+            #AWG.stop()
+            #Turn OFF all necessary AWG channels
+            #AWG.set_ch1_output(0)
+            #AWG.set_ch2_output(0)
+            #AWG.set_ch3_output(0)
     
     
-        # after the measurement ends, you need to close the data file.
-        data.close_file()
-        # lastly tell the secondary processes (if any) that they are allowed to start again.
-        qt.mend()
+            # after the measurement ends, you need to close the data file.
+            data.close_file()
+            # lastly tell the secondary processes (if any) that they are allowed to start again.
+            qt.mend()
 
     
     
