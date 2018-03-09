@@ -31,11 +31,11 @@ seqCH3 = list()
 seq = list() 
 #I = np.linspace(0,500*np.sqrt(2),3) # I vector from 0 until the radius of the sphere
 
-period = 0.300
+period = 0.310
   
-init = 0.100
+init = 0.105
 manipulate = 0.100
-read = 0.100
+read = 0.105
 delay = 0.023 
 
 t_burst = arange(0.005,0.080,0.001)
