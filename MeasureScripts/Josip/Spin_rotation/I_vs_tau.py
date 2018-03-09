@@ -7,7 +7,7 @@ import numpy as np
 
 
 
-file_name = '1_3 IV 303'
+file_name = '1_3 IV 304'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 tau_vector_repetitions = 5
@@ -30,7 +30,7 @@ data.create_file()
 
  
 
-plot2d = qt.Plot2D(data, name='measure2D_31',autoupdate=False)
+plot2d = qt.Plot2D(data, name='measure2D_middle',autoupdate=False)
 
 
 
