@@ -163,6 +163,9 @@ finally:
     AWG.set_ch2_output(0)
     AWG.set_ch3_output(0)
 
+    # Do the background correction
+    bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
+
 
     # after the measurement ends, you need to close the data file.
     data.close_file()
