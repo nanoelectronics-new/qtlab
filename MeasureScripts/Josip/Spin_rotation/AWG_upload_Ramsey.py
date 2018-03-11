@@ -31,60 +31,35 @@ seqCH3 = list()
 seq = list() 
 #I = np.linspace(0,500*np.sqrt(2),3) # I vector from 0 until the radius of the sphere
 
-period = 0.310
+period = 0.340
   
 init = 0.105
-manipulate = 0.100
+manipulate_half = 0.065
 read = 0.105
 delay = 0.023 
 
-t_burst = arange(0.005,0.080,0.001)
+t_burst_half = arange(0.003,0.040,0.001)
+
+pi_half = 0.007  # Duration of the burst for the pi/2 rotation
 
 delay = 0.023
 
-for i,t in enumerate(t_burst):   # Creating waveforms for all sequence elements
+for i,t in enumerate(t_burst_half):   # Creating waveforms for all sequence elements
     p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV')  
-          
-    x = (manipulate - t)/2
-    b = delay - x
 
+    a = init - delay + (manipulate_half - t - pi_half)
+    b = pi_half 
+    c = t*2
+    d = pi_half
+    e = period - a-b-c-d
 
-    if b >= 0.001000:
-        a = init - b
-        c = t - b
-        d = delay + x
-        e = read
-        p.setValuesCH1([a, 0.0],[b, 500.0],[c,500.0],[d,0.0],[e,0.0])   # I
-        p.setMarkersCH1([0,1,0,0,0],[0,1,0,0,0])  
-        p.setValuesCH2([a, 0.0],[b, 500.0],[c,500.0],[d,0.0],[e,0.0])    # Q
-        p.setMarkersCH2([0,1,0,0,0],[0,1,0,0,0])
-        p.setValuesCH3([a, 200.0],[b, 200.0],[c,0.0],[d,0.0],[e,200.0])  # Gate
-        p.setMarkersCH3([0,1,0,0,0],[0,1,0,0,0])
+    p.setValuesCH1([a, 0.0],[b, 500.0],[c,0.0],[d,500.0],[e,0.0])   # I
+    p.setMarkersCH1([0,0,0,0,0],[0,0,0,0,0])  
+    p.setValuesCH2([a, 0.0],[b, 500.0],[c,0.0],[d,500.0],[e,0.0])    # Q
+    p.setMarkersCH2([0,0,0,0,0],[0,0,0,0,0])
+    p.setValuesCH3([init, 200.0],[manipulate_half*2, 0.0],[read,200.0])  # Gate
+    p.setMarkersCH3([0,0,0],[0,0,0])
 
-    elif abs(b) < 0.001000:    
-        a = init - b
-        c = t - b
-        d = delay + x
-        e = read
-        p.setValuesCH1([a, 0.0],[c,500.0],[d,0.0],[e,0.0])   # I
-        p.setMarkersCH1([0,1,0,0],[0,1,0,0])  
-        p.setValuesCH2([a, 0.0],[c,500.0],[d,0.0],[e,0.0])    # Q
-        p.setMarkersCH2([0,1,0,0],[0,1,0,0])
-        p.setValuesCH3([a, 200.0],[c,0.0],[d,0.0],[e,200.0])  # Gate
-        p.setMarkersCH3([0,1,0,0],[0,1,0,0])
-
-    elif b <= 0.001000:
-        b = abs(b)
-        a = init 
-        c = t 
-        d = delay + x
-        e = read
-        p.setValuesCH1([a, 0.0],[b, 0.0],[c,500.0],[d,0.0],[e,0.0])   # I
-        p.setMarkersCH1([0,1,0,0,0],[0,1,0,0,0])  
-        p.setValuesCH2([a, 0.0],[b, 0.0],[c,500.0],[d,0.0],[e,0.0])    # Q
-        p.setMarkersCH2([0,1,0,0,0],[0,1,0,0,0])
-        p.setValuesCH3([a, 200.0],[b, 0.0],[c,0.0],[d,0.0],[e,200.0])  # Gate
-        p.setMarkersCH3([0,1,0,0,0],[0,1,0,0,0])
 
     seqCH1.append(p.CH1) 
     seqCH2.append(p.CH2) 
