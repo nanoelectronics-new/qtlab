@@ -34,7 +34,7 @@ seq = list()
 period = 0.410
   
 init = 0.105
-manipulate = 0.200
+manipulate = 0.130
 read = 0.105
 delay = 0.023 
 
