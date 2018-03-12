@@ -31,14 +31,14 @@ seqCH3 = list()
 seq = list() 
 #I = np.linspace(0,500*np.sqrt(2),3) # I vector from 0 until the radius of the sphere
 
-period = 0.390
+period = 0.340
   
 init = 0.105
-manipulate_half = 0.090
+manipulate_half = 0.065
 read = 0.105
 delay = 0.023 
 
-t_burst_half = arange(0.003,0.071,0.001)
+t_burst_half = arange(0.003,0.041,0.001)
 
 pi_half = 0.007  # Duration of the burst for the pi/2 rotation
 
