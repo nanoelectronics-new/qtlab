@@ -7,13 +7,13 @@ import numpy as np
 
 
 
-file_name = '1_3 IV 319'
+file_name = '1_3 IV 324'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 tau_vector_repetitions = 5
 power = 5.0
 
-
+taus = arange(0.003,0.071,0.001)*2
 
 
 qt.mstart()
@@ -53,13 +53,13 @@ AWG._ins.force_jump(1)
 VSG.set_power(power)
 
   
-tau_vector = np.zeros(len(t_burst)) # Empty vector for averaging intermediate tau result vectors
+tau_vector = np.zeros(len(taus)) # Empty vector for averaging intermediate tau result vectors
 
 start = time()
 try: 
     for k in xrange(tau_vector_repetitions):  #repeat the one tau vector measurement n times
         AWG._ins.force_jump(1)     # Start from the first tau in the sequence
-        for j,v2 in enumerate(t_burst):  
+        for j,v2 in enumerate(taus):  
         
             
         
@@ -80,7 +80,7 @@ try:
     tau_vector = tau_vector/tau_vector_repetitions
     # save the data point to the file    
 
-    data.add_data_point(t_burst*1e3,tau_vector)  
+    data.add_data_point(taus*1e3,tau_vector)  
     data.new_block()
     stop = time()
     
