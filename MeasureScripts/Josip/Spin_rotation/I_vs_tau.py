@@ -7,13 +7,13 @@ import numpy as np
 
 
 
-file_name = '1_3 IV 325'
+file_name = '1_3 IV 331'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
-tau_vector_repetitions = 5
+tau_vector_repetitions = 15
 power = 5.0
 
-taus = arange(0.003,0.041,0.001)*2
+taus = arange(0.003,0.061,0.001)*2
 
 
 qt.mstart()
