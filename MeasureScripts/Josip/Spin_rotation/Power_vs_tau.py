@@ -19,7 +19,7 @@ import numpy as np
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = '1_3 IV 328'
+file_name = '1_3 IV 333'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -34,7 +34,7 @@ t_burst = arange(0.005,0.080,0.001)
 
 v1_vec = arange(5,20.5,0.5)  #Power in dBm
 
-#f_center = 5.961e9 + 4.55e6  # Center frequency in Hz
+f_center = 5.96555e9  # Center frequency in Hz
 tau_vector_repetitions = 100
 
 
@@ -81,7 +81,7 @@ plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
 plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
-#VSG.set_frequency(f_center)
+VSG.set_frequency(f_center)
 #Turn the RF on
 VSG.set_status("on") 
 ##Run the AWG sequence 
