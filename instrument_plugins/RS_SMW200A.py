@@ -62,7 +62,7 @@ class RS_SMW200A(Instrument):
             tags=['sweep'])
         self.add_parameter('power', type=types.FloatType,
             flags=Instrument.FLAG_GETSET | Instrument.FLAG_GET_AFTER_SET,
-            minval=-30, maxval=30, units='dBm',
+            minval=-30, maxval=30,
             tags=['sweep'])
         self.add_parameter('power_units', type=types.StringType,
             flags=Instrument.FLAG_GETSET | Instrument.FLAG_GET_AFTER_SET)
@@ -161,7 +161,7 @@ class RS_SMW200A(Instrument):
             None
 
         Output:
-            power (float) : output power in dBm
+            power (float) : output power in power units
         '''
         logging.debug(__name__ + ' : reading power from instrument')
         return float(self._visainstrument.ask('SOUR:POW?'))
@@ -171,7 +171,7 @@ class RS_SMW200A(Instrument):
         Sets output power of a device
 
         Input:
-            power (float) : output power in dBm
+            power (float) : output power in power units
 
         Output:
             None
@@ -210,6 +210,9 @@ class RS_SMW200A(Instrument):
         '''
         logging.debug(__name__ + ' : reading power units from the instrument')
         return str(self._visainstrument.ask('UNIT:POW?'))   
+
+
+
 
 
 
