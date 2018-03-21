@@ -15,6 +15,9 @@ averaging_repetitions = 25      # Defines the number of averaged traces
 f_center = 5.96555e9            # Center frequency in Hz
 
 
+def dBm_to_watts(P_dBm):
+    P_watts = 10**(float(P_dBm)/10.0)
+    return P_watts
 
 
 

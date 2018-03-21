@@ -64,6 +64,8 @@ class RS_SMW200A(Instrument):
             flags=Instrument.FLAG_GETSET | Instrument.FLAG_GET_AFTER_SET,
             minval=-30, maxval=30, units='dBm',
             tags=['sweep'])
+        self.add_parameter('power_units', type=types.StringType,
+            flags=Instrument.FLAG_GETSET | Instrument.FLAG_GET_AFTER_SET)
         self.add_parameter('status', type=types.StringType,
             flags=Instrument.FLAG_GETSET | Instrument.FLAG_GET_AFTER_SET)
         self.add_parameter('IQ_status', type=types.StringType,
@@ -166,7 +168,7 @@ class RS_SMW200A(Instrument):
 
     def do_set_power(self,power):
         '''
-        Set output power of device
+        Sets output power of a device
 
         Input:
             power (float) : output power in dBm
@@ -176,6 +178,40 @@ class RS_SMW200A(Instrument):
         '''
         logging.debug(__name__ + ' : setting power to %s dBm' % power)
         self._visainstrument.write('SOUR:POW %e' % power)
+
+
+
+    def do_set_power_units(self, units):
+        '''
+        Sets the units for the output power of a device
+
+        Input:
+            units (string) : power units in V,DBUV or DBM
+
+        Output:
+            None
+        '''
+        if type(units) != str or units.upper() not in ["V", "DBUV","DBM"]:
+            raise Exception ('Power units not properly given - must be one of the strings: "V", "DBUV","DBM" ')
+        units = units.upper() # Just converting all letters to uppercase to avoid unneccesary complications
+        logging.debug(__name__ + ' : setting power units to %s' % units)
+        self._visainstrument.write('UNIT:POW %s' % units)
+
+
+    def do_get_power_units(self):
+        '''
+        Gets the units for the output power of a device
+
+        Input:
+            None
+
+        Output:
+            units (string) : power units in V,DBUV or DBM
+        '''
+        logging.debug(__name__ + ' : reading power units from the instrument')
+        return str(self._visainstrument.ask('UNIT:POW?'))   
+
+
 
     def do_get_status(self):
         '''
