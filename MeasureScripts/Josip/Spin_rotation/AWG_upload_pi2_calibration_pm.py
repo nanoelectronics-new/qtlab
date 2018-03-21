@@ -33,7 +33,7 @@ seq = list()
 
   
 init = 0.105                            # First part of the pulse
-manipulate = 0.100                      # Second part of the pulse
+manipulate = 0.130                      # Second part of the pulse
 read = 0.105                            # Third part of the pulse
 period = init + manipulate + read       # Total pulse period
                        
@@ -56,19 +56,19 @@ overall_delay_IQ_to_PM = delay_IQ_to_PM + PM_before_IQ   #  Self descriptive
 
 IQ_duration = 0.007                         # Duration of the IQ pulse in ns
 T_between_pulses = 0.010                    # Time between the bursts in ns
-PM_duration = 2*IQ_duration + 1*T_between_pulses + 2*PM_before_IQ  # Duration of the pm pulse in ns - window around IQ pulses
+PM_duration = 4*IQ_duration + 3*T_between_pulses + 2*PM_before_IQ  # Duration of the pm pulse in ns - window around IQ pulses
 
 for i in xrange(3):          # Creating waveforms for all sequence elements
     p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV')   # New waveform object for the new
                                                                                                                       # sequence element
 
-    a = init + gate_to_IQ - delay                   # Time from the start of the period, until the start of the IQ pulse 
-    rest_of_IQ = period - a - 2*IQ_duration - 1*T_between_pulses     # The duration after the second IQ pulse until the end of the period
+    a = init + gate_to_IQ - delay                                   # Time from the start of the period, until the start of the IQ pulse 
+    rest_of_IQ = period - a - 4*IQ_duration - 3*T_between_pulses    # The duration after the second IQ pulse until the end of the period
 
-    p.setValuesCH1([a, 0.0],[IQ_duration, 500.0],[T_between_pulses,0.0],[IQ_duration, 500.0],[rest_of_IQ, 0.0])  # I analog wavefrom
-    p.setMarkersCH1([0,0,0,0,0],[0,0,0,0,0])                                                       # I markers
-    p.setValuesCH2([a, 0.0],[IQ_duration, 500.0],[T_between_pulses,0.0],[IQ_duration, 500.0],[rest_of_IQ, 0.0])   # Q analog wavefrom
-    p.setMarkersCH2([0,0,0,0,0],[0,0,0,0,0])                                                       # Q markers
+    p.setValuesCH1([a, 0.0],[IQ_duration, 500.0],[T_between_pulses,0.0],[IQ_duration, 500.0],[T_between_pulses,0.0],[IQ_duration, 500.0],[T_between_pulses,0.0],[IQ_duration, 500.0],[rest_of_IQ, 0.0])  # I analog wavefrom
+    p.setMarkersCH1([0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0])                                                       # I markers
+    p.setValuesCH2([a, 0.0],[IQ_duration, 500.0],[T_between_pulses,0.0],[IQ_duration, 500.0],[T_between_pulses,0.0],[IQ_duration, 500.0],[T_between_pulses,0.0],[IQ_duration, 500.0],[rest_of_IQ, 0.0])   # Q analog wavefrom
+    p.setMarkersCH2([0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0])                                                       # Q markers
 
 
 
@@ -83,7 +83,7 @@ for i in xrange(3):          # Creating waveforms for all sequence elements
 
    
 
-    
+
     seqCH1.append(p.CH1) 
     seqCH2.append(p.CH2) 
     seqCH3.append(p.CH3) 

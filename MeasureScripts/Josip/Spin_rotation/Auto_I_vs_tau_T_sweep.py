@@ -36,7 +36,7 @@ for Tmf_index,Tmf in enumerate(T_mult_factor):
     seqCH2 = list() 
     seqCH3 = list() 
     seq = list() 
-    #I = np.linspace(0,500*np.sqrt(2),3) # I vector from 0 until the radius of the sphere
+
     
     period = 0.260*Tmf
       
