@@ -7,7 +7,7 @@ import numpy as np
 
 
 
-file_name = '1_3 IV 349'
+file_name = '1_3 IV 352'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 tau_vector_repetitions = 5
@@ -75,7 +75,7 @@ try:
             # the next function is necessary to keep the gui responsive. It
             # checks for instance if the 'stop' button is pushed. It also checks
             # if the plots need updating.
-            qt.msleep(0.002)
+            qt.msleep(0.010)
     
     # Calculate the average value of the recorded tau vector
     tau_vector = tau_vector/tau_vector_repetitions
