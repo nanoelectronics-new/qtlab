@@ -19,23 +19,23 @@ import numpy as np
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = '1_3 IV 333'
+file_name = '1_3 IV 346'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-
-t_burst = arange(0.005,0.080,0.001)
-
-
+raw_input("Warning: - check if the sequence and the measurement script have the same number of steps!\nPress enter to continue...")
+t_burst = arange(0.006,0.141,0.001)
 
 
 
 
-v1_vec = arange(5,20.5,0.5)  #Power in dBm
+
+
+v1_vec = arange(-10.0,20.5,0.5)  #Power in dBm
 
 f_center = 5.96555e9  # Center frequency in Hz
-tau_vector_repetitions = 100
+tau_vector_repetitions = 75
 
 
 # you indicate that a measurement is about to start and other
@@ -58,7 +58,7 @@ data = qt.Data(name=file_name)
 # information is used later for plotting purposes.
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
-data.add_coordinate('tau [ns]')
+data.add_coordinate('tau_burst [ns]')
 data.add_coordinate('Power [dBm]')
 data.add_value('Current [pA]')
 
@@ -90,6 +90,7 @@ AWG.run()
 AWG.set_ch1_output(1)
 AWG.set_ch2_output(1)
 AWG.set_ch3_output(1)
+AWG.set_ch4_output(1)
 #Force the AWG to start from the first element of the sequence
 AWG._ins.force_jump(1)
 
@@ -128,7 +129,7 @@ try:
                 # the next function is necessary to keep the gui responsive. It
                 # checks for instance if the 'stop' button is pushed. It also checks
                 # if the plots need updating.
-                qt.msleep(0.002)
+                qt.msleep(0.010)
 
         # Calculate the average value of the recorded tau vector
         tau_vector = tau_vector/tau_vector_repetitions
@@ -168,6 +169,7 @@ finally:
     AWG.set_ch1_output(0)
     AWG.set_ch2_output(0)
     AWG.set_ch3_output(0)
+    AWG.set_ch4_output(0)
 
     # Do the background correction
     bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
