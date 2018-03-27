@@ -32,7 +32,7 @@ t_burst = arange(0.006,0.141,0.001)
 
 
 
-v1_vec = arange(-10.0,20.5,0.5)  #Power in dBm
+v1_vec = arange(-5.0,15.5,0.5)  #Power in dBm
 
 f_center = 5.96555e9  # Center frequency in Hz
 tau_vector_repetitions = 75
