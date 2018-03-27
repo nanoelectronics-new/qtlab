@@ -88,6 +88,8 @@ try:
 
             tau_vector = np.zeros(len(taus))                # Empty vector for averaging intermediate tau result vectors
 
+            start = time()                                  # Getting the current timestamp for the calculation of the remaining measurement time
+
             for k in xrange(tau_vector_repetitions):    # Repeat the one tau vector measurement n times
                 AWG._ins.force_jump(1)                  # Start from the first tau in the sequence
                 for j,v2 in enumerate(taus):            # Going thorugh taus
@@ -105,7 +107,12 @@ try:
             # Calculate the average value of the recorded tau vector
             tau_vector = tau_vector/tau_vector_repetitions
             # save the data point to the file    
-            data.add_data_point(taus*1e3,DAC6_off+DAC6_center,DAC5_off+DAC5_center,tau_vector)  
+
+            # For the proper saving need to create vectors of single DACX_off values, in the length of inner loop passages
+            DAC6_vector = np.linspace(DAC6_off,DAC6_off,len(taus))
+            DAC5_vector = np.linspace(DAC5_off,DAC5_off,len(taus))
+
+            data.add_data_point(taus*1e3,DAC6_vector,DAC5_vector,tau_vector)  
             data.new_block()
             stop = time()
             new_mat = np.column_stack((new_mat,tau_vector))   # Gluing new tau_vector to the present matrix
@@ -117,7 +124,7 @@ try:
             plot2d.update()
             plot3d.update()
             
-            stop = time()              # Some things for being able to calculate the remaining time of the measurement
+            stop = time()              # Some things for being able to calculate the remaining measurement time
             vec_count = vec_count + 1
             # Calculating and showing the remaining measurement time
             print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(DAC5_offsets.size*DAC6_offsets.size - vec_count))))
