@@ -7,13 +7,13 @@ import numpy as np
 
 
 
-file_name = '1_3 IV 331'
+file_name = '1_3 IV 349'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
-tau_vector_repetitions = 15
+tau_vector_repetitions = 5
 power = 5.0
 
-taus = arange(0.003,0.061,0.001)*2
+taus = arange(0.006,0.141,0.001)
 
 
 qt.mstart()
@@ -43,6 +43,7 @@ AWG.run()
 AWG.set_ch1_output(1)
 AWG.set_ch2_output(1)
 AWG.set_ch3_output(1)
+AWG.set_ch4_output(1)
 #Force the AWG to start from the first element of the sequence
 AWG._ins.force_jump(1)
 
@@ -101,7 +102,7 @@ finally:
     AWG.set_ch1_output(0)
     AWG.set_ch2_output(0)
     AWG.set_ch3_output(0)
-
+    AWG.set_ch4_output(0)
 
     # after the measurement ends, you need to close the data file.
     data.close_file()
