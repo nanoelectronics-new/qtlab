@@ -33,12 +33,12 @@ seq = list()
 
   
 init = 0.105                            # First part of the pulse
-manipulate = 0.200                      # Second part of the pulse
+manipulate = 0.160                      # Second part of the pulse
 read = 0.105                            # Third part of the pulse
 period = init + manipulate + read       # Total pulse period
                        
 
-t_burst = arange(0.006,0.168,0.002)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
+t_burst = arange(0.006,0.122,0.001)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
 
 delay = 0.023                           # Delay of the IQ in ns
 

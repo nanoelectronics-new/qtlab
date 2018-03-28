@@ -7,13 +7,13 @@ import numpy as np
 
 
 
-file_name = '1_3 IV 352'
+file_name = '1_3 IV 355'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 tau_vector_repetitions = 5
 power = 5.0
 
-taus = arange(0.006,0.141,0.001)
+taus = arange(0.006,0.122,0.001)
 
 
 qt.mstart()
@@ -22,7 +22,7 @@ qt.mstart()
 data = qt.Data(name=file_name)
 
 
-data.add_coordinate('tau [ns]')
+data.add_coordinate('tau wait [ns]')
 data.add_value('Current [pA]')
 
 
