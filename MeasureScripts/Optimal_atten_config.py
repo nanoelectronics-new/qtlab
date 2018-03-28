@@ -7,21 +7,31 @@
         Ta: list, ambient temperatures of all the attenuators
         Pinput: Input power in mW
         max_P_4K: Maximum allowed dissipation on the 4K plate in mW
+        max_P_still: Maximum allowed dissipation on the still plate in mW
+        max_P_50mK: Maximum allowed dissipation on the 50mK plate in mW
         max_P_MC: Maximum allowed dissipation on the MC plate in mW
+
         
     OUTPUTS:
-        Currently_minium_noise_of_combination - minimum calculated overall noise
-        Currently_noise_minimizing_combination - attenuator combination that minimizes the overall noise
+        All the possible attenuator combinations
+        Combinations that satisfy the dissipation criteria
+        Attenuator combination that minimizes the overall noise
+        Temperature of the noise on the output of the MC plate attenuator
+        Power dissipation on all the fridge stages
+        
 """
         
-wanted_overall_attenuation = 50         # In dB
+wanted_overall_attenuation = 40         # In dB
 attenuator_set = [0,3,6,9,10,12,20,30]     # In dB
 Tin = 290.0                             # In Kelvins
 Ta = [50.0,4.0,1.0,0.1,0.02]            # In Kelvins
 
 Pinput = 1.0                            # Input power in mW
 max_P_4K = 5.0                         # Maximum allowed dissipation on the 4K plate in mW
-max_P_MC = 2e-4                         # Maximum allowed dissipation on the MC plate in mW
+max_P_still = 0.1                     # Maximum allowed dissipation on the still plate in mW
+max_P_50mK = 0.02                      # Maximum allowed dissipation on the 50mK plate in mW
+max_P_MC = 2e-4                        # Maximum allowed dissipation on the MC plate in mW
+
 
 
 
@@ -90,8 +100,12 @@ for index,combination in enumerate(possible_atten_combination):  # Going through
             P = Powers(Pinput,L(element))      # Then its input is Pin   
         else:                                  # Otherwise 
             P = Powers(P[1],L(element))        # its input is an output from the previous stage
-        if (i==1 and (P[0] > max_P_4K)) or (i==4 and (P[0] > max_P_MC)): # If an attenuator is on the 4K stage and dissipation there is higher then max_P_4K
-                                                                          # Or if the attenuator is on the MC stage and dissipation there is higher then max_P_MC
+
+            # If an attenuator is on the 4K stage and dissipation there is higher then max_P_4K
+            # Or if the attenuator is on the still stage and dissipation there is higher then max_P_still
+            # Or if the attenuator is on the 50mK stage and dissipation there is higher then max_P_50mK
+            # Or if the attenuator is on the MC stage and dissipation there is higher then max_P_MC
+        if (i==1 and (P[0] > max_P_4K)) or (i==2 and (P[0] > max_P_still)) or (i==3 and (P[0] > max_P_50mK)) or  (i==4 and (P[0] > max_P_MC)): 
             combinations_to_remove.append(combination) # Then add this combination into the removal list
             break
 
