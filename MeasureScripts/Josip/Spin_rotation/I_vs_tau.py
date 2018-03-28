@@ -12,6 +12,7 @@ file_name = '1_3 IV 355'
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 tau_vector_repetitions = 5
 power = 5.0
+f_center = 5.91555e9        # Center frequency in Hz
 
 taus = arange(0.006,0.122,0.001)
 
@@ -34,7 +35,12 @@ plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
 
 
 
-
+# Set the VSG power units
+VSG.set_power_units("dbm") 
+# Set the RF power
+VSG.set_power(power)
+# Set the RF frequency
+VSG.set_frequency(f_center)
 #Turn the RF on
 VSG.set_status("on") 
 ##Run the AWG sequence 
@@ -51,7 +57,7 @@ AWG._ins.force_jump(1)
 
 # preparation is done, now start the measurement.
 # It is actually a simple loop.
-VSG.set_power(power)
+
 
   
 tau_vector = np.zeros(len(taus)) # Empty vector for averaging intermediate tau result vectors
