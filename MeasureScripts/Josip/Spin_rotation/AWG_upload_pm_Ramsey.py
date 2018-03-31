@@ -54,7 +54,7 @@ PM_before_IQ = 0.010                    # Since the rise time of the PM is slowe
 overall_delay_IQ_to_PM = delay_IQ_to_PM + PM_before_IQ   #  Self descriptive
 
 
-IQ_duration = 0.011                        # Duration of the IQ pulse in ns
+IQ_duration = 0.004                      # Duration of the IQ pulse in ns
 PM_duration = IQ_duration + 2*PM_before_IQ  # Duration of the pm pulse in ns - window around IQ pulse
 
 
