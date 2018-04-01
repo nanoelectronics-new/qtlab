@@ -18,7 +18,7 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 359'
+file_name = '1_3 IV 360'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -30,7 +30,7 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 v1_vec = arange(-5e7,5e7,3e6)  #Frequency offset in Hz
 f_center = 5.96555e9  # Center frequency in Hz
 tau_vector_repetitions = 35
-power = 9.0
+power = 11.0
 
 raw_input("Warning: - check if the sequence and the measurement script have the same number of steps!\nPress enter to continue...")
 
@@ -83,16 +83,16 @@ plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='ima
 VSG.set_power_units("dbm") 
 # Set the RF power
 VSG.set_power(power)
-#Turn the RF on
+# Turn the RF on
 VSG.set_status("on") 
-##Run the AWG sequence 
+## Run the AWG sequence 
 AWG.run()
-#Turn ON all necessary AWG channels
+# Turn ON all necessary AWG channels
 AWG.set_ch1_output(1)
 AWG.set_ch2_output(1)
 AWG.set_ch3_output(1)
 AWG.set_ch4_output(1)
-#Force the AWG to start from the first element of the sequence
+# Force the AWG to start from the first element of the sequence
 AWG._ins.force_jump(1)
 
 
