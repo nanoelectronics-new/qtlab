@@ -23,24 +23,24 @@ import numpy as np
 #dmm_lockin = qt.instruments.create('dmm_lockin','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505188::INSTR')
 
 
-file_name = '1_3 IV 173'
+file_name = '1_3 IV 365'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
 ramp_rate_Y = 0.0008 #T/s
+step_size_BY = 1e-3 
+
+power = 5.0
 
 
-
-step_size_BY = -1e-3 
-
-BY_vector = arange(155e-3,105e-3+step_size_BY,step_size_BY) #T  #
+BY_vector = arange(115e-3,145e-3+step_size_BY,step_size_BY) #T  #
 
 magnetY.set_rampRate_T_s(ramp_rate_Y)
 
 
-freq_vec = arange(5.3e9,6.3e9,3e6)  # frequency 
+freq_vec = arange(5.5e9,6.5e9,3e6)  # frequency 
 
 qt.mstart()
 
@@ -53,13 +53,25 @@ data_temp = np.zeros(len(freq_vec))  # Temporary vector for storing the data
 
 
 data.add_coordinate('Frequency [Hz]')  #v2
-data.add_coordinate('Bfield [T]')   #v1
+data.add_coordinate('By [T]')   #v1
 data.add_value('Current [pA]')
 
 plot2d = qt.Plot2D(data, name=file_name+' 2D_2',autoupdate=False)
 plot3d = qt.Plot3D(data, name=file_name+' 3D_2', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
-
+# Set the VSG power units
+VSG.set_power_units("dbm") 
+# Set the RF power
+VSG.set_power(power)
+# Turn the RF on
+VSG.set_status("on") 
+## Run the AWG sequence 
+AWG.run()
+# Turn ON all necessary AWG channels
+AWG.set_ch1_output(1)
+AWG.set_ch2_output(1)
+AWG.set_ch3_output(1)
+AWG.set_ch4_output(1)
 
 init_start = time()
 vec_count = 0
@@ -124,6 +136,17 @@ try:
     print 'Overall duration: %s sec' % (stop - init_start, )
 
 finally:
+
+    # Switching off the RF 
+    VSG.set_status("off") 
+
+    #Stop the AWG sequence 
+    AWG.stop()
+    #Turn OFF all necessary AWG channels
+    AWG.set_ch1_output(0)
+    AWG.set_ch2_output(0)
+    AWG.set_ch3_output(0)
+    AWG.set_ch4_output(0)
 
     bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
     # after the measurement ends, you need to close the data file.
