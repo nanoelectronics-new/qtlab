@@ -30,12 +30,12 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
     
     
 ramp_rate_Y = 0.0008 #T/s
-step_size_BY = 1e-3 
+step_size_BY = -1e-3 
 
-power = 5.0
+power = 0.0
 
 
-BY_vector = arange(115e-3,145e-3+step_size_BY,step_size_BY) #T  #
+BY_vector = arange(145e-3,115e-3+step_size_BY,step_size_BY) #T  #
 
 magnetY.set_rampRate_T_s(ramp_rate_Y)
 
@@ -102,6 +102,12 @@ try:
             #IVVI.set_dac5(v2)
 
             VSG.set_frequency(freq)
+
+            # the next function is necessary to keep the gui responsive. It
+            # checks for instance if the 'stop' button is pushed. It also checks
+            # if the plots need updating.
+            qt.msleep(0.010)
+
             # readout
             result = dmm.get_readval()/gain*1e12
             
@@ -112,10 +118,8 @@ try:
         
             
 
-            # the next function is necessary to keep the gui responsive. It
-            # checks for instance if the 'stop' button is pushed. It also checks
-            # if the plots need updating.
-            qt.msleep(0.001)
+         
+            
         data.new_block()
         stop = time()
         new_mat = np.column_stack((new_mat, data_temp))
