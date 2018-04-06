@@ -23,7 +23,7 @@ import numpy as np
 #dmm_lockin = qt.instruments.create('dmm_lockin','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505188::INSTR')
 
 
-file_name = '1_3 IV 381'
+file_name = '1_3 IV 383'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -66,11 +66,11 @@ VSG.set_power(power)
 # Turn the RF on
 VSG.set_status("on") 
 ## Run the AWG sequence 
-#AWG.run()
+AWG.run()
 ## Turn ON all necessary AWG channels
-#AWG.set_ch1_output(1)
-#AWG.set_ch2_output(1)
-#AWG.set_ch3_output(1)
+AWG.set_ch1_output(1)
+AWG.set_ch2_output(1)
+AWG.set_ch3_output(1)
 #AWG.set_ch4_output(1)
 
 init_start = time()
@@ -145,11 +145,11 @@ finally:
     VSG.set_status("off") 
 
     #Stop the AWG sequence 
-    #AWG.stop()
+    AWG.stop()
     #Turn OFF all necessary AWG channels
-    #AWG.set_ch1_output(0)
-    #AWG.set_ch2_output(0)
-    #AWG.set_ch3_output(0)
+    AWG.set_ch1_output(0)
+    AWG.set_ch2_output(0)
+    AWG.set_ch3_output(0)
     #AWG.set_ch4_output(0)
 
     bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
@@ -157,3 +157,4 @@ finally:
     data.close_file()
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
+qt.mend()
