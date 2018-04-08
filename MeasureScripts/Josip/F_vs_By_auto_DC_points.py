@@ -3,6 +3,7 @@ from time import time,sleep
 import datetime
 import convert_for_diamond_plot as cnv
 import numpy as np
+from Background_correction import Back_corr as bc
 
 
 
@@ -142,7 +143,7 @@ try:
             finally:
             	stop = time()
             	vec_count = vec_count + 1
-                print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(DAC5_offsets.size*DAC6_offsets.size .size - vec_count))))
+                print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(DAC5_offsets.size*DAC6_offsets.size - vec_count))))
                 
                 bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
                 # after the measurement ends, you need to close the data file.
