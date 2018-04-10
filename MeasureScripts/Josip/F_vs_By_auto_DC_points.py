@@ -7,13 +7,13 @@ from Background_correction import Back_corr as bc
 
 
 
-DAC5_center = -357.95       #  DAC5 center voltage in mV
-DAC6_center = -261.33       #  DAC6 center voltage in mV
+DAC5_center = -358.524       #  DAC5 center voltage in mV
+DAC6_center = -262.367       #  DAC6 center voltage in mV
 DAC5_offsets = np.linspace(-0.30,0.30,5) # DAC5 offsets from the center (to be swept through) voltage 
 DAC6_offsets = np.linspace(-0.12,0.12,2) # DAC6 offsets from the center (to be swept through) voltage 
 
 
-name_counter = 386
+name_counter = 398
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
