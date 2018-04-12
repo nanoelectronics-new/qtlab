@@ -48,7 +48,7 @@ try:
             
             
         ramp_rate_Y = 0.0008 #T/s
-        step_size_BY = -2e-3 
+        step_size_BY = -1e-3 
         
         
         
