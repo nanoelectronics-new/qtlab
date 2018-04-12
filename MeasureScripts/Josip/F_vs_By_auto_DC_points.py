@@ -14,6 +14,10 @@ b = 58.30482 # y axis cut
 DAC5_values = np.linspace(-358.724, -357.113, 10.0)  
 DAC6_values = a*DAC5_values + b  # Calculating the DAC6 values based on the line formula
 
+# Shifting the DAC6 DC points for the mean value of the pulse 
+horizontal_shift = (200-113.51)*0.008  # 113.5 is the mean value of the pulse and the 0.008 the conversion factor to get an effective voltage
+DAC5_values  = DAC5_values - horizontal_shift
+
 name_counter = 401
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
