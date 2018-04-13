@@ -18,7 +18,7 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 397'
+file_name = '1_3 IV 425'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -28,8 +28,8 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 v1_vec = arange(-5e7,5e7,3e6)  #Frequency offset in Hz
-f_center = 5.545e9  # Center frequency in Hz
-tau_vector_repetitions = 25
+f_center = 5.636e9  # Center frequency in Hz
+tau_vector_repetitions = 50
 
 power = 0.0
 
@@ -55,7 +55,7 @@ data = qt.Data(name=file_name)
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
 data.add_coordinate('tau burst [ns]')
-data.add_coordinate('5.545 GHz + Frequency offset [Hz]')
+data.add_coordinate('5.636 GHz + Frequency offset [Hz]')
 data.add_value('Current [pA]')
 
 # The next command will actually create the dirs and files, based
@@ -116,7 +116,10 @@ try:
             AWG._ins.force_jump(1)     # Start from the first tau in the sequence
             for j,v2 in enumerate(t_burst):  
     
-                
+                # the next function is necessary to keep the gui responsive. It
+                # checks for instance if the 'stop' button is pushed. It also checks
+                # if the plots need updating.
+                qt.msleep(0.010)
     
                 # readout
                
@@ -126,10 +129,7 @@ try:
                 
                 AWG._ins.force_event()
     
-                # the next function is necessary to keep the gui responsive. It
-                # checks for instance if the 'stop' button is pushed. It also checks
-                # if the plots need updating.
-                qt.msleep(0.002)
+               
 
         # Calculate the average value of the recorded tau vector
         tau_vector = tau_vector/tau_vector_repetitions
