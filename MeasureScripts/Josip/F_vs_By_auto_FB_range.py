@@ -9,13 +9,13 @@ from Background_correction import Back_corr as bc
 
 
 
-name_counter = 420
+name_counter = 434
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
 
-By_borders = [[55e-3,85e-3],[85e-3,115e-3],[115e-3,145e-3],[145e-3,175e-3],[175e-3,205e-3]]  # Borders or limits of the magnetic field sweep for the scanned F,B windows in T
-F_borders = [[3.5e9,4.5e9],[4.5e9,5.5e9],[5.5e9,6.5e9],[6.5e9,7.5e9],[7.5e9,8.5e9]]  # Borders or limits of the frequency sweep for the scanned F,B windows in Hz
+By_borders = [[115e-3,145e-3],[145e-3,175e-3],[85e-3,115e-3]]  # Borders or limits of the magnetic field sweep for the scanned F,B windows in T
+F_borders = [[5.0e9,7.0e9],[5.0e9,7.0e9],[5.0e9,7.0e9]]  # Borders or limits of the frequency sweep for the scanned F,B windows in Hz
 
 
 # Set the VSG power units
@@ -25,11 +25,11 @@ VSG.set_power(power)
 # Turn the RF on
 VSG.set_status("on") 
 ## Run the AWG sequence 
-AWG.run()
+#AWG.run()
 ## Turn ON all necessary AWG channels
-AWG.set_ch1_output(1)
-AWG.set_ch2_output(1)
-AWG.set_ch3_output(1)
+#AWG.set_ch1_output(1)
+#AWG.set_ch2_output(1)
+#AWG.set_ch3_output(1)
 #AWG.set_ch4_output(1)
 
 init_start = time()
@@ -153,11 +153,11 @@ finally:
 	# Switching off the RF 
 	VSG.set_status("off")
 	#Stop the AWG sequence 
-	AWG.stop()
+	#AWG.stop()
 	#Turn OFF all necessary AWG channels
-	AWG.set_ch1_output(0)
-	AWG.set_ch2_output(0)
-	AWG.set_ch3_output(0)
+	#AWG.set_ch1_output(0)
+	#AWG.set_ch2_output(0)
+	#AWG.set_ch3_output(0)
 	#AWG.set_ch4_output(0)
 	print 'Overall duration: %s sec' % (stop - init_start, )
 
