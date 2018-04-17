@@ -9,12 +9,12 @@ from Background_correction import Back_corr as bc
 
 
 
-name_counter = 434
+name_counter = 439
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
 
-By_borders = [[115e-3,145e-3],[145e-3,175e-3],[85e-3,115e-3]]  # Borders or limits of the magnetic field sweep for the scanned F,B windows in T
+By_borders = [[115e-3,145e-3],[85e-3,115e-3],[145e-3,175e-3]]  # Borders or limits of the magnetic field sweep for the scanned F,B windows in T
 F_borders = [[5.0e9,7.0e9],[5.0e9,7.0e9],[5.0e9,7.0e9]]  # Borders or limits of the frequency sweep for the scanned F,B windows in Hz
 
 
