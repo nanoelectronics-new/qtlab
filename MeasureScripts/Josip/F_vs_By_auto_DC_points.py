@@ -8,17 +8,20 @@ from Background_correction import Back_corr as bc
 
 
 # Coeffs of the DC point sweeping line
-a = 0.89448  # Direction coeff
-b = 58.30482 # y axis cut	
+#a = 0.89448  # Direction coeff
+#b = 58.30482 # y axis cut	
 
-DAC5_values = np.linspace(-358.724, -357.113, 10.0)  
-DAC6_values = a*DAC5_values + b  # Calculating the DAC6 values based on the line formula
+#DAC5_values = np.linspace(-358.724, -357.113, 10.0)  
+#DAC6_values = a*DAC5_values + b  # Calculating the DAC6 values based on the line formula
 
 # Shifting the DAC6 DC points for the mean value of the pulse 
-horizontal_shift = (200-113.51)*0.008  # 113.5 is the mean value of the pulse and the 0.008 the conversion factor to get an effective voltage
-DAC5_values  = DAC5_values - horizontal_shift
+#horizontal_shift = (200-113.51)*0.008  # 113.5 is the mean value of the pulse and the 0.008 the conversion factor to get an effective voltage
+#DAC5_values  = DAC5_values - horizontal_shift
 
-name_counter = 401
+DAC5_values = [-367.926,-367.651,-367.363,-367.034,-366.644]
+DAC6_values = [-263.177,-262.894,-262.662,-262.399,-262.051]
+
+name_counter = 446
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
@@ -30,11 +33,11 @@ VSG.set_power(power)
 # Turn the RF on
 VSG.set_status("on") 
 ## Run the AWG sequence 
-AWG.run()
+#AWG.run()
 ## Turn ON all necessary AWG channels
-AWG.set_ch1_output(1)
-AWG.set_ch2_output(1)
-AWG.set_ch3_output(1)
+#AWG.set_ch1_output(1)
+#AWG.set_ch2_output(1)
+#AWG.set_ch3_output(1)
 #AWG.set_ch4_output(1)
 
 init_start = time()
@@ -52,17 +55,17 @@ try:
             
             
         ramp_rate_Y = 0.0008 #T/s
-        step_size_BY = -1e-3 
+        step_size_BY = -2e-3 
         
         
         
         
-        BY_vector = arange(145e-3,115e-3+step_size_BY,step_size_BY) #T  #
+        BY_vector = arange(175e-3,85e-3+step_size_BY,step_size_BY) #T  #
         
         magnetY.set_rampRate_T_s(ramp_rate_Y)
         
         
-        freq_vec = arange(5.5e9,6.5e9,3e6)  # frequency 
+        freq_vec = arange(5.5e9,7e9,3e6)  # frequency 
         
         qt.mstart()
         
@@ -159,9 +162,9 @@ finally:
 	#Stop the AWG sequence 
 	AWG.stop()
 	#Turn OFF all necessary AWG channels
-	AWG.set_ch1_output(0)
-	AWG.set_ch2_output(0)
-	AWG.set_ch3_output(0)
+	#AWG.set_ch1_output(0)
+	#AWG.set_ch2_output(0)
+	#AWG.set_ch3_output(0)
 	#AWG.set_ch4_output(0)
 	print 'Overall duration: %s sec' % (stop - init_start, )
 
