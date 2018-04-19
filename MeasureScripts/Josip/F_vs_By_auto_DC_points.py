@@ -18,8 +18,8 @@ from Background_correction import Back_corr as bc
 #horizontal_shift = (200-113.51)*0.008  # 113.5 is the mean value of the pulse and the 0.008 the conversion factor to get an effective voltage
 #DAC5_values  = DAC5_values - horizontal_shift
 
-DAC5_values = [-367.926,-367.651,-367.363,-367.034,-366.644]
-DAC6_values = [-263.177,-262.894,-262.662,-262.399,-262.051]
+DAC5_values = [-367.651,-367.363,-367.034,-366.644]
+DAC6_values = [-262.894,-262.662,-262.399,-262.051]
 
 name_counter = 446
 
@@ -147,7 +147,7 @@ try:
         finally:
             stop = time()
             vec_count = vec_count + 1
-            print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(DAC5_values.size - vec_count))))
+            print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(len(DAC5_values) - vec_count))))
 		    
             bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
 		    # after the measurement ends, you need to close the data file.
