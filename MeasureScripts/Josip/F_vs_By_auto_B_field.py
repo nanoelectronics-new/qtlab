@@ -7,9 +7,9 @@ from Background_correction import Back_corr as bc
 
 
 
-thetas = arange(15,90,5) # Angle between the By and x axis
+thetas = arange(55,90,5) # Angle between the By and x axis
 
-name_counter = 454
+name_counter = 463
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
@@ -54,10 +54,10 @@ try:
         Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-        BY_vector = arange(Bymax,Bymin+step_size_BY,step_size_BY) # Defining the By vector in T  
+        BY_vector = np.linspace(Bymax,Bymin+step_size_BY,45) # Defining the By vector in T  
         magnetY.set_rampRate_T_s(ramp_rate_Y)
 
-        BZ_vector = arange(Bzmax,Bzmin+step_size_BZ,step_size_BZ) # Defining the Bz vector in T  
+        BZ_vector = np.linspace(Bzmax,Bzmin+step_size_BZ,45) # Defining the Bz vector in T  
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
