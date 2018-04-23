@@ -7,12 +7,12 @@ from Background_correction import Back_corr as bc
 
 
 
-thetas = arange(55,90,5) # Angle between the By and x axis
+thetas = arange(50,90,5) # Angle between the By and x axis
 
-name_counter = 471
+name_counter = 474
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
-power = 0.0
+power = -4.0
 
 # Set the VSG power units
 VSG.set_power_units("dbm") 
@@ -36,7 +36,7 @@ try:
 
         start = time()
         
-        file_name = '1_3 IV %d_theta=%d'%(name_counter,theta)
+        file_name = '1_3 IV %d_theta=%d'%(name_counter,180-theta)
         name_counter += 1 
         
             
@@ -54,10 +54,10 @@ try:
         Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-        BY_vector = np.linspace(Bymax,Bymin+step_size_BY,45) # Defining the By vector in T  
+        BY_vector = np.linspace(-Bymax,-Bymin,45) # Defining the By vector in T  
         magnetY.set_rampRate_T_s(ramp_rate_Y)
 
-        BZ_vector = np.linspace(Bzmax,Bzmin+step_size_BZ,45) # Defining the Bz vector in T  
+        BZ_vector = np.linspace(Bzmax,Bzmin,45) # Defining the Bz vector in T  
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
