@@ -7,9 +7,9 @@ from Background_correction import Back_corr as bc
 
 
 
-thetas = arange(50,90,5) # Angle between the By and x axis
+thetas = arange(65,90,5) # Angle between the By and x axis
 
-name_counter = 474
+name_counter = 477
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
@@ -46,8 +46,8 @@ try:
         step_size_BY = -2e-3 
         step_size_BZ = -2e-3
 
-        Bmin = 85e-3  # Min total field in T
-        Bmax = 175e-3 # Max total field in T
+        Bmin = 140e-3  # Min total field in T
+        Bmax = 190e-3 # Max total field in T
         Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
         Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
         Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
@@ -61,7 +61,7 @@ try:
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        freq_vec = arange(3.5e9,7e9,3e6)  # frequency 
+        freq_vec = arange(2e9,4.5e9,3e6)  # frequency 
         
         qt.mstart()
         
