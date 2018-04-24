@@ -85,7 +85,8 @@ try:
             for i,v1 in enumerate(BY_vector):  
                 
               			
-            
+                freq_traces_counter = 0    # Counter of the frequency traces used for the remaining measurement time estimation
+                start_freq_trace = time()  # Remebering the time when the ongoing freq trace started
                 
                 magnetY.set_field(BY_vector[i])   # Set the By field first
                 
@@ -133,11 +134,12 @@ try:
                     new_mat = new_mat[:,1:]
                 np.savetxt(fname = data.get_filepath()+ "_matrix", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')
                 
-        
+                
                 plot2d.update()
         
                 plot3d.update()
-        
+                stop = time()
+                print 'Estimated remaining time of the ongoing measurement: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start_freq_trace)*(len(BY_vector) - freq_traces_counter))))
                 
                 
                 
