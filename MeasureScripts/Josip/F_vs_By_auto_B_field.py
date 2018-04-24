@@ -7,9 +7,9 @@ from Background_correction import Back_corr as bc
 
 
 
-thetas = arange(65,90,5) # Angle between the By and x axis
+thetas = arange(70,95,5) # Angle between the By and x axis
 
-name_counter = 477
+name_counter = 478
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
@@ -61,7 +61,7 @@ try:
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        freq_vec = arange(2e9,4.5e9,3e6)  # frequency 
+        freq_vec = arange(2.5e9,4e9,3e6)  # frequency 
         
         qt.mstart()
         
