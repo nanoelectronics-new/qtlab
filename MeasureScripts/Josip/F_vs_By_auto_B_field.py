@@ -9,7 +9,7 @@ from Background_correction import Back_corr as bc
 
 thetas = arange(80,95,5) # Angle between the By and x axis
 
-name_counter = 480
+name_counter = 481
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
@@ -46,8 +46,8 @@ try:
         step_size_BY = -4e-3 
         step_size_BZ = -4e-3
 
-        Bmin = 140e-3  # Min total field in T
-        Bmax = 190e-3 # Max total field in T
+        Bmin = 250e-3  # Min total field in T
+        Bmax = 300e-3 # Max total field in T
         Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
         Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
         Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
@@ -61,7 +61,7 @@ try:
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        freq_vec = arange(1.5e9,2.5e9,3e6)  # frequency 
+        freq_vec = arange(1.5e9,3e9,3e6)  # frequency 
         
         qt.mstart()
         
@@ -87,14 +87,12 @@ try:
               			
             
                 
-                magnetY.set_field(BY_vector[i])   # Set the By field
-                magnetZ.set_field(BZ_vector[i])   # Set the Bz field
-        
+                magnetY.set_field(BY_vector[i])   # Set the By field first
                 
-
-        
                 while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
                     qt.msleep(0.050)
+
+                magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
 
                 while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
                     qt.msleep(0.050)
