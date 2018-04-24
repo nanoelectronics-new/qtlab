@@ -7,9 +7,9 @@ from Background_correction import Back_corr as bc
 
 
 
-thetas = arange(80,95,5) # Angle between the By and x axis
+thetas = arange(85,95,5) # Angle between the By and x axis
 
-name_counter = 481
+name_counter = 483
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
@@ -43,11 +43,11 @@ try:
             
         ramp_rate_Y = 0.0008 #T/s
         ramp_rate_Z = 0.0008 #T/s
-        step_size_BY = -4e-3 
-        step_size_BZ = -4e-3
+        step_size_BY = -5e-3 
+        step_size_BZ = -5e-3
 
-        Bmin = 250e-3  # Min total field in T
-        Bmax = 300e-3 # Max total field in T
+        Bmin = 300e-3  # Min total field in T
+        Bmax = 700e-3 # Max total field in T
         Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
         Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
         Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
@@ -61,7 +61,7 @@ try:
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        freq_vec = arange(1.5e9,3e9,3e6)  # frequency 
+        freq_vec = arange(1e9,3.5e9,3e6)  # frequency 
         
         qt.mstart()
         
@@ -140,7 +140,7 @@ try:
                 plot3d.update()
                 stop = time()
                 print 'Estimated remaining time of the ongoing measurement: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start_freq_trace)*(len(BY_vector) - freq_traces_counter))))
-                
+                freq_traces_counter += 1
                 
                 
         
