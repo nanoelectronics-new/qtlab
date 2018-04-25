@@ -7,9 +7,9 @@ from Background_correction import Back_corr as bc
 
 
 
-thetas = arange(85,95,5) # Angle between the By and x axis
+thetas = arange(90,95,5) # Angle between the By and x axis
 
-name_counter = 483
+name_counter = 485
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
@@ -43,11 +43,11 @@ try:
             
         ramp_rate_Y = 0.0008 #T/s
         ramp_rate_Z = 0.0008 #T/s
-        step_size_BY = -5e-3 
-        step_size_BZ = -5e-3
+        step_size_BY = -10e-3 
+        step_size_BZ = -10e-3
 
-        Bmin = 300e-3  # Min total field in T
-        Bmax = 700e-3 # Max total field in T
+        Bmin = 1000e-3  # Min total field in T
+        Bmax = 1400e-3 # Max total field in T
         Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
         Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
         Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
@@ -61,7 +61,7 @@ try:
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        freq_vec = arange(1e9,3.5e9,3e6)  # frequency 
+        freq_vec = arange(1e9,3e9,1e6)  # frequency 
         
         qt.mstart()
         
@@ -82,10 +82,11 @@ try:
         
         
         try:
+            freq_traces_counter = 0    # Counter of the frequency traces used for the remaining measurement time estimation
             for i,v1 in enumerate(BY_vector):  
                 
               			
-                freq_traces_counter = 0    # Counter of the frequency traces used for the remaining measurement time estimation
+                
                 start_freq_trace = time()  # Remebering the time when the ongoing freq trace started
                 
                 magnetY.set_field(BY_vector[i])   # Set the By field first
