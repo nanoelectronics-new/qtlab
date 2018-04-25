@@ -18,17 +18,22 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 429'
+file_name = '1_3 IV 486'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 
 
 
+B_total = 289.773e-3 # in T
+theta = 100 # in degrees
+By = B_total*np.cos(np.deg2rad(theta))
+Bz = B_total*np.sin(np.deg2rad(theta))
 
 
-v1_vec = arange(-5e7,5e7,3e6)  #Frequency offset in Hz
-f_center = 4.904e9  # Center frequency in Hz
+
+v1_vec = arange(-15e7,15e7,1e6)  #Frequency offset in Hz
+f_center = 2.800e9  # Center frequency in Hz
 tau_vector_repetitions = 25
 
 power = 0.0
@@ -55,7 +60,7 @@ data = qt.Data(name=file_name)
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
 data.add_coordinate('tau burst [ns]')
-data.add_coordinate('4.904 GHz + Frequency offset [Hz]')
+data.add_coordinate('2.800 GHz + Frequency offset [Hz]')
 data.add_value('Current [pA]')
 
 # The next command will actually create the dirs and files, based
@@ -76,6 +81,18 @@ new_mat = np.zeros(len(t_burst)) # Creating empty matrix for storing all data
 plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
 plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
+
+# Set the magnet
+ramp_rate_Y = 0.0008 #T/s
+ramp_rate_Z = 0.0008 #T/s
+magnetY.set_rampRate_T_s(ramp_rate_Y)
+magnetZ.set_rampRate_T_s(ramp_rate_Z)
+magnetY.set_field(By)   # Set the By field first               
+while math.fabs(By - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
+    qt.msleep(0.050)
+magnetZ.set_field(Bz)   # Set the Bz field second
+while math.fabs(Bz - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
+    qt.msleep(0.050)
 
 
 # Set the VSG power units
