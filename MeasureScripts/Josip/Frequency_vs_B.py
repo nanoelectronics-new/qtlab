@@ -23,24 +23,35 @@ import numpy as np
 #dmm_lockin = qt.instruments.create('dmm_lockin','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505188::INSTR')
 
 
-file_name = '1_3 IV 453'
+file_name = '1_3 IV 489'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
-    
-    
-ramp_rate_Y = 0.0008 #T/s
-step_size_BY = -2e-3 
-
 power = -4.0
+theta = 100 
 
-
-BY_vector = arange(175e-3,85e-3+step_size_BY,step_size_BY) #T  #
-
+ramp_rate_Y = 0.0008 #T/s
+ramp_rate_Z = 0.0008 #T/s
+step_size_BY = -4e-3 
+step_size_BZ = -4e-3
+Bmin = 250e-3  # Min total field in T
+Bmax = 300e-3 # Max total field in T
+Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
+Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
+Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
+Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
+    
+    
+BY_vector = np.linspace(Bymax,Bymin,45) # Defining the By vector in T  
 magnetY.set_rampRate_T_s(ramp_rate_Y)
+BZ_vector = np.linspace(Bzmax,Bzmin,45) # Defining the Bz vector in T  
+magnetZ.set_rampRate_T_s(ramp_rate_Z)
 
 
-freq_vec = arange(5.5e9,7e9,3e6)  # frequency 
+freq_vec = arange(2.2e9,3.2e9,3e6)  # frequency 
+
+
+
 
 qt.mstart()
 
@@ -53,7 +64,7 @@ data_temp = np.zeros(len(freq_vec))  # Temporary vector for storing the data
 
 
 data.add_coordinate('Frequency [Hz]')  #v2
-data.add_coordinate('By [T]')   #v1
+data.add_coordinate('B [T]')   #v1
 data.add_value('Current [pA]')
 
 plot2d = qt.Plot2D(data, name=file_name+' 2D_2',autoupdate=False)
@@ -84,14 +95,15 @@ try:
         start = time()
     
         
-        magnetY.set_field(BY_vector[i])  
-
-    
-        total_field = BY_vector[i]
-
-        while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:
+        magnetY.set_field(BY_vector[i])   # Set the By field first
+        while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
             qt.msleep(0.050)
 
+        magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
+        while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
+            qt.msleep(0.050)
+            
+        total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
 
 
 
