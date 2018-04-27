@@ -9,7 +9,7 @@ from Background_correction import Back_corr as bc
 
 thetas = arange(0,5,5) # Angle between the By and x axis
 
-name_counter = 491
+name_counter = 492
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
@@ -21,11 +21,11 @@ VSG.set_power(power)
 # Turn the RF on
 VSG.set_status("on") 
 ## Run the AWG sequence 
-#AWG.run()
+AWG.run()
 ## Turn ON all necessary AWG channels
-#AWG.set_ch1_output(1)
-#AWG.set_ch2_output(1)
-#AWG.set_ch3_output(1)
+AWG.set_ch1_output(1)
+AWG.set_ch2_output(1)
+AWG.set_ch3_output(1)
 #AWG.set_ch4_output(1)
 
 init_start = time()
@@ -46,8 +46,8 @@ try:
         step_size_BY = -1e-3 
         step_size_BZ = -1e-3
 
-        Bmin = 115e-3  # Min total field in T
-        Bmax = 145e-3 # Max total field in T
+        Bmin = 105e-3  # Min total field in T
+        Bmax = 155e-3 # Max total field in T
         Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
         Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
         Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
@@ -61,7 +61,7 @@ try:
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        freq_vec = arange(5.5e9,6.5e9,3e6)  # frequency 
+        freq_vec = arange(5.3e9,6.3e9,3e6)  # frequency 
         
         qt.mstart()
         
@@ -162,11 +162,11 @@ finally:
 	# Switching off the RF 
 	VSG.set_status("off")
 	#Stop the AWG sequence 
-	#AWG.stop()
+	AWG.stop()
 	#Turn OFF all necessary AWG channels
-	#AWG.set_ch1_output(0)
-	#AWG.set_ch2_output(0)
-	#AWG.set_ch3_output(0)
+	AWG.set_ch1_output(0)
+	AWG.set_ch2_output(0)
+	AWG.set_ch3_output(0)
 	#AWG.set_ch4_output(0)
 	print 'Overall duration: %s sec' % (stop - init_start, )
 

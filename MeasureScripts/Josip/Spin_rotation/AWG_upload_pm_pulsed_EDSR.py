@@ -32,8 +32,8 @@ seq = list()
         
         
           
-init_and_read = 0.210                       # First part of the pulse
-manipulate = 0.160                      # Second part of the pulse
+init_and_read = 0.030                       # First part of the pulse
+manipulate = 0.100                      # Second part of the pulse
                                             
 period = init_and_read + manipulate        # Total pulse period
                                
@@ -54,7 +54,7 @@ PM_before_IQ = 0.010                    # Since the rise time of the PM is slowe
 overall_delay_IQ_to_PM = delay_IQ_to_PM + PM_before_IQ   #  Self descriptive
         
         
-IQ_duration = 0.140                         # Duration of the IQ pulse in ns
+IQ_duration = 0.075                         # Duration of the IQ pulse in ns
 PM_duration = IQ_duration + 2*PM_before_IQ  # Duration of the pm pulse in ns - window around IQ pulses
         
 for i in xrange(3):          # Creating waveforms for all sequence elements
@@ -75,10 +75,10 @@ for i in xrange(3):          # Creating waveforms for all sequence elements
     p.setMarkersCH3([0,0],[0,0])                              # Gate pulse markers
         
         
-    b = a - overall_delay_IQ_to_PM
-    rest_PM = period - b - PM_duration                     # The duration after the PM pulse until the end of the period
-    p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[rest_PM, 0.0])
-    p.setMarkersCH4([0,1,0],[0,0,0])
+    #b = a - overall_delay_IQ_to_PM
+    #rest_PM = period - b - PM_duration                     # The duration after the PM pulse until the end of the period
+    #p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[rest_PM, 0.0])
+    #p.setMarkersCH4([0,1,0],[0,0,0])
         
            
         
@@ -86,11 +86,11 @@ for i in xrange(3):          # Creating waveforms for all sequence elements
     seqCH1.append(p.CH1) 
     seqCH2.append(p.CH2) 
     seqCH3.append(p.CH3) 
-    seqCH4.append(p.CH4)
+    #seqCH4.append(p.CH4)
         
 seq.append(seqCH1) 
 seq.append(seqCH2) 
 seq.append(seqCH3) 
-seq.append(seqCH4)
+#seq.append(seqCH4)
 AWG_lib.set_waveform_trigger_all_wait_mean(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG 
     
