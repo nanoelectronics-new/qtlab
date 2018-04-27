@@ -9,7 +9,7 @@ from Background_correction import Back_corr as bc
 
 thetas = arange(0,5,5) # Angle between the By and x axis
 
-name_counter = 490
+name_counter = 491
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
@@ -23,9 +23,9 @@ VSG.set_status("on")
 ## Run the AWG sequence 
 #AWG.run()
 ## Turn ON all necessary AWG channels
-AWG.set_ch1_output(1)
-AWG.set_ch2_output(1)
-AWG.set_ch3_output(1)
+#AWG.set_ch1_output(1)
+#AWG.set_ch2_output(1)
+#AWG.set_ch3_output(1)
 #AWG.set_ch4_output(1)
 
 init_start = time()
@@ -164,9 +164,9 @@ finally:
 	#Stop the AWG sequence 
 	#AWG.stop()
 	#Turn OFF all necessary AWG channels
-	AWG.set_ch1_output(0)
-	AWG.set_ch2_output(0)
-	AWG.set_ch3_output(0)
+	#AWG.set_ch1_output(0)
+	#AWG.set_ch2_output(0)
+	#AWG.set_ch3_output(0)
 	#AWG.set_ch4_output(0)
 	print 'Overall duration: %s sec' % (stop - init_start, )
 
