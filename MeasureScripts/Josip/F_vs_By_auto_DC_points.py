@@ -18,10 +18,12 @@ from Background_correction import Back_corr as bc
 #horizontal_shift = (200-113.51)*0.008  # 113.5 is the mean value of the pulse and the 0.008 the conversion factor to get an effective voltage
 #DAC5_values  = DAC5_values - horizontal_shift
 
-DAC5_values = [-367.651,-367.363,-367.034,-366.644]
-DAC6_values = [-262.894,-262.662,-262.399,-262.051]
+DAC5_values = np.array([-358.547,-358.368,-358.229,-358.015,-357.822,-357.676,-357.538,-357.310,-357.137,-356.978])
+mean = 1.2308  #  Effective (on the sample) mean value of the AWG pulse in mV
+DAC5_values = DAC5_values - mean
+DAC6_values = np.array([-262.703,-262.544,-262.401,-262.250,-262.108,-261.948,-261.806,-261.647,-261.496,-261.353])
 
-name_counter = 446
+name_counter = 500
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
@@ -33,11 +35,11 @@ VSG.set_power(power)
 # Turn the RF on
 VSG.set_status("on") 
 ## Run the AWG sequence 
-#AWG.run()
+AWG.run()
 ## Turn ON all necessary AWG channels
-#AWG.set_ch1_output(1)
-#AWG.set_ch2_output(1)
-#AWG.set_ch3_output(1)
+AWG.set_ch1_output(1)
+AWG.set_ch2_output(1)
+AWG.set_ch3_output(1)
 #AWG.set_ch4_output(1)
 
 init_start = time()
@@ -60,12 +62,12 @@ try:
         
         
         
-        BY_vector = arange(175e-3,85e-3+step_size_BY,step_size_BY) #T  #
+        BY_vector = arange(155e-3,105e-3+step_size_BY,step_size_BY) #T  #
         
         magnetY.set_rampRate_T_s(ramp_rate_Y)
         
         
-        freq_vec = arange(5.5e9,7e9,3e6)  # frequency 
+        freq_vec = arange(5.3e9,6.3e9,3e6)  # frequency 
         
         qt.mstart()
         
@@ -162,9 +164,9 @@ finally:
 	#Stop the AWG sequence 
 	AWG.stop()
 	#Turn OFF all necessary AWG channels
-	#AWG.set_ch1_output(0)
-	#AWG.set_ch2_output(0)
-	#AWG.set_ch3_output(0)
+	AWG.set_ch1_output(0)
+	AWG.set_ch2_output(0)
+	AWG.set_ch3_output(0)
 	#AWG.set_ch4_output(0)
 	print 'Overall duration: %s sec' % (stop - init_start, )
 
