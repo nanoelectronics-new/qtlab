@@ -32,7 +32,7 @@ seq = list()
         
         
           
-init_and_read = 0.300                       # First part of the pulse
+init_and_read = 0.100                       # First part of the pulse
 manipulate = 0.100                      # Second part of the pulse
                                             
 period = init_and_read + manipulate        # Total pulse period
