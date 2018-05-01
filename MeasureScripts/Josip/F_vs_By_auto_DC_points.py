@@ -18,12 +18,12 @@ from Background_correction import Back_corr as bc
 #horizontal_shift = (200-113.51)*0.008  # 113.5 is the mean value of the pulse and the 0.008 the conversion factor to get an effective voltage
 #DAC5_values  = DAC5_values - horizontal_shift
 
-DAC5_values = np.array([-358.547,-358.368,-358.229,-358.015,-357.822,-357.676,-357.538,-357.310,-357.137,-356.978])
+DAC5_values = np.array([-357.078,-356.978,-356.878,-357.078,-356.878,-357.078,-356.978,-356.878])
 mean = 1.2308  #  Effective (on the sample) mean value of the AWG pulse in mV
 DAC5_values = DAC5_values - mean
-DAC6_values = np.array([-262.703,-262.544,-262.401,-262.250,-262.108,-261.948,-261.806,-261.647,-261.496,-261.353])
+DAC6_values = np.array([-261.253,-261.253,-261.253,-261.353,-261.353,-261.453,-261.453,-261.453])
 
-name_counter = 500
+name_counter = 510
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
