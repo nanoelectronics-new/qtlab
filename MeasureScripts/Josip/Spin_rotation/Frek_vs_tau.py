@@ -59,7 +59,7 @@ data = qt.Data(name=file_name)
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
 data.add_coordinate('tau burst [ns]')
-data.add_coordinate('%.3f GHz + Frequency offset [Hz]'%f_center)
+data.add_coordinate('%.3f GHz + Frequency offset [Hz]'%(f_center*1e-9)
 data.add_value('Current [pA]')
 
 # The next command will actually create the dirs and files, based
