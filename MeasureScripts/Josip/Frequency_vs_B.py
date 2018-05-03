@@ -17,7 +17,7 @@ import numpy as np
 
 UHFLI_lib.UHF_init_demod(demod_c = 2)  # Initialize UHF LI
 
-file_name = '1_3 IV 521'
+file_name = '1_3 IV 522'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -99,7 +99,7 @@ AWG.set_ch3_output(1)
 init_start = time()
 vec_count = 0
 
-print "HERE"
+
 try:
     for i,v1 in enumerate(BY_vector):  
         
@@ -137,11 +137,11 @@ try:
             result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)*1e12/gain  # Reading the lockin and correcting for M1b gain
             
             data_temp[j] = result
-            data_temp_lockin[j] = result
+            data_temp_lockin[j] = result_lockin
             # save the data point to the file, this will automatically trigger
             # the plot windows to update
             data.add_data_point(freq,total_field, result)  
-            data.add_data_point(freq,total_field, result_lockin)
+            data_lockin.add_data_point(freq,total_field, result_lockin)
       
             
 
