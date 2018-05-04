@@ -17,7 +17,7 @@ import numpy as np
 
 UHFLI_lib.UHF_init_demod(demod_c = 2)  # Initialize UHF LI
 
-file_name = '1_3 IV 523'
+file_name = '1_3 IV 524'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -188,11 +188,13 @@ finally:
     AWG.set_ch3_output(0)
     #AWG.set_ch4_output(0)
 
-    bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
-    bc(path = data_lockin.get_dir(), fname = data_lockin.get_filename()+"_matrix")
     # after the measurement ends, you need to close the data file.
     data.close_file()
     data_lockin.close_file()
+
+    bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
+    bc(path = data_lockin.get_dir(), fname = data_lockin.get_filename()+"_matrix")
+
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
 
