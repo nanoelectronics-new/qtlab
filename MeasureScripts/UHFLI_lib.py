@@ -440,14 +440,17 @@ def UHF_init_demod(device_id = 'dev2148', demod_c = 0, out_c = 0):
         #general_setting.append(['/%s/demods/*/enable' % device, 0])
         #general_setting.append(['/%s/scopes/*/enable' % device, 0])
     daq.set(general_setting)
+
+
+    daq.setInt('/%s/demods/%s/enable' % (device, demod_c) , 1)  # Enable demodulator 
+
+    daq.setInt('/%s/demods/%s/rate' % (device, demod_c), 100000) # Set the demodulator sampling rate
+    
     
     
     raw_input("Set the UHF LI parameters in user interface dialog!  Press enter to continue...")  # Wait for user to set the device parametrs from user interface
 
    
-    daq.setInt('/%s/demods/%s/enable' % (device, demod_c) , 1)  # Enable demodulator 
-
-    daq.setInt('/%s/demods/%s/rate' % (device, demod_c), 100000) # Set the demodulator sampling rate
     
     
     # Unsubscribe any streaming data
