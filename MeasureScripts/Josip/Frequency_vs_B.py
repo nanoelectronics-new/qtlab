@@ -17,7 +17,7 @@ import numpy as np
 
 UHFLI_lib.UHF_init_demod(demod_c = 2)  # Initialize UHF LI
 
-file_name = '1_3 IV 525'
+file_name = '1_3 IV 526'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -93,7 +93,7 @@ AWG.run()
 ## Turn ON all necessary AWG channels
 AWG.set_ch1_output(1)
 AWG.set_ch2_output(1)
-AWG.set_ch3_output(1)
+#AWG.set_ch3_output(1)
 #AWG.set_ch4_output(1)
 
 init_start = time()
@@ -185,7 +185,7 @@ finally:
     #Turn OFF all necessary AWG channels
     AWG.set_ch1_output(0)
     AWG.set_ch2_output(0)
-    AWG.set_ch3_output(0)
+    #AWG.set_ch3_output(0)
     #AWG.set_ch4_output(0)
 
     # after the measurement ends, you need to close the data file.
