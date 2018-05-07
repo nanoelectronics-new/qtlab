@@ -16,13 +16,15 @@ def Back_corr(path = None, fname = None):
     #plt.figure("Before  substraction")
     #plt.imshow(mat)
 
-    for row, element in enumerate(mat[:,0]):
-        processed_row = mat[row,:] 
-        mat[row,:] = processed_row - np.mean(processed_row)  # Substracting the mean of the column from the column itself
+
 
     for col, element in enumerate(mat[0]):
         processed_column = mat[:,col] 
         mat[:,col] = processed_column - np.mean(processed_column)  # Substracting the mean of the column from the column itself
+
+    #for row, element in enumerate(mat[:,0]):
+     #   processed_row = mat[row,:] 
+     #   mat[row,:] = processed_row - np.mean(processed_row)  # Substracting the mean of the column from the column itself
 
     
 
