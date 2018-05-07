@@ -17,7 +17,7 @@ import numpy as np
 
 UHFLI_lib.UHF_init_demod(demod_c = 2)  # Initialize UHF LI
 
-file_name = '1_3 IV 527'
+file_name = '1_3 IV 529'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -26,8 +26,8 @@ theta = 0
 
 ramp_rate_Y = 0.0008 #T/s
 ramp_rate_Z = 0.0008 #T/s
-step_size_BY = -1e-3 
-step_size_BZ = -1e-3
+step_size_BY = -2e-3 
+step_size_BZ = -2e-3
 Bmin = 105e-3  # Min total field in T
 Bmax = 155e-3 # Max total field in T
 Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T

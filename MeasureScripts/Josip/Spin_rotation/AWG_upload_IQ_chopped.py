@@ -43,7 +43,7 @@ IQ_off = 10.0                      # Part during which the RF burst is off, in u
 
         
 for i in xrange(2):          # Creating waveforms for all sequence elements
-    p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV', repeat = 50000)   # New waveform object for the new
+    p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV', repeat = 375)   # New waveform object for the new
                                                                                                                               # sequence element
               
     if i == 0:     # Creating the high level element   

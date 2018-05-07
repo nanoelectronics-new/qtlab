@@ -527,7 +527,7 @@ def UHF_measure_demod(Num_of_TC = 3):
     path = path_demod
 
     # Poll data parameters
-    poll_length = 1/sampling_rate * 1000  # [s]   # Data aquisition time for recording 1000 samples
+    poll_length = 0.150 # 1/sampling_rate * 1000  # [s]   # Data aquisition time for recording 1000 samples
     poll_timeout = 500  # [ms]
     poll_flags = 0
     poll_return_flat_dict = True 
