@@ -19,13 +19,13 @@ import numpy as np
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
 
-file_name = '1_3 IV 354'
+file_name = '1_3 IV 530'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 raw_input("Warning: - check if the sequence and the measurement script have the same number of steps!\nPress enter to continue...")
-t_burst = arange(0.006,0.141,0.001)
+t_burst = arange(0.006,0.150,0.001)
 
 
 
@@ -34,8 +34,8 @@ t_burst = arange(0.006,0.141,0.001)
 
 v1_vec = arange(-5.0,15.5,0.5)  #Power in dBm
 
-f_center = 5.96555e9  # Center frequency in Hz
-tau_vector_repetitions = 25
+f_center = 5.925e9  # Center frequency in Hz
+tau_vector_repetitions = 150
 
 
 # you indicate that a measurement is about to start and other
@@ -90,7 +90,7 @@ AWG.run()
 AWG.set_ch1_output(1)
 AWG.set_ch2_output(1)
 AWG.set_ch3_output(1)
-AWG.set_ch4_output(1)
+#AWG.set_ch4_output(1)
 #Force the AWG to start from the first element of the sequence
 AWG._ins.force_jump(1)
 
@@ -160,6 +160,11 @@ try:
 
 finally:
 
+    
+
+    # after the measurement ends, you need to close the data file.
+    data.close_file()
+
     # Switching off the RF 
     VSG.set_status("off") 
 
@@ -169,13 +174,12 @@ finally:
     AWG.set_ch1_output(0)
     AWG.set_ch2_output(0)
     AWG.set_ch3_output(0)
-    AWG.set_ch4_output(0)
+    #AWG.set_ch4_output(0)
 
     # Do the background correction
     bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
 
 
-    # after the measurement ends, you need to close the data file.
-    data.close_file()
+
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
