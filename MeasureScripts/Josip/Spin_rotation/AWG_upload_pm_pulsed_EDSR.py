@@ -57,46 +57,28 @@ overall_delay_IQ_to_PM = delay_IQ_to_PM + PM_before_IQ   #  Self descriptive
 IQ_duration = 0.075                         # Duration of the IQ pulse in ns
 PM_duration = IQ_duration + 2*PM_before_IQ  # Duration of the pm pulse in ns - window around IQ pulses
         
-for i in xrange(4):          # Creating waveforms for all sequence elements
-    p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV', repeat = 50000)   # New waveform object for the new
+for i in xrange(3):          # Creating waveforms for all sequence elements
+    p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV')   # New waveform object for the new
                                                                                                                               # sequence element
-    if i < 2: 
-        a = init_and_read + gate_to_IQ - delay                                   # Time from the start of the period, until the start of the IQ pulse 
-        rest_of_IQ = period - a - IQ_duration                           # The duration after the second IQ pulse until the end of the period
-            
-        p.setValuesCH1([a, 0.0],[IQ_duration, 0.0],[rest_of_IQ, 0.0])  # I analog wavefrom
-        p.setMarkersCH1([0,0,0],[0,0,0])                                                       # I markers
-        p.setValuesCH2([a, 0.0],[IQ_duration, 0.0],[rest_of_IQ, 0.0])   # Q analog wavefrom
-        p.setMarkersCH2([0,0,0],[0,0,0])                                                       # Q markers
-            
-            
-            
-        p.setValuesCH3([init_and_read, 200.0],[manipulate, 0.0])  # Gate pulse analog wavefrom
-        p.setMarkersCH3([0,0],[0,0])                              # Gate pulse markers
-            
-            
-        #b = a - overall_delay_IQ_to_PM
-        #rest_PM = period - b - PM_duration                     # The duration after the PM pulse until the end of the period
-        #p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[rest_PM, 0.0])
-        #p.setMarkersCH4([0,1,0],[0,0,0])
-
-    if i >= 2: 
-        a = init_and_read + gate_to_IQ - delay                                   # Time from the start of the period, until the start of the IQ pulse 
-        rest_of_IQ = period - a - IQ_duration                           # The duration after the second IQ pulse until the end of the period
-            
-        p.setValuesCH1([a, 0.0],[IQ_duration, 500.0],[rest_of_IQ, 0.0])  # I analog wavefrom
-        p.setMarkersCH1([1,1,1],[0,0,0])                                                       # I markers
-        p.setValuesCH2([a, 0.0],[IQ_duration, 500.0],[rest_of_IQ, 0.0])   # Q analog wavefrom
-        p.setMarkersCH2([0,0,0],[0,0,0])                                                       # Q markers
-            
-            
-            
-        p.setValuesCH3([init_and_read, 200.0],[manipulate, 0.0])  # Gate pulse analog wavefrom
-        p.setMarkersCH3([0,0],[0,0])                              # Gate pulse markers
-            
-
-
-
+        
+    a = init_and_read + gate_to_IQ - delay                                   # Time from the start of the period, until the start of the IQ pulse 
+    rest_of_IQ = period - a - IQ_duration                           # The duration after the second IQ pulse until the end of the period
+        
+    p.setValuesCH1([a, 0.0],[IQ_duration, 500.0],[rest_of_IQ, 0.0])  # I analog wavefrom
+    p.setMarkersCH1([0,0,0],[0,0,0])                                                       # I markers
+    p.setValuesCH2([a, 0.0],[IQ_duration, 500.0],[rest_of_IQ, 0.0])   # Q analog wavefrom
+    p.setMarkersCH2([0,0,0],[0,0,0])                                                       # Q markers
+        
+        
+        
+    p.setValuesCH3([init_and_read, 200.0],[manipulate, 0.0])  # Gate pulse analog wavefrom
+    p.setMarkersCH3([0,0],[0,0])                              # Gate pulse markers
+        
+        
+    #b = a - overall_delay_IQ_to_PM
+    #rest_PM = period - b - PM_duration                     # The duration after the PM pulse until the end of the period
+    #p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[rest_PM, 0.0])
+    #p.setMarkersCH4([0,1,0],[0,0,0])
         
            
         
