@@ -19,16 +19,16 @@ from Background_correction import Back_corr as bc
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 533'
+file_name = '1_3 IV 535'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 raw_input("Warning: - check if the sequence and the measurement script have the same number of steps!\nPress enter to continue...")
 
-t_burst = arange(0.006,0.150,0.002)
+t_burst = arange(0.006,0.150,0.001)
 
 
-B_total = 123e-3 # in T
+B_total = 122.0455e-3 # in T
 theta = 0.0 # in degrees
 By = B_total*np.cos(np.deg2rad(theta))
 Bz = B_total*np.sin(np.deg2rad(theta))
@@ -37,8 +37,8 @@ Bz = B_total*np.sin(np.deg2rad(theta))
 
 
 
-v1_vec = arange(-0.5e7,0.5e7,2e6)  #Frequency offset in Hz
-f_center = 5.930e9  # Center frequency in Hz
+v1_vec = arange(-5e7,5e7,2e6)  #Frequency offset in Hz
+f_center = 5.886e9  # Center frequency in Hz
 tau_vector_repetitions = 25
 power = 0.0
 
