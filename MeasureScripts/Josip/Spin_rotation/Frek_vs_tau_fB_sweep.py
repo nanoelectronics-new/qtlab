@@ -83,7 +83,8 @@ for z,B in enumerate(B_total):
     # and will be called:
     # <timestamp>_testmeasurement.dat
     # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-    file_name = '1_3 IV %d_freq=%.3fGHz_By=%dmT'%(name_counter, f_center, B*1e3)
+    file_name = '1_3 IV %d_freq=%.3fGHz_By=%dmT'%(name_counter, f_center/1e9, B*1e3)
+    name_counter += 1
     data = qt.Data(name=file_name)
     
     # Now you provide the information of what data will be saved in the
@@ -112,8 +113,8 @@ for z,B in enumerate(B_total):
     # measurement a 'name' can be provided so that window can be reused.
     # If the 'name' doesn't already exists, a new window with that name
     # will be created. For 3d plots, a plotting style is set.
-    plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-    plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    plot2d = qt.Plot2D(data, name='measure2D'+name_counter,autoupdate=False)
+    plot3d = qt.Plot3D(data, name='measure3D'+name_counter, coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
     
     
     # Set the magnet
