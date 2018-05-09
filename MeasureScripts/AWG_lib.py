@@ -574,16 +574,16 @@ def set_waveform_trigger_all_wait_mean(seq,AWG_clock,AWGMax_amp, t_sync, sync, t
         for elem_num, seq_elem in enumerate(seq[ch]):   # Iterating trough sequence elements
             
              # Wait for trigger for every element of the sequence
-            AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 0, count = seq_elem.repeat, NEXT = False, INF = 0)
+            AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 0, count = seq_elem.repeat, NEXT = True, INF = 1)
 
 
             
 
             if elem_num == (len(seq[ch])-1): # If it is the last element set GOTOind=1 - return to first elem
-                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, GOTOind=1, count = seq_elem.repeat, NEXT = False, INF = 0)
+                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, GOTOind=1, count = seq_elem.repeat, NEXT = True, INF = 1)
                 
             else:
-                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, count = seq_elem.repeat, NEXT = False, INF = 0)
+                AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, count = seq_elem.repeat, NEXT = True, INF = 1)
                 
                
                            
