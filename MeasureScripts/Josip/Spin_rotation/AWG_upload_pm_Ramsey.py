@@ -32,13 +32,13 @@ seq = list()
 
 
   
-init = 0.105                            # First part of the pulse
-manipulate = 0.160                      # Second part of the pulse
-read = 0.105                            # Third part of the pulse
+init = 0.030                            # First part of the pulse
+manipulate = 0.200                      # Second part of the pulse
+read = 0.030                            # Third part of the pulse
 period = init + manipulate + read       # Total pulse period
                        
 
-t_burst = arange(0.006,0.122,0.001)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
+t_burst = arange(0.006,0.160,0.001)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
 
 delay = 0.023                           # Delay of the IQ in ns
 
@@ -54,7 +54,7 @@ PM_before_IQ = 0.010                    # Since the rise time of the PM is slowe
 overall_delay_IQ_to_PM = delay_IQ_to_PM + PM_before_IQ   #  Self descriptive
 
 
-IQ_duration = 0.002                      # Duration of the IQ pulse in ns
+IQ_duration = 0.009                      # Duration of the IQ pulse in ns
 PM_duration = IQ_duration + 2*PM_before_IQ  # Duration of the pm pulse in ns - window around IQ pulse
 
 
@@ -78,38 +78,38 @@ for i,t in enumerate(t_burst):          # Creating waveforms for all sequence el
 
 
 
-    start_to_start_PM_pulses = t + IQ_duration  # Duration from the start of the first until the start of the second PM pulse
-    b = a - overall_delay_IQ_to_PM                # Time until the PM pulse starts - it is for the delay IQ to PM shorter then "a" 
-
-    if start_to_start_PM_pulses <= PM_duration:   # If the PM pulses do overlap
-        PM_duration_when_overlaped = PM_duration + start_to_start_PM_pulses     # Duration of the PM pulses when they are partially or fully 
-                                                                                # overlapping - they make one pulse then 
-        rest_PM = period - b - PM_duration_when_overlaped                       # The duration after the PM pulse until the end of the period
-        p.setValuesCH4([b, 0.0],[PM_duration_when_overlaped, 0.0],[rest_PM, 0.0])
-        p.setMarkersCH4([0,1,0],[0,0,0])
-
-    elif start_to_start_PM_pulses > PM_duration:  # If the PM pulses do NOT overlap
-
-        
-        time_between_PM_pulses = start_to_start_PM_pulses - PM_duration         # Distance between the PM pulses is 
-                                                                                # for the duration of the PM pulse shorter then the distance 
-                                                                                # from the start to start
-
-        rest_PM = period - b - 2*PM_duration - time_between_PM_pulses  # The duration after the second PM pulse until the end of the period
-                                                                            
-        p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[time_between_PM_pulses,0.0],[PM_duration, 0.0],[rest_PM, 0.0])
-        p.setMarkersCH4([0,1,0,1,0],[0,0,0,0,0])
+    #start_to_start_PM_pulses = t + IQ_duration  # Duration from the start of the first until the start of the second PM pulse
+    #b = a - overall_delay_IQ_to_PM                # Time until the PM pulse starts - it is for the delay IQ to PM shorter then "a" 
+#
+    #if start_to_start_PM_pulses <= PM_duration:   # If the PM pulses do overlap
+    #    PM_duration_when_overlaped = PM_duration + start_to_start_PM_pulses     # Duration of the PM pulses when they are partially or fully 
+    #                                                                            # overlapping - they make one pulse then 
+    #    rest_PM = period - b - PM_duration_when_overlaped                       # The duration after the PM pulse until the end of the period
+    #    p.setValuesCH4([b, 0.0],[PM_duration_when_overlaped, 0.0],[rest_PM, 0.0])
+    #    p.setMarkersCH4([0,1,0],[0,0,0])
+#
+    #elif start_to_start_PM_pulses > PM_duration:  # If the PM pulses do NOT overlap
+#
+    #    
+    #    time_between_PM_pulses = start_to_start_PM_pulses - PM_duration         # Distance between the PM pulses is 
+    #                                                                            # for the duration of the PM pulse shorter then the distance 
+    #                                                                            # from the start to start
+#
+    #    rest_PM = period - b - 2*PM_duration - time_between_PM_pulses  # The duration after the second PM pulse until the end of the period
+    #                                                                        
+    #    p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[time_between_PM_pulses,0.0],[PM_duration, 0.0],[rest_PM, 0.0])
+    #    p.setMarkersCH4([0,1,0,1,0],[0,0,0,0,0])
 
 
     seqCH1.append(p.CH1) 
     seqCH2.append(p.CH2) 
     seqCH3.append(p.CH3) 
-    seqCH4.append(p.CH4)
+    #seqCH4.append(p.CH4)
 
 seq.append(seqCH1) 
 seq.append(seqCH2) 
 seq.append(seqCH3) 
-seq.append(seqCH4) 
+#seq.append(seqCH4) 
 AWG_lib.set_waveform_trigger_all_wait_mean(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG 
 
 raw_input("Press Enter if uploading to AWG is finished")
