@@ -7,10 +7,10 @@ import numpy as np
 
 
 
-file_name = '1_3 IV 547'
+file_name = '1_3 IV 552'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
-tau_vector_repetitions = 5
+tau_vector_repetitions = 20
 power = 4.0
 f_center = 5.893e9          # Center frequency in Hz
 f_offset = 50e6             # Frequencey offset in MHz
@@ -32,7 +32,7 @@ data.create_file()
 
  
 
-plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
+plot2d = qt.Plot2D(data, name= file_name, autoupdate=False)
 
 
 
