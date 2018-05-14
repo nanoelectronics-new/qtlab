@@ -8,7 +8,7 @@ import numpy as np
 ## Script for running I vs tau measurement versus DAC voltages
 ## Used for the optimization of the visibility of the oscillations in respect to the DC point position
 
-file_name = '1_3 IV 557'
+file_name = '1_3 IV 558'
 
 
 gain = 1000e6               # Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -22,8 +22,8 @@ taus = arange(0.006,0.120,0.001)     # Should be same like in the used AWG uploa
 
 DAC5_center = -358.13       #  DAC5 center voltage in mV
 DAC6_center = -261.26       #  DAC6 center voltage in mV
-DAC5_offsets = np.linspace(-0.25,0.30,5) # DAC5 offsets from the center (to be swept through) voltage 
-DAC6_offsets = np.linspace(-0.06,0.06,2) # DAC6 offsets from the center (to be swept through) voltage 
+DAC5_offsets = np.linspace(-0.80,0.80,26) # DAC5 offsets from the center (to be swept through) voltage 
+DAC6_offsets = np.linspace(-0.12,0.12,4) # DAC6 offsets from the center (to be swept through) voltage 
 
 
 #saving directly in matrix format for diamond program
@@ -110,8 +110,8 @@ try:
             # save the data point to the file    
 
             # For the proper saving need to create vectors of single DACX_off values, in the length of inner loop passages
-            DAC6_vector = np.linspace(DAC6_off,DAC6_off,len(taus))
-            DAC5_vector = np.linspace(DAC5_off,DAC5_off,len(taus))
+            DAC6_vector = np.linspace(IVVI.get_dac6(),IVVI.get_dac6(),len(taus))
+            DAC5_vector = np.linspace(IVVI.get_dac5(),IVVI.get_dac5(),len(taus))
 
             data.add_data_point(taus*1e3,DAC5_vector,DAC6_vector,tau_vector)  
             data.new_block()
