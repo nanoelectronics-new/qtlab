@@ -8,7 +8,7 @@ import numpy as np
 ## Script for running I vs tau measurement versus DAC voltages
 ## Used for the optimization of the visibility of the oscillations in respect to the DC point position
 
-file_name = '1_3 IV 543'
+file_name = '1_3 IV 546'
 
 
 gain = 1000e6               # Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -37,8 +37,8 @@ data = qt.Data(name=file_name)
 
 
 data.add_coordinate('tau [ns]')
-data.add_coordinate('DAC6_offset_voltage [mV]')
 data.add_coordinate('DAC5_offset_voltage [mV]')
+data.add_coordinate('DAC6_offset_voltage [mV]')
 data.add_value('Current [pA]')
 
 
@@ -113,7 +113,7 @@ try:
             DAC6_vector = np.linspace(DAC6_off,DAC6_off,len(taus))
             DAC5_vector = np.linspace(DAC5_off,DAC5_off,len(taus))
 
-            data.add_data_point(taus*1e3,DAC6_vector,DAC5_vector,tau_vector)  
+            data.add_data_point(taus*1e3,DAC5_vector,DAC6_vector,tau_vector)  
             data.new_block()
             stop = time()
             new_mat = np.column_stack((new_mat,tau_vector))   # Gluing new tau_vector to the present matrix
