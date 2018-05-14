@@ -17,7 +17,7 @@ file_name = '1_3 IV 342'
     
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-init_read = arange(0.090,0.400,0.010) # Init + read duration in us
+init_read = arange(0.030,0.300,0.010) # Init + read duration in us
 freq_vec = arange(5.70e9,6.30e9,3e6)  # Frequency vector 
 
 qt.mstart()

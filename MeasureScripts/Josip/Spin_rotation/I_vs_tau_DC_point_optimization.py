@@ -8,20 +8,21 @@ import numpy as np
 ## Script for running I vs tau measurement versus DAC voltages
 ## Used for the optimization of the visibility of the oscillations in respect to the DC point position
 
-file_name = '1_3 IV 368'
+file_name = '1_3 IV 543'
 
 
 gain = 1000e6               # Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 tau_vector_repetitions = 5  # Number of whole traces averages
-f_center = 6.152e9        # Center frequency in Hz
-power = 5.0                 # RF power in dBm
+f_center = 5.893e9          # Center frequency in Hz
+f_offset = 50e6             # Frequencey offset in MHz
+power = 4.0                 # RF power in dBm
 
 raw_input("Warning: - check if the sequence and the measurement script have the same number of steps!\nPress enter to continue...")
-taus = arange(0.006,0.141,0.001)     # Should be same like in the used AWG upload script
+taus = arange(0.006,0.120,0.001)     # Should be same like in the used AWG upload script
 
-DAC5_center = -357.89       #  DAC5 center voltage in mV
-DAC6_center = -261.20       #  DAC6 center voltage in mV
-DAC5_offsets = np.linspace(-0.20,0.20,5) # DAC5 offsets from the center (to be swept through) voltage 
+DAC5_center = -358.13       #  DAC5 center voltage in mV
+DAC6_center = -261.26       #  DAC6 center voltage in mV
+DAC5_offsets = np.linspace(-0.25,0.30,5) # DAC5 offsets from the center (to be swept through) voltage 
 DAC6_offsets = np.linspace(-0.06,0.06,2) # DAC6 offsets from the center (to be swept through) voltage 
 
 
@@ -58,14 +59,14 @@ VSG.set_power_units("dbm")
 # Set the RF power
 VSG.set_power(power)
 # Set the RF frequency
-VSG.set_frequency(f_center)
+VSG.set_frequency((f_center - f_offset))
 ##Run the AWG sequence 
 AWG.run()
 #Turn ON all necessary AWG channels
 AWG.set_ch1_output(1)
 AWG.set_ch2_output(1)
 AWG.set_ch3_output(1)
-AWG.set_ch4_output(1)
+#AWG.set_ch4_output(1)
 #Force the AWG to start from the first element of the sequence
 AWG._ins.force_jump(1)
 
@@ -142,7 +143,7 @@ finally:
     AWG.set_ch1_output(0)
     AWG.set_ch2_output(0)
     AWG.set_ch3_output(0)
-    AWG.set_ch4_output(0)
+    #AWG.set_ch4_output(0)
 
     # Do the background correction
     bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
