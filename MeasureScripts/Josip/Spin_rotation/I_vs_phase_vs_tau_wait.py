@@ -14,7 +14,7 @@ from Background_correction import Back_corr as bc
 
 
     
-file_name = '1_3 IV 562'
+file_name = '1_3 IV 563'
 
 
 gain = 1000e6               # Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -23,7 +23,7 @@ f_center = 5.887e9          # Center frequency in Hz
 
 power = 4.0                 # RF power in dBm
 
-tau_wait = arange(0.006,0.120,0.004)    # Array of increasing durations between the pulses 
+tau_wait = arange(0.006,0.120,0.001)    # Array of increasing durations between the pulses 
 thetas = np.linspace(0.0,360.0,100)         # Angle of the rotation axis associated with the second pi/2 pulse, in respect 
                                         # to the angle of the rotation axis of the first pi/2 puls
 
