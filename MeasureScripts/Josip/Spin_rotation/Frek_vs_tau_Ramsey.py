@@ -19,7 +19,7 @@ from Background_correction import Back_corr as bc
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 542'
+file_name = '1_3 IV 560'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
@@ -28,14 +28,14 @@ gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 
 
 
 
-v1_vec = arange(-50e6,53e6,5e6)  #Frequency offset in Hz
+v1_vec = arange(-50e6,53e6,3e6)  #Frequency offset in Hz
 f_center = 5.893e9  # Center frequency in Hz
-tau_vector_repetitions = 35
+tau_vector_repetitions = 5
 power = 4.0
 
 raw_input("Warning: - check if the sequence and the measurement script have the same number of steps!\nPress enter to continue...")
 
-taus = arange(0.006,0.100,0.001)    # vector of tau values for the Ramsey experiment
+taus = arange(0.006,0.120,0.001)    # vector of tau values for the Ramsey experiment
 
 # you indicate that a measurement is about to start and other
 # processes should stop (like batterycheckers, or temperature
@@ -76,8 +76,8 @@ new_mat = np.zeros(len(taus)) # Creating empty matrix for storing all data
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='measure2D',autoupdate=False)
-plot3d = qt.Plot3D(data, name='measure3D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+plot2d = qt.Plot2D(data, name=file_name + "2D",autoupdate=False)
+plot3d = qt.Plot3D(data, name=file_name + "3D", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
 
 
 # Set the VSG power units
