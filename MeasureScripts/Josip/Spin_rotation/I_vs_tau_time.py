@@ -8,7 +8,7 @@ import numpy as np
 ## Script for running I vs tau measurement versus DAC voltages
 ## Used for the optimization of the visibility of the oscillations in respect to the DC point position
 
-file_name = '1_3 IV 556'
+file_name = '1_3 IV 559'
 
 
 gain = 1000e6               # Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
