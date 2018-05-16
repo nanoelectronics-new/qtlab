@@ -29,7 +29,7 @@ thetas = np.linspace(0.0,360.0,100)         # Angle of the rotation axis associa
 
 
 #saving directly in matrix format for diamond program
-new_mat = np.zeros(len(taus)) # Creating empty matrix for storing all data  
+new_mat = np.zeros(len(thetas)) # Creating empty matrix for storing all data  
 
 
 qt.mstart()
@@ -91,6 +91,7 @@ vec_count = 0
 
 try:
     for i,t in enumerate(tau_wait):          # Creating waveforms for all sequence elements
+        start = time()                               # Getting the timestamp for the calculation of the remaining measurement time
         
         a = init + gate_to_IQ - delay                   # Time from the start of the period, until the start of the IQ pulse 
         rest_of_IQ = period - a - 2*IQ_duration - t     # The duration after the second IQ pulse until the end of the period
@@ -169,10 +170,10 @@ try:
         
         init_start = time()
               
-        start = time()                               # Getting the current timestamp for the calculation of the remaining measurement time
-        for k in xrange(tau_vector_repetitions):    # Repeat the one tau vector measurement n times
+       
+        for k in xrange(tau_vector_repetitions):    # Repeat the one trace measurement n times
             AWG._ins.force_jump(1)                  # Start from the first tau in the sequence
-            for j,v2 in enumerate(thetas):            # Going thorugh taus
+            for j,v2 in enumerate(thetas):            # Going thorugh thetas
                 
                 # the next function is necessary to keep the gui responsive. It
                 # checks for instance if the 'stop' button is pushed. It also checks
