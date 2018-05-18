@@ -23,7 +23,7 @@ def  I_vs_phase_vs_tau_wait(fname = "Random", f = 5.887e9):
     
     power = 4.0                 # RF power in dBm
     
-    tau_wait = arange(0.006,0.120,0.004)    # Array of increasing durations between the pulses 
+    tau_wait = arange(0.006,0.070,0.001)    # Array of increasing durations between the pulses 
     thetas = np.linspace(0.0,360.0,100)         # Angle of the rotation axis associated with the second pi/2 pulse, in respect 
                                             # to the angle of the rotation axis of the first pi/2 puls
     
@@ -236,7 +236,7 @@ def  I_vs_phase_vs_tau_wait(fname = "Random", f = 5.887e9):
 
 num_meas = 568
 f_center =  5.887e9  # Center frequency in Hz
-f_offsets = np.linspace(-20e6,20e6,9) # Frequency offset in Hz
+f_offsets = np.linspace(-20e6,20e6,5) # Frequency offset in Hz
 
 for i,f in enumerate(f_offsets):
     I_vs_phase_vs_tau_wait(fname = "1_3 IV %d_offset=%.2f MHz"%(num_meas,f/1e6), f = (f_center + f))
