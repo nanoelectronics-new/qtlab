@@ -236,7 +236,7 @@ def  I_vs_phase_vs_tau_wait(fname = "Random", f = 5.887e9):
 
 num_meas = 568
 f_center =  5.887e9  # Center frequency in Hz
-f_offsets = np.linspace(-20e6,20e6,5e6) # Frequency offset in Hz
+f_offsets = np.linspace(-20e6,20e6,9) # Frequency offset in Hz
 
 for i,f in enumerate(f_offsets):
     I_vs_phase_vs_tau_wait(fname = "1_3 IV %d_offset=%.2f MHz"%(num_meas,f/1e6), f = (f_center + f))
