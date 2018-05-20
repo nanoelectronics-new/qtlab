@@ -12,7 +12,7 @@ from Waveform_PresetAmp import Pulse as pul
 from Background_correction import Back_corr as bc
 
 
-def  I_vs_phase_vs_tau_wait(fname = "Random", f = 5.887e9):   
+def  I_vs_phase_vs_tau_wait(fname = "Random", f = 5.887e9, IQ_dur = 0.009):   
     
     file_name = fname
     
@@ -82,7 +82,7 @@ def  I_vs_phase_vs_tau_wait(fname = "Random", f = 5.887e9):
     
     gate_to_IQ = 0.010                      # Intentional pause between the onset of the C.B. part of the gate pulse (CH3) and the IQ pulse in ns
     
-    IQ_duration = 0.009                      # Duration of the IQ pulse in ns
+    IQ_duration = IQ_dur                      # Duration of the IQ pulse in ns
     
     I_amp = 707.11  # mV
     Q_amp = 707.11  # mV
@@ -234,11 +234,10 @@ def  I_vs_phase_vs_tau_wait(fname = "Random", f = 5.887e9):
 
 
 
-num_meas = 568
-f_center =  5.887e9  # Center frequency in Hz
-f_offsets = np.linspace(-20e6,20e6,5) # Frequency offset in Hz
+num_meas = 573
+IQ_durations = np.linspace(0.006,0.012,7) # IQ durations in ns
 
-for i,f in enumerate(f_offsets):
-    I_vs_phase_vs_tau_wait(fname = "1_3 IV %d_offset=%.2f MHz"%(num_meas,f/1e6), f = (f_center + f))
+for i,IQ_dur in enumerate(IQ_durations):
+    I_vs_phase_vs_tau_wait(fname = "1_3 IV %d_IQ_duration=%.2f ns"%(num_meas,IQ_dur*1e3), IQ_dur = IQ_dur)  
     num_meas += 1
 
