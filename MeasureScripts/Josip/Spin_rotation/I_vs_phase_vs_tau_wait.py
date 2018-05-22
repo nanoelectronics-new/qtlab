@@ -23,8 +23,8 @@ def  I_vs_phase_vs_tau_wait(fname = "Random", f = 5.887e9, IQ_dur = 0.009):
     
     power = 4.0                 # RF power in dBm
     
-    tau_wait = arange(0.006,0.070,0.001)    # Array of increasing durations between the pulses 
-    thetas = np.linspace(0.0,360.0,100)         # Angle of the rotation axis associated with the second pi/2 pulse, in respect 
+    tau_wait = arange(0.006,0.119,0.001)    # Array of increasing durations between the pulses 
+    thetas = np.linspace(100.0,160.0,17)         # Angle of the rotation axis associated with the second pi/2 pulse, in respect 
                                             # to the angle of the rotation axis of the first pi/2 puls
     
     
@@ -234,10 +234,10 @@ def  I_vs_phase_vs_tau_wait(fname = "Random", f = 5.887e9, IQ_dur = 0.009):
 
 
 
-num_meas = 573
-IQ_durations = np.linspace(0.006,0.012,7) # IQ durations in ns
+num_meas = 580
+#IQ_durations = np.linspace(0.006,0.012,7) # IQ durations in ns
 
-for i,IQ_dur in enumerate(IQ_durations):
-    I_vs_phase_vs_tau_wait(fname = "1_3 IV %d_IQ_duration=%.2f ns"%(num_meas,IQ_dur*1e3), IQ_dur = IQ_dur)  
-    num_meas += 1
+#for i,IQ_dur in enumerate(IQ_durations):
+I_vs_phase_vs_tau_wait(fname = "1_3 IV %d"%num_meas)  
+#num_meas += 1
 
