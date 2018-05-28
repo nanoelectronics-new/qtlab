@@ -17,19 +17,19 @@ import numpy as np
 
 #UHFLI_lib.UHF_init_demod(demod_c = 2)  # Initialize UHF LI
 
-file_name = '1_3 IV 583'
+file_name = '1_3 IV 590'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
-theta = 0 
+theta = 30.0 
 
 ramp_rate_Y = 0.0008 #T/s
 ramp_rate_Z = 0.0008 #T/s
 step_size_BY = -2e-3 
 step_size_BZ = -2e-3
-Bmin = 40e-3  # Min total field in T
-Bmax = 115e-3 # Max total field in T
+Bmin = 80e-3  # Min total field in T
+Bmax = 150e-3 # Max total field in T
 Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
 Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
 Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
@@ -42,7 +42,7 @@ BZ_vector = np.linspace(Bzmax,Bzmin,45) # Defining the Bz vector in T
 magnetZ.set_rampRate_T_s(ramp_rate_Z)
 
 
-freq_vec = arange(2.3e9,5.6e9,3e6)  # frequency 
+freq_vec = arange(3e9,5e9,3e6)  # frequency 
 
 qt.mstart()
 
