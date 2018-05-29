@@ -38,7 +38,7 @@ read = 0.030                            # Third part of the pulse
 period = init + manipulate + read       # Total pulse period
                        
 
-t_burst = arange(0.006,0.150,0.001)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
+t_burst = arange(0.006,0.150,0.002)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
 
 delay = 0.023                           # Delay of the IQ in ns
 
