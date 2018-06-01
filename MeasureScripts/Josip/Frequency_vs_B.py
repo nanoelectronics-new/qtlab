@@ -118,8 +118,6 @@ try:
 
 
 
-
-
         for j,freq in enumerate(freq_vec):  
 
             #IVVI.set_dac5(v2)
