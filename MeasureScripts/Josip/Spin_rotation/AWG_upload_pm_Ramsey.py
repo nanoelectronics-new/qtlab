@@ -10,7 +10,7 @@ from Waveform_PresetAmp import Pulse as pul
 
 ### SETTING AWG
 ##
-AWG_clock = 1.2e9    # AWG sampling rate     
+AWG_clock = 1e9    # AWG sampling rate     
                                             
                         
 AWGMax_amp = 0.5       
