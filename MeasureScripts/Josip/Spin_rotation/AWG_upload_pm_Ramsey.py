@@ -10,7 +10,7 @@ from Waveform_PresetAmp import Pulse as pul
 
 ### SETTING AWG
 ##
-AWG_clock = 1e9    # AWG sampling rate     
+AWG_clock = 1.0e9    # AWG sampling rate     
                                             
                         
 AWGMax_amp = 0.5       
@@ -54,7 +54,7 @@ PM_before_IQ = 0.010                    # Since the rise time of the PM is slowe
 overall_delay_IQ_to_PM = delay_IQ_to_PM + PM_before_IQ   #  Self descriptive
 
 
-IQ_duration = 0.011                     # Duration of the IQ pulse in ns
+IQ_duration = 0.011                      # Duration of the IQ pulse in ns
 PM_duration = IQ_duration + 2*PM_before_IQ  # Duration of the pm pulse in ns - window around IQ pulse
 
 
@@ -76,7 +76,9 @@ for i,t in enumerate(t_burst):          # Creating waveforms for all sequence el
     p.setValuesCH3([init, 200.0],[manipulate, 0.0],[read,200.0])  # Gate pulse analog wavefrom
     p.setMarkersCH3([0,0,0],[0,0,0])                              # Gate pulse markers
 
-
+    print len(p.CH1.waveform)
+    print len(p.CH2.waveform)
+    print len(p.CH3.waveform)
 
     #start_to_start_PM_pulses = t + IQ_duration  # Duration from the start of the first until the start of the second PM pulse
     #b = a - overall_delay_IQ_to_PM                # Time until the PM pulse starts - it is for the delay IQ to PM shorter then "a" 
