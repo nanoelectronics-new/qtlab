@@ -19,19 +19,19 @@ from Background_correction import Back_corr as bc
 #UHFLI_lib.UHF_init_demod(demod_c = 2)  # Initialize UHF LI
 
 
-file_name = '1_3 IV 611'
+file_name = '1_3 IV 614'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
-theta = 45.0 
+theta = 30.0 
 
 ramp_rate_Y = 0.0008 #T/s
 ramp_rate_Z = 0.0008 #T/s
 step_size_BY = -2e-3 
 step_size_BZ = -2e-3
-Bmin = 168e-3  # Min total field in T
-Bmax = 168e-3 # Max total field in T
+Bmin = 80e-3  # Min total field in T
+Bmax = 150e-3 # Max total field in T
 Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
 Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
 Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
@@ -118,6 +118,8 @@ try:
 
 
 
+
+
         for j,freq in enumerate(freq_vec):  
 
             #IVVI.set_dac5(v2)
@@ -194,4 +196,3 @@ finally:
 
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
-
