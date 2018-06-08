@@ -19,17 +19,17 @@ from Background_correction import Back_corr as bc
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 605'
+file_name = '1_3 IV 617'
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 raw_input("Warning: - check if the sequence and the measurement script have the same number of steps!\nPress enter to continue...")
 
-t_burst = arange(0.006,0.150,0.002)
+t_burst = arange(0.006,0.140,0.002)
 
 
-B_total = 168e-3 # in T
-theta = 45.0 # in degrees
+B_total = 147e-3 # in T
+theta = 30.0 # in degrees
 By = B_total*np.cos(np.deg2rad(theta))
 Bz = B_total*np.sin(np.deg2rad(theta))
 
@@ -37,10 +37,10 @@ Bz = B_total*np.sin(np.deg2rad(theta))
 
 
 
-v1_vec = arange(-1e7,5e7,2e6)  #Frequency offset in Hz
+v1_vec = arange(-5e7,5e7,2e6)  #Frequency offset in Hz
 f_center = 5.800e9  # Center frequency in Hz
 tau_vector_repetitions = 25
-power = 0.0
+power = 4.0
 
 
 # you indicate that a measurement is about to start and other
@@ -111,7 +111,7 @@ AWG.run()
 AWG.set_ch1_output(1)
 AWG.set_ch2_output(1)
 AWG.set_ch3_output(1)
-#AWG.set_ch4_output(1)
+AWG.set_ch4_output(1)
 #Force the AWG to start from the first element of the sequence
 AWG._ins.force_jump(1)
 
@@ -190,7 +190,7 @@ finally:
     AWG.set_ch1_output(0)
     AWG.set_ch2_output(0)
     AWG.set_ch3_output(0)
-    #AWG.set_ch4_output(0)
+    AWG.set_ch4_output(0)
 
 
     # Do the background correction

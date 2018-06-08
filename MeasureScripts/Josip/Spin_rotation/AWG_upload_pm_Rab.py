@@ -32,13 +32,13 @@ seq = list()
 
 
   
-init = 0.030                            # First part of the pulse
-manipulate = 0.200                      # Second part of the pulse
-read = 0.030                            # Third part of the pulse
+init = 0.040                            # First part of the pulse
+manipulate = 0.180                      # Second part of the pulse
+read = 0.040                            # Third part of the pulse
 period = init + manipulate + read       # Total pulse period
                        
 
-t_burst = arange(0.006,0.150,0.001)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
+t_burst = arange(0.006,0.140,0.002)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
 
 delay = 0.023                           # Delay of the IQ in ns
 
@@ -63,7 +63,7 @@ for i,t in enumerate(t_burst):          # Creating waveforms for all sequence el
     p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'us' , AmpUnits = 'mV')   # New waveform object for the new
                                                                                                                       # sequence element
 
-    a = init + gate_to_IQ - delay                   # Time from the start of the period, until the start of the IQ pulse 
+    a = init + read + gate_to_IQ - delay                   # Time from the start of the period, until the start of the IQ pulse 
     IQ_duration = t                                 # The burst duration
     rest_of_IQ = period - a - IQ_duration           # The duration after the IQ pulse until the end of the period
 
@@ -74,32 +74,32 @@ for i,t in enumerate(t_burst):          # Creating waveforms for all sequence el
 
 
 
-    p.setValuesCH3([init, 200.0],[manipulate, 0.0],[read,200.0])    # Gate pulse analog wavefrom
+    p.setValuesCH3([init, 200.0],[read,200.0],[manipulate, 0.0])    # Gate pulse analog wavefrom
     p.setMarkersCH3([0,0,0],[0,0,0])                                # Gate pulse markers
 
 
 
     
-    #b = a - overall_delay_IQ_to_PM                              # Time until the PM pulse starts - it is for the delay IQ to PM shorter then "a" 
+    b = a - overall_delay_IQ_to_PM                              # Time until the PM pulse starts - it is for the delay IQ to PM shorter then "a" 
 
    
-    #PM_duration = IQ_duration + 2*PM_before_IQ                  # Duration of the pm pulse in ns - window around IQ pulse   
+    PM_duration = IQ_duration + 2*PM_before_IQ                  # Duration of the pm pulse in ns - window around IQ pulse   
                                                                 
-    #rest_PM = period - b - PM_duration                          # The duration after the PM pulse until the end of the period
-    #p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[rest_PM, 0.0])
-    #p.setMarkersCH4([0,1,0],[0,0,0])
+    rest_PM = period - b - PM_duration                          # The duration after the PM pulse until the end of the period
+    p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[rest_PM, 0.0])
+    p.setMarkersCH4([0,1,0],[0,0,0])
 
     
 
     seqCH1.append(p.CH1) 
     seqCH2.append(p.CH2) 
     seqCH3.append(p.CH3) 
-    #seqCH4.append(p.CH4)
+    seqCH4.append(p.CH4)
 
 seq.append(seqCH1) 
 seq.append(seqCH2) 
 seq.append(seqCH3) 
-#seq.append(seqCH4) 
+seq.append(seqCH4) 
 AWG_lib.set_waveform_trigger_all_wait_mean(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG 
 
 raw_input("Press Enter if uploading to AWG is finished")
