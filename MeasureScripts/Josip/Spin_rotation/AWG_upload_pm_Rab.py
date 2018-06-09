@@ -32,13 +32,13 @@ seq = list()
 
 
   
-init = 0.040                            # First part of the pulse
-manipulate = 0.180                      # Second part of the pulse
-read = 0.040                            # Third part of the pulse
+init = 0.030                            # First part of the pulse
+manipulate = 0.200                      # Second part of the pulse
+read = 0.030                            # Third part of the pulse
 period = init + manipulate + read       # Total pulse period
                        
 
-t_burst = arange(0.006,0.140,0.002)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
+t_burst = arange(0.006,0.160,0.002)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
 
 delay = 0.023                           # Delay of the IQ in ns
 
@@ -78,16 +78,23 @@ for i,t in enumerate(t_burst):          # Creating waveforms for all sequence el
     p.setMarkersCH3([0,0,0],[0,0,0])                                # Gate pulse markers
 
 
-
     
-    b = a - overall_delay_IQ_to_PM                              # Time until the PM pulse starts - it is for the delay IQ to PM shorter then "a" 
+    PM_duration = IQ_duration + 2*PM_before_IQ  # Duration of the pm pulse in ns - window around IQ pulses
+    b = a - overall_delay_IQ_to_PM
+    
+    if b > 0:   # if b is positive then there is no reason for splitting the PM pulse into two parts   
+        
+        rest_PM = period - b - PM_duration                     # The duration after the PM pulse until the end of the period
+        p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[rest_PM, 0.0])
+        p.setMarkersCH4([0,1,0],[0,0,0])
+        
+    elif b <= 0: # if b is negative then split the PM pulse into two - part of it at the start and part of it at the end of the CH4 pulse
 
-   
-    PM_duration = IQ_duration + 2*PM_before_IQ                  # Duration of the pm pulse in ns - window around IQ pulse   
-                                                                
-    rest_PM = period - b - PM_duration                          # The duration after the PM pulse until the end of the period
-    p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[rest_PM, 0.0])
-    p.setMarkersCH4([0,1,0],[0,0,0])
+        b = abs(b)
+        rest_PM = period - PM_duration                     # The duration after the PM pulse until the end of the period
+        PM_first_part = PM_duration - b
+        p.setValuesCH4([PM_first_part, 0.0],[rest_PM, 0.0],[b, 0.0])
+        p.setMarkersCH4([1,0,1],[0,0,0])
 
     
 
