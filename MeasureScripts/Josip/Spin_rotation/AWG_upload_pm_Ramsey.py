@@ -97,7 +97,7 @@ for i,t in enumerate(t_burst):          # Creating waveforms for all sequence el
         rest_PM = period - b - 2*PM_duration - time_between_PM_pulses  # The duration after the second PM pulse until the end of the period
                                                                             
         p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[time_between_PM_pulses,0.0],[PM_duration, 0.0],[rest_PM, 0.0])
-        p.setMarkersCH4([0,1,0,1,0],[0,0,0,0,0])
+        p.setMarkersCH4([0,1,0,1,0],[0,1,0,1,0])
 
 
     seqCH1.append(p.CH1) 
