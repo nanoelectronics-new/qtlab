@@ -299,7 +299,6 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
             break   
     #END OF MEASURE
 
-  
             
     # Unsubscribe from all paths
     daq.unsubscribe('*')
