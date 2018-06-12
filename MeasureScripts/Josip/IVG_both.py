@@ -18,7 +18,7 @@ leak_test = True
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(-356.0,-359.0,-0.1)   #V_G 4
+v_vec = arange(-356.0,-359.0,-0.06)   #V_G 4
 
 # you indicate that a measurement is about to start and other
 # processes should stop (like batterycheckers, or temperature
@@ -32,7 +32,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data = qt.Data(name='IV 626')  # Put one space before name
+data = qt.Data(name='IV 627')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the
