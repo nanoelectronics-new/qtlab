@@ -10,15 +10,15 @@ import UHFLI_lib
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)  # Initialize IVVI
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')   # Initialize dmm
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
-
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
+bias = -1000
 
-# Sweeping vector
+leak_test = True
 
-bias = 1000
-v_vec = arange(-900,-4000,-2)  #''' !! Take care about step sign '''
-
+# you define two vectors of what you want to sweep. In this case
+# a magnetic field (b_vec) and a frequency (f_vec)
+v_vec = arange(-356.0,-359.0,-0.1)   #V_G 4
 
 # you indicate that a measurement is about to start and other
 # processes should stop (like batterycheckers, or temperature
@@ -32,7 +32,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data = qt.Data(name='IVG_GS_N6_24-01_Leiden_fridge')  # Put one space before name
+data = qt.Data(name='IV 626')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the
@@ -45,7 +45,7 @@ data = qt.Data(name='IVG_GS_N6_24-01_Leiden_fridge')  # Put one space before nam
 
 data.add_coordinate('Voltage [mV]')   # Underline makes the next letter as index
 
-data.add_value(' Reflection')      # Underline makes the next letter as index
+data.add_value(' Current_lockin [pA]')      # Underline makes the next letter as index
 
 data.add_value('Current [pA]')      # Underline makes the next letter as index
 
@@ -71,7 +71,7 @@ plot2d_dmm.set_style('lines')
 
 
 # preparation is done, now start the measurement.
-IVVI.set_dac1(bias)
+#IVVI.set_dac1(bias)
 # It is actually a simple loop.
 start = time()
 for v in v_vec:
@@ -81,7 +81,7 @@ for v in v_vec:
     # readout form UHFLI
     # argument Num_of_TC represents number of time constants to wait before raeding the value
     # it is important because of the settling time of the low pass filter
-    result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
+    result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)/gain*1e12  # Reading the lockin and correcting for M1b gain
 
     # readout_dmm
     result_dmm = dmm.get_readval()/gain*1e12
@@ -95,7 +95,7 @@ for v in v_vec:
     # the next function is necessary to keep the gui responsive. It
     # checks for instance if the 'stop' button is pushed. It also checks
     # if the plots need updating.
-    qt.msleep(0.001)
+    qt.msleep(0.003)
 stop = time()
 print 'Duration: %s sec' % (stop - start, )
 
