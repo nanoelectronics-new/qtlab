@@ -49,12 +49,13 @@ for i in xrange(10):  # Collect the trace 10 times
     new_mat.append(result_lockin)   # The trace is saved as a new row 
     #data.add_data_point(np.linspace(1, result_lockin.size, result_lockin.size), result_lockin)  # Adding new data point
 
-    np.savetxt(fname = data.get_dir() + "/Time_domain_off_peak", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+    np.savetxt(fname = data.get_dir() + "/Time_domain_off_peak.dat", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')
     #plot2d.update()
 
     ## Calculating and ploting the power spectral density
     f, Pxx_den = signal.periodogram(result_lockin, fs = 27.5e3, window = 'hamming', nfft = 274657)
     #plt.semilogy(f, Pxx_den)
+    new_mat_FD.append(f)
     new_mat_FD.append(Pxx_den)
     np.savetxt(fname = data.get_dir() + "/Freq_domain_off_peak.dat", X = new_mat_FD, fmt = '%1.4e', delimiter = '  ', newline = '\n')
 
