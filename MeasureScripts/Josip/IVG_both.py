@@ -1,6 +1,7 @@
 from numpy import pi, random, arange, size
 from time import time,sleep
 import UHFLI_lib
+import numpy as np
 
 
 
@@ -9,7 +10,7 @@ import UHFLI_lib
 #####################################################
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)  # Initialize IVVI
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')   # Initialize dmm
-UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
+UHFLI_lib.UHF_init_scope()  # Initialize UHF LI
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 bias = -1000
@@ -81,8 +82,9 @@ for v in v_vec:
     # readout form UHFLI
     # argument Num_of_TC represents number of time constants to wait before raeding the value
     # it is important because of the settling time of the low pass filter
-    result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)/gain*1e12  # Reading the lockin and correcting for M1b gain
-
+    result_lockin = UHFLI_lib.UHF_measure_scope_single_shot(maxtime = 0.5)
+    result_lockin = result_lockin[0] 
+    result_lockin = np.mean(result_lockin)/gain*1e12
     # readout_dmm
     result_dmm = dmm.get_readval()/gain*1e12
 
