@@ -40,7 +40,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name='IV 630')
+data = qt.Data(name='IV 637')
 
 
 # Now you provide the information of what data will be saved in the
@@ -64,7 +64,7 @@ data.create_file()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='plot9', autoupdate=False)
+plot2d = qt.Plot2D(data, name='plot92', autoupdate=False)
 plot2d.set_style('lines')
 
 
