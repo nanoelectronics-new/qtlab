@@ -12,8 +12,8 @@ def do_meas():
     """Better to put this into a function, not to mess with already existing varibales with the same name"""
 
 
-
-    UHFLI_lib.UHF_init_scope()  # Initialize UHF LI
+    reload(UHFLI_lib)
+    daq, scopeModule = UHF_init_scope_module(device_id = 'dev2148',  mode = 1)  # Initialize UHF LI
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     power = -4.0
     bias = -1000
@@ -36,7 +36,7 @@ def do_meas():
     # <timestamp>_testmeasurement.dat
     # to find out what 'datadir' is set to, type: qt.config.get('datadir')
     
-    data = qt.Data(name='IV 646')  # Put one space before name
+    data = qt.Data(name='IV 647')  # Put one space before name
     
     
     # Now you provide the information of what data will be saved in the
@@ -111,6 +111,9 @@ def do_meas():
     stop = time()
     print 'Duration: %s sec' % (stop - start, )
     
+
+    # Switching off the RF 
+    VSG.set_status("off") 
     # Saving UHFLI setting to the measurement data folder
     # You can load this settings file from UHFLI user interface 
     UHFLI_lib.UHF_save_settings(path = data_path)

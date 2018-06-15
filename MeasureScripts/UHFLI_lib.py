@@ -9,6 +9,7 @@ import numpy as np
 
 import zhinst.utils as utils
 import zhinst.ziPython as ziPython
+import zhinst
 
 
 
@@ -90,6 +91,174 @@ def UHF_init_scope(device_id = 'dev2148'):
 
 
 
+
+
+
+
+def UHF_init_scope_module(device_id = 'dev2148', mode = 1):
+    """
+    Function for the initialization of the UHFLI's scope module.
+
+    Important:
+
+      The Scope Tab of the LabOne UI must be closed whilst obtaining scope data
+      in the API.
+
+     Arguments:
+
+      device_id (str): The ID of the device to run the example with. For
+        example, `dev2006` or `uhf-dev2006`.
+
+     mode (int): 'scopeModule/mode' : Scope data processing mode.
+        0 - Pass through scope segments assembled, returned unprocessed, non-interleaved.
+        1 - Moving average, scope recording assembled, scaling applied, averaged, if averaging is enabled.
+        2 - Not yet supported.
+        3 - As for mode 1, except an FFT is applied to every segment of the scope recording.
+
+
+    Returns:
+
+        daq, scopeModule instances, for using elsewhere
+
+    """
+
+    apilevel_example = 6  # The API level supported by this example.
+    # Call a zhinst utility function that returns:
+    # - an API session `daq` in order to communicate with devices via the data server.
+    # - the device ID string that specifies the device branch in the server's node hierarchy.
+    # - the device's discovery properties.
+    # This example can't run with HF2 Instruments or instruments without the DIG option.
+    required_devtype = r'UHF|MF'  # Regular expression of supported instruments.
+    required_options = ['DIG']
+    required_err_msg = "This example requires the DIG Option on either UHF or MF instruments (HF2 is unsupported)."
+
+    (daq, device, props) = zhinst.utils.create_api_session(device_id, apilevel_example,
+                                                           required_devtype=required_devtype,
+                                                           required_options=required_options,
+                                                           required_err_msg=required_err_msg)
+    zhinst.utils.api_server_version_check(daq)
+
+    # Enable the API's log.
+    daq.setDebugLevel(3)
+
+    # Create a base instrument configuration: disable all outputs, demods and scopes.
+    general_setting = [['/%s/sigouts/*/enables/*' % device, 0],
+                       ['/%s/scopes/*/enable' % device, 0]]
+    node_branches = daq.listNodes('/%s/' % device, 0)
+    if 'DEMODS' in node_branches:
+        general_setting.append(['/%s/demods/*/enable' % device, 0])
+    daq.set(general_setting)
+    # Perform a global synchronisation between the device and the data server:
+    # Ensure that the settings have taken effect on the device before setting
+    # the next configuration.
+    daq.sync()
+
+
+    raw_input("Set the UHF LI Scope parameters in the user interface dialog and then close the Scope tab!  Press enter to continue...")  # Wait for user to set the device parametrs from user interface
+
+    # Perform a global synchronisation between the device and the data server: Ensure that the settings have taken
+    # effect on the device before continuing. This also clears the API's data buffers to remove any old data.
+    daq.sync()
+
+
+    # Initialize and configure the Scope Module.
+    scopeModule = daq.scopeModule()
+    # 'scopeModule/mode' : Scope data processing mode.
+    # 0 - Pass through scope segments assembled, returned unprocessed, non-interleaved.
+    # 1 - Moving average, scope recording assembled, scaling applied, averaged, if averaging is enabled.
+    # 2 - Not yet supported.
+    # 3 - As for mode 1, except an FFT is applied to every segment of the scope recording.
+    scopeModule.set('scopeModule/mode', mode)
+
+
+    # 'scopeModule/averager/weight' : Average the scope shots using an exponentially weighted moving average of the
+    # previous 'weight' shots.
+    scopeModule.set('scopeModule/averager/weight', 1)
+
+
+    # Subscribe to the scope's data in the module.
+    wave_nodepath = '/{}/scopes/0/wave'.format(device)
+    scopeModule.subscribe(wave_nodepath)
+
+
+    return daq, scopeModule
+
+
+
+
+
+
+def get_scope_record(device = 'dev2148', daq = None, scopeModule = None, scope_in_channel = 0):
+    """
+    Obtain one scope record (consisting of multiple segments) from the device
+    via the Scope Module.
+
+    """
+
+
+
+    wave_nodepath = '/{}/scopes/0/wave'.format(device)
+
+    data = []
+
+    # Tell the module to be ready to acquire data; reset the module's progress to 0.0.
+    scopeModule.execute()
+    # Set the scope to operate in 'single' mode: Once one scope record consisting of the specified number of segments
+    # (>= 1) has been recorded the scope will automatically stop. Note: The device node scopes/0/single will be set back
+    # to 0.
+    daq.setInt('/%s/scopes/0/single' % device, 1)
+    # We additionally need to start the scope: Now the scope is ready to record data upon receiving triggers.
+    daq.setInt('/%s/scopes/0/enable' % device, 1)
+
+    start = time.time()
+    timeout = 30  # [s]
+    records = 0
+    # Wait until one scope recording (of the configured number of segments) is complete, with timeout.
+    while scopeModule.progress() < 1.0:
+        time.sleep(0.1)
+        progress = scopeModule.progress()
+        records = scopeModule.get("scopeModule/records")["records"][0]
+        #print("Scope module progress: {:.2%}, records: {}.".format(progress[0], records), end="\r")
+        # Here we could read intermediate data via:
+        # data = scopeModule.read(True)...
+        # and process it before the all segments have been recorded.
+        # if device in data:
+        # ...
+        if (time.time() - start) > timeout:
+            # Break out of the loop if for some reason we're no longer receiving scope data from the device.
+            print("\nScope Module not finished finished after {} s, will call finish()...".format(timeout))
+            break
+    print("")
+    daq.setInt('/%s/scopes/0/enable' % device, 0)
+
+    # Read out the scope data available in the module.
+    d = scopeModule.read(True)
+
+    # Stop the module; to use it again we need to call execute().
+    scopeModule.finish()
+
+
+
+    flags = d[wave_nodepath][0][0]['flags']
+    if flags & 2:
+        print("Scope flags is {} - bit2 is set, this indicates corrupted data.".format(flags))
+    data.append(d[wave_nodepath])
+
+    wave = data[0][0][0]['wave'][scope_in_channel]
+    
+    return wave
+
+
+
+
+
+
+
+def UHF_measure_scope_module(device = 'dev2148'):
+
+    data = {}
+    data[wave_nodepath] = []
+    wave_nodepath = '/{}/scopes/0/wave'.format(device)
 
 
 
