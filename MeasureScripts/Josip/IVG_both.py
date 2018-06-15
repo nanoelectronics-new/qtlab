@@ -33,7 +33,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data = qt.Data(name='IV 627')  # Put one space before name
+data = qt.Data(name='IV 646')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the
