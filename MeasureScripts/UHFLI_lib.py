@@ -277,9 +277,9 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
     path =  '/%s/scopes/0/wave' % (device)  # Device node to acquire data from (this one stands for scope)
 
     
-    daq.sync()
+
     daq.subscribe(path)
-    daq.flush()
+    daq.sync()
     
  
     #time.sleep(maxtime)   # Empirically proven that here we need to wait at least the scope shot length
