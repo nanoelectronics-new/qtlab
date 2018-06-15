@@ -96,6 +96,7 @@ def UHF_init_scope(device_id = 'dev2148'):
 
 
 def UHF_init_scope_module(device_id = 'dev2148', mode = 1):
+
     """
     Function for the initialization of the UHFLI's scope module.
 
@@ -109,11 +110,11 @@ def UHF_init_scope_module(device_id = 'dev2148', mode = 1):
       device_id (str): The ID of the device to run the example with. For
         example, `dev2006` or `uhf-dev2006`.
 
-     mode (int): 'scopeModule/mode' : Scope data processing mode.
-        0 - Pass through scope segments assembled, returned unprocessed, non-interleaved.
-        1 - Moving average, scope recording assembled, scaling applied, averaged, if averaging is enabled.
-        2 - Not yet supported.
-        3 - As for mode 1, except an FFT is applied to every segment of the scope recording.
+      mode (int): 'scopeModule/mode' : Scope data processing mode.
+         0 - Pass through scope segments assembled, returned unprocessed, non-interleaved.
+         1 - Moving average, scope recording assembled, scaling applied, averaged, if averaging is enabled.
+         2 - Not yet supported.
+         3 - As for mode 1, except an FFT is applied to every segment of the scope recording.
 
 
     Returns:
@@ -188,7 +189,8 @@ def UHF_init_scope_module(device_id = 'dev2148', mode = 1):
 
 
 
-def get_scope_record(device = 'dev2148', daq = None, scopeModule = None, scope_in_channel = 0):
+def get_scope_record(device = 'dev2148', daq = None, scopeModule = None):
+
     """
     Obtain one scope record (consisting of multiple segments) from the device
     via the Scope Module.
@@ -228,7 +230,7 @@ def get_scope_record(device = 'dev2148', daq = None, scopeModule = None, scope_i
             # Break out of the loop if for some reason we're no longer receiving scope data from the device.
             print("\nScope Module not finished finished after {} s, will call finish()...".format(timeout))
             break
-    print("")
+    #print("")
     daq.setInt('/%s/scopes/0/enable' % device, 0)
 
     # Read out the scope data available in the module.
@@ -244,21 +246,13 @@ def get_scope_record(device = 'dev2148', daq = None, scopeModule = None, scope_i
         print("Scope flags is {} - bit2 is set, this indicates corrupted data.".format(flags))
     data.append(d[wave_nodepath])
 
-    wave = data[0][0][0]['wave'][scope_in_channel]
-    
+    wave = data[0][0][0]['wave']
+
     return wave
 
 
 
 
-
-
-
-def UHF_measure_scope_module(device = 'dev2148'):
-
-    data = {}
-    data[wave_nodepath] = []
-    wave_nodepath = '/{}/scopes/0/wave'.format(device)
 
 
 

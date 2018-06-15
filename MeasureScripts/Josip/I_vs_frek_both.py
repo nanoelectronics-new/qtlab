@@ -13,7 +13,7 @@ def do_meas():
 
 
     reload(UHFLI_lib)
-    daq, scopeModule = UHF_init_scope_module(device_id = 'dev2148',  mode = 1)  # Initialize UHF LI
+    daq, scopeModule = UHFLI_lib.UHF_init_scope_module(device_id = 'dev2148',  mode = 1)  # Initialize UHF LI
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     power = -4.0
     bias = -1000
@@ -95,8 +95,8 @@ def do_meas():
         # readout form UHFLI
         # argument Num_of_TC represents number of time constants to wait before raeding the value
         # it is important because of the settling time of the low pass filter
-        result_lockin = UHFLI_lib.UHF_measure_scope_single_shot(maxtime = 1.0)
-        result_lockin = result_lockin[0] 
+        result_lockin = UHFLI_lib.get_scope_record(daq = daq, scopeModule = scopeModule)
+        result_lockin = result_lockin[0]   # Take the data from channel 1
         result_lockin = np.mean(result_lockin)/gain*1e12
         # readout_dmm
         result_dmm = dmm.get_readval()/gain*1e12
