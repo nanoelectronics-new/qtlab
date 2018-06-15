@@ -19,19 +19,19 @@ from Background_correction import Back_corr as bc
 #UHFLI_lib.UHF_init_demod(demod_c = 2)  # Initialize UHF LI
 
 
-file_name = '1_3 IV 625'
+file_name = '1_3 IV 644'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
-theta = 30.0 
+theta = 0.0 
 
 ramp_rate_Y = 0.0008 #T/s
 ramp_rate_Z = 0.0008 #T/s
 step_size_BY = -2e-3 
 step_size_BZ = -2e-3
-Bmin = 147e-3  # Min total field in T
-Bmax = 147e-3 # Max total field in T
+Bmin = 80e-3  # Min total field in T
+Bmax = 150e-3 # Max total field in T
 Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
 Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
 Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
@@ -88,12 +88,12 @@ VSG.set_power(power)
 # Turn the RF on
 VSG.set_status("on") 
 ## Run the AWG sequence 
-AWG.run()
+#AWG.run()
 ## Turn ON all necessary AWG channels
-AWG.set_ch1_output(1)
-AWG.set_ch2_output(1)
-AWG.set_ch3_output(1)
-AWG.set_ch4_output(1)
+#AWG.set_ch1_output(1)
+#AWG.set_ch2_output(1)
+#AWG.set_ch3_output(1)
+#AWG.set_ch4_output(1)
 
 init_start = time()
 vec_count = 0
@@ -180,12 +180,12 @@ finally:
     VSG.set_status("off") 
 
     #Stop the AWG sequence 
-    AWG.stop()
+    #AWG.stop()
     #Turn OFF all necessary AWG channels
-    AWG.set_ch1_output(0)
-    AWG.set_ch2_output(0)
-    AWG.set_ch3_output(0)
-    AWG.set_ch4_output(0)
+    #AWG.set_ch1_output(0)
+    #AWG.set_ch2_output(0)
+    #AWG.set_ch3_output(0)
+    #AWG.set_ch4_output(0)
 
     # after the measurement ends, you need to close the data file.
     data.close_file()
