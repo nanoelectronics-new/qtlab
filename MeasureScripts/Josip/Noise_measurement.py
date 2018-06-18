@@ -22,13 +22,13 @@ daq, scopeModule = UHFLI_lib.UHF_init_scope_module(device_id = 'dev2148',  mode 
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-frequency = 6.011e9   # in GHz
+frequency = 5.937e9   # in GHz
 power = -4  # in dBm
 num_traces = 10
 qt.mstart()
 
 
-data = qt.Data(name='IV 653')
+data = qt.Data(name='IV 658')
 
  
 new_mat  = list()   # Creating empty matrix for storing all data 
@@ -55,21 +55,21 @@ for i in xrange(num_traces):  # Collect the trace 10 times
     qt.msleep(0.010)
 
     num_samples, result_lockin = UHFLI_lib.get_scope_record(daq = daq, scopeModule = scopeModule)
-    result_lockin = result_lockin[0]#*(1e12/gain)**2  # Converting to pA - squared because of the power spectral density
+    result_lockin = result_lockin[0]*(1e12/gain)**2  # Converting to pA - squared because of the power spectral density
     new_mat.append(result_lockin)   # The trace is saved as a new row 
-    np.savetxt(fname = data.get_dir() + "/Power_spectral_density.dat", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+    np.savetxt(fname = data.get_dir() + "/Power_spectral_density_pA2_Hz.dat", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')
     
 # Calculating the average PSD based on the 10 traces
 PSD_aver =  np.mean(new_mat, axis=0)
 freq_axis = np.linspace(0.1,13733, num_samples)
 PSD_aver = np.vstack([PSD_aver, freq_axis])  # Adding the frequancy axis to the last row
 # Saving the average with the frequency axis in the same folder
-np.savetxt(fname = data.get_dir() + "/Power_spectral_density_average.dat", X = PSD_aver, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+np.savetxt(fname = data.get_dir() + "/Power_spectral_density_average_pA2_Hz.dat", X = PSD_aver, fmt = '%1.4e', delimiter = '  ', newline = '\n')
 
 # Plotting the average PSD
 plt.semilogy(freq_axis, PSD_aver[0])
 plt.xlabel('frequency [Hz]')
-plt.ylabel('PSD [V**2/Hz]')
+plt.ylabel('PSD [pA**2/Hz]')
 plt.show()
 # Saving UHFLI setting to the measurement data folder
 # You can load this settings file from UHFLI user interface 
