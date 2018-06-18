@@ -36,7 +36,7 @@ def do_meas():
     # <timestamp>_testmeasurement.dat
     # to find out what 'datadir' is set to, type: qt.config.get('datadir')
     
-    data = qt.Data(name='IV 655')  # Put one space before name
+    data = qt.Data(name='IV 657')  # Put one space before name
     
     
     # Now you provide the information of what data will be saved in the
