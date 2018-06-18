@@ -36,7 +36,7 @@ def do_meas():
     # <timestamp>_testmeasurement.dat
     # to find out what 'datadir' is set to, type: qt.config.get('datadir')
     
-    data = qt.Data(name='IV 650')  # Put one space before name
+    data = qt.Data(name='IV 654')  # Put one space before name
     
     
     # Now you provide the information of what data will be saved in the
@@ -49,7 +49,7 @@ def do_meas():
     
     data.add_coordinate('Frequency [Hz]')   # Underline makes the next letter as index
     
-    data.add_value(' Current_lockin [pA]')      # Underline makes the next letter as index
+    data.add_value('Current_lockin [pA]')      # Underline makes the next letter as index
     
     data.add_value('Current [pA]')      # Underline makes the next letter as index
     
@@ -95,7 +95,7 @@ def do_meas():
         # readout form UHFLI
         # argument Num_of_TC represents number of time constants to wait before raeding the value
         # it is important because of the settling time of the low pass filter
-        result_lockin = UHFLI_lib.get_scope_record(daq = daq, scopeModule = scopeModule)
+        num_samples, result_lockin = UHFLI_lib.get_scope_record(daq = daq, scopeModule = scopeModule)
         result_lockin = result_lockin[0]   # Take the data from channel 1
         result_lockin = np.mean(result_lockin)/gain*1e12
         # readout_dmm
