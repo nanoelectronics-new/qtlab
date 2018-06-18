@@ -19,7 +19,7 @@ from Background_correction import Back_corr as bc
 #UHFLI_lib.UHF_init_demod(demod_c = 2)  # Initialize UHF LI
 
 
-file_name = '1_3 IV 649'
+file_name = '1_3 IV 656'
 
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -28,8 +28,8 @@ theta = 0.0
 
 ramp_rate_Y = 0.0008 #T/s
 ramp_rate_Z = 0.0008 #T/s
-step_size_BY = -2e-3 
-step_size_BZ = -2e-3
+step_size_BY = -0.5e-3 
+step_size_BZ = -0.5e-3
 Bmin = 117e-3  # Min total field in T
 Bmax = 130e-3 # Max total field in T
 Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
@@ -38,9 +38,9 @@ Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
 Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
     
     
-BY_vector = np.linspace(Bymax,Bymin,45) # Defining the By vector in T  
+BY_vector = np.linspace(Bymax,Bymin,20) # Defining the By vector in T  
 magnetY.set_rampRate_T_s(ramp_rate_Y)
-BZ_vector = np.linspace(Bzmax,Bzmin,45) # Defining the Bz vector in T  
+BZ_vector = np.linspace(Bzmax,Bzmin,20) # Defining the Bz vector in T  
 magnetZ.set_rampRate_T_s(ramp_rate_Z)
 
 
