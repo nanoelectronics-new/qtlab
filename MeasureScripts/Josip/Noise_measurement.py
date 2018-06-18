@@ -28,7 +28,7 @@ num_traces = 10
 qt.mstart()
 
 
-data = qt.Data(name='IV 662')
+data = qt.Data(name='IV 664')
 
  
 new_mat  = list()   # Creating empty matrix for storing all data 
@@ -61,7 +61,7 @@ for i in xrange(num_traces):  # Collect the trace 10 times
     
 # Calculating the average PSD based on the 10 traces
 PSD_aver =  np.mean(new_mat, axis=0)
-freq_axis = np.linspace(0.1,13733, num_samples)
+freq_axis = np.linspace(0.0262, 13732.884, num_samples)
 PSD_aver = np.vstack([PSD_aver, freq_axis])  # Adding the frequancy axis to the last row
 # Saving the average with the frequency axis in the same folder
 np.savetxt(fname = data.get_dir() + "/Power_spectral_density_average_pA2_Hz.dat", X = PSD_aver, fmt = '%1.4e', delimiter = '  ', newline = '\n')

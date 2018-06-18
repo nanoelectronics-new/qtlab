@@ -217,7 +217,7 @@ def get_scope_record(device = 'dev2148', daq = None, scopeModule = None):
     daq.setInt('/%s/scopes/0/enable' % device, 1)
 
     start = time.time()
-    timeout = 30  # [s]
+    timeout = 90  # [s]
     records = 0
     # Wait until one scope recording (of the configured number of segments) is complete, with timeout.
     while scopeModule.progress() < 1.0:
