@@ -95,7 +95,7 @@ def UHF_init_scope(device_id = 'dev2148'):
 
 
 
-def UHF_init_scope_module(device_id = 'dev2148', mode = 1):
+def UHF_init_scope_module(device_id = 'dev2148', mode = 1, PSD = 0):
 
     """
     Function for the initialization of the UHFLI's scope module.
@@ -176,6 +176,10 @@ def UHF_init_scope_module(device_id = 'dev2148', mode = 1):
     # previous 'weight' shots.
     scopeModule.set('scopeModule/averager/weight', 1)
 
+
+    # If the PSD = 1, turn the power and spectral density ON
+    scopeModule.set('scopeModule/fft/spectraldensity', PSD)
+    scopeModule.set('scopeModule/fft/power', PSD)
 
     # Subscribe to the scope's data in the module.
     wave_nodepath = '/{}/scopes/0/wave'.format(device)
