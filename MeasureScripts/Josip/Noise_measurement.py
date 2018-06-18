@@ -22,13 +22,13 @@ daq, scopeModule = UHFLI_lib.UHF_init_scope_module(device_id = 'dev2148',  mode 
 
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-frequency = 5.750e9   # in GHz
+frequency = 5.965e9   # in GHz
 power = -4  # in dBm
 num_traces = 10
 qt.mstart()
 
 
-data = qt.Data(name='IV 659')
+data = qt.Data(name='IV 660')
 
  
 new_mat  = list()   # Creating empty matrix for storing all data 
@@ -68,7 +68,7 @@ np.savetxt(fname = data.get_dir() + "/Power_spectral_density_average_pA2_Hz.dat"
 
 # Plotting the average PSD
 plt.semilogy(freq_axis, PSD_aver[0])
-plt.title('OFF the EDSR peak slope')
+plt.title('ON the top of the EDSR peak')
 plt.xlabel('frequency [Hz]')
 plt.ylabel('PSD [pA**2/Hz]')
 plt.show()
