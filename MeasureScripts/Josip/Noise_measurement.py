@@ -28,7 +28,7 @@ num_traces = 10
 qt.mstart()
 
 
-data = qt.Data(name='IV 661')
+data = qt.Data(name='IV 662')
 
  
 new_mat  = list()   # Creating empty matrix for storing all data 
@@ -46,7 +46,7 @@ VSG.set_power_units("dbm")
 # Set the RF power
 VSG.set_power(power)
 # Turn the RF on
-VSG.set_status("on") 
+#VSG.set_status("on") 
 # Set the RF frequency
 VSG.set_frequency(frequency)
 
@@ -68,10 +68,13 @@ np.savetxt(fname = data.get_dir() + "/Power_spectral_density_average_pA2_Hz.dat"
 
 # Plotting the average PSD
 plt.semilogy(freq_axis, PSD_aver[0])
-plt.title('ON the top of the EDSR peak')
+plt.title('RF off')
 plt.xlabel('frequency [Hz]')
 plt.ylabel('PSD [pA**2/Hz]')
 plt.show()
+
+# Switching off the RF 
+VSG.set_status("off") 
 # Saving UHFLI setting to the measurement data folder
 # You can load this settings file from UHFLI user interface 
 UHFLI_lib.UHF_save_settings(path = data.get_dir() )
