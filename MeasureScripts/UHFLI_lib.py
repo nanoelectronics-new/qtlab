@@ -247,8 +247,9 @@ def get_scope_record(device = 'dev2148', daq = None, scopeModule = None):
     data.append(d[wave_nodepath])
 
     wave = data[0][0][0]['wave']
+    num_samples = data[0][0][0]['totalsamples']
 
-    return wave
+    return num_samples, wave
 
 
 
