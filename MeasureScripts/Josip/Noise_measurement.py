@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 #####################################################
 
 reload(UHFLI_lib)
-daq, scopeModule = UHFLI_lib.UHF_init_scope_module(device_id = 'dev2148',  mode = 3)  # Initialize UHF LI
+daq, scopeModule = UHFLI_lib.UHF_init_scope_module(device_id = 'dev2148',  mode = 3)  # Initialize UHF LI, set the mode to get the FFT data
 
 UHFLI_lib.UHF_init_scope()  # Initialize UHF LI
 gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
@@ -26,7 +26,7 @@ frequency = 5.8e9   # in GHz
 qt.mstart()
 
 
-data = qt.Data(name='IV 648')
+data = qt.Data(name='IV 651_test')
 
  
 new_mat  = list()   # Creating empty matrix for storing all data 
@@ -53,7 +53,7 @@ VSG.set_frequency(freq)
 for i in xrange(10):  # Collect the trace 10 times
 
     result_lockin = UHFLI_lib.get_scope_record(daq = daq, scopeModule = scopeModule)
-    result_lockin = result_lockin[0]*(1e12/gain)**2  # Converting to pA - squared because of the power spectral density
+    result_lockin = result_lockin[0] # *(1e12/gain)**2  # Converting to pA - squared because of the power spectral density
     new_mat.append(result_lockin)   # The trace is saved as a new row 
 
     np.savetxt(fname = data.get_dir() + "/Power_spectral_density.dat", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')

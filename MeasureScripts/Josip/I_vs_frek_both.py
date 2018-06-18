@@ -22,7 +22,7 @@ def do_meas():
     
     # you define two vectors of what you want to sweep. In this case
     # a magnetic field (b_vec) and a frequency (f_vec)
-    freq_vec = arange(5.3e9,6.3e9,3e6)  # frequency 
+    freq_vec = arange(5.7e9,6.2e9,3e6)  # frequency 
     
     # you indicate that a measurement is about to start and other
     # processes should stop (like batterycheckers, or temperature
@@ -36,7 +36,7 @@ def do_meas():
     # <timestamp>_testmeasurement.dat
     # to find out what 'datadir' is set to, type: qt.config.get('datadir')
     
-    data = qt.Data(name='IV 648')  # Put one space before name
+    data = qt.Data(name='IV 650')  # Put one space before name
     
     
     # Now you provide the information of what data will be saved in the
