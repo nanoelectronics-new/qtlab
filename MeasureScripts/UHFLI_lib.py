@@ -1040,7 +1040,7 @@ def UHF_measure_demod_trig(Num_of_TC = 3, trigger = 3, AWG_instr = None, record_
 
 
 
-def UHF_save_settings(path = None, filename = 'UHFLI_settings_file.xml'):
+def UHF_save_settings(daq = None, path = None, filename = 'UHFLI_settings_file.xml'):
     """
     Saving UHF Lockin settings file to a location defined by path in a file defined
     by filename.

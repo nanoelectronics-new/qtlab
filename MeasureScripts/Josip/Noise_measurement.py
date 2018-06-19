@@ -20,15 +20,20 @@ import matplotlib.pyplot as plt
 reload(UHFLI_lib)
 daq, scopeModule = UHFLI_lib.UHF_init_scope_module(device_id = 'dev2148',  mode = 3, PSD = 1)  # Initialize the UHF LI, set the mode to get the PSD data
 
-gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 frequency = 5.966e9   # in GHz
 power = -4  # in dBm
 num_traces = 10
+
+
+
+
+
 qt.mstart()
 
 
-data = qt.Data(name='IV 671')
+data = qt.Data(name='IV 674')
 
  
 new_mat  = list()   # Creating empty matrix for storing all data 
@@ -74,10 +79,10 @@ plt.ylabel('PSD [pA**2/Hz]')
 plt.show()
 
 # Switching off the RF 
-VSG.set_status("off") 
+#VSG.set_status("off") 
 # Saving UHFLI setting to the measurement data folder
 # You can load this settings file from UHFLI user interface 
-UHFLI_lib.UHF_save_settings(path = data.get_dir() )
+UHFLI_lib.UHF_save_settings(daq = daq, path = data.get_dir() )
 
 # after the measurement ends, you need to close the data file.
 data.close_file()
