@@ -33,7 +33,7 @@ num_traces = 10
 qt.mstart()
 
 
-data = qt.Data(name='IV 677')
+data = qt.Data(name='IV 678')
 
  
 new_mat  = list()   # Creating empty matrix for storing all data 
