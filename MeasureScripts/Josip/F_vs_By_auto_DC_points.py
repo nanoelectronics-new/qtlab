@@ -18,12 +18,12 @@ from Background_correction import Back_corr as bc
 #horizontal_shift = (200-113.51)*0.008  # 113.5 is the mean value of the pulse and the 0.008 the conversion factor to get an effective voltage
 #DAC5_values  = DAC5_values - horizontal_shift
 
-DAC5_values = np.array([-357.078,-356.978,-356.878,-357.078,-356.878,-357.078,-356.978,-356.878])
-mean = 1.2308  #  Effective (on the sample) mean value of the AWG pulse in mV
+DAC5_values = np.array([-358.00,-358.1,-358.2,-358.3,-358.4,-358.5])
+mean = 0.0  #  Effective (on the sample) mean value of the AWG pulse in mV
 DAC5_values = DAC5_values - mean
-DAC6_values = np.array([-261.253,-261.253,-261.253,-261.353,-261.353,-261.453,-261.453,-261.453])
+DAC6_values = np.array([-261.14,-261.14,-261.14,-261.14,-261.14,-261.14])
 
-name_counter = 510
+name_counter = 686
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 power = -4.0
@@ -40,7 +40,7 @@ AWG.run()
 AWG.set_ch1_output(1)
 AWG.set_ch2_output(1)
 AWG.set_ch3_output(1)
-#AWG.set_ch4_output(1)
+AWG.set_ch4_output(1)
 
 init_start = time()
 vec_count = 0
@@ -48,7 +48,7 @@ vec_count = 0
 try:  
     for z,DAC5 in enumerate(DAC5_values): 
     	IVVI.set_dac5(DAC5_values[z])               # Set the DAC5 voltage
-        IVVI.set_dac6(DAC6_values[z])       		# Set the DAC6 volt
+        #IVVI.set_dac6(DAC6_values[z])       		# Set the DAC6 volt
 
         start = time()
         file_name = '1_3 IV %d_DAC5=%.2fmV_DAC6=%.2fmV'%(name_counter,IVVI.get_dac5(),IVVI.get_dac6())
@@ -56,18 +56,18 @@ try:
         
             
             
-        ramp_rate_Y = 0.0008 #T/s
+        ramp_rate_Y = 0.0005 #T/s
         step_size_BY = -2e-3 
         
         
         
         
-        BY_vector = arange(155e-3,105e-3+step_size_BY,step_size_BY) #T  #
+        BY_vector = arange(125e-3,95e-3+step_size_BY,step_size_BY) #T  #
         
         magnetY.set_rampRate_T_s(ramp_rate_Y)
         
         
-        freq_vec = arange(5.3e9,6.3e9,3e6)  # frequency 
+        freq_vec = arange(4.5e9,6e9,3e6)  # frequency 
         
         qt.mstart()
         
@@ -167,7 +167,7 @@ finally:
 	AWG.set_ch1_output(0)
 	AWG.set_ch2_output(0)
 	AWG.set_ch3_output(0)
-	#AWG.set_ch4_output(0)
+	AWG.set_ch4_output(0)
 	print 'Overall duration: %s sec' % (stop - init_start, )
 
 
