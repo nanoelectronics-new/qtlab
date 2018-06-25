@@ -16,7 +16,7 @@ AWG_clock = 1.0e9    # AWG sampling rate
 AWGMax_amp = 0.5       
    
 t_sync = 0          # Some things for the compatibility with AWG_lib scripts 
-                    #they mean nothing for this case    
+                    # they mean nothing for this case    
 t_wait = 100   
 
 
@@ -33,7 +33,7 @@ seq = list()
 
   
 init = 0.015                            # First part of the pulse
-manipulate = 0.100                      # Second part of the pulse
+manipulate = 0.100                    # Second part of the pulse
 read = 0.015                            # Third part of the pulse
 period = init + manipulate + read       # Total pulse period
                        
@@ -72,11 +72,15 @@ for i,t in enumerate(t_burst):          # Creating waveforms for all sequence el
     p.setValuesCH2([a, 0.0],[IQ_duration, 500.0],[rest_of_IQ, 0.0])                         # Q analog wavefrom
     p.setMarkersCH2([0,0,0],[0,0,0])                                                        # Q markers
 
+    #print round(a*AWG_clock)/1000000 + round(IQ_duration*AWG_clock)/1000000 + round(rest_of_IQ*AWG_clock)/1000000
+       
+   
 
 
     p.setValuesCH3([init, 200.0],[read,200.0],[manipulate, 0.0])    # Gate pulse analog wavefrom
     p.setMarkersCH3([0,0,0],[0,0,0])                                # Gate pulse markers
 
+    #print round(init*AWG_clock)/1000000 + round(read*AWG_clock)/1000000 + round(manipulate*AWG_clock)/1000000
 
     
     #PM_duration = IQ_duration + 2*PM_before_IQ  # Duration of the pm pulse in ns - window around IQ pulses
@@ -96,7 +100,11 @@ for i,t in enumerate(t_burst):          # Creating waveforms for all sequence el
     #    p.setValuesCH4([PM_first_part, 0.0],[rest_PM, 0.0],[b, 0.0])
     #    p.setMarkersCH4([1,0,1],[0,0,0])
 #
-    #
+    
+
+    #print len(p.CH1.waveform)
+    #print len(p.CH2.waveform)
+    #print len(p.CH3.waveform)
 
     seqCH1.append(p.CH1) 
     seqCH2.append(p.CH2) 
