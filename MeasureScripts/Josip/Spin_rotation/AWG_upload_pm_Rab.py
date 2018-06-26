@@ -10,7 +10,7 @@ from Waveform_PresetAmp import Pulse as pul
 
 ### SETTING AWG
 ##
-AWG_clock = 0.5e9    # AWG sampling rate     
+AWG_clock = 1.0e9    # AWG sampling rate     
                                             
                         
 AWGMax_amp = 0.5       
@@ -32,22 +32,22 @@ seq = list()
 
 
   
-init = 0.030                            # First part of the pulse
-manipulate = 0.200                    # Second part of the pulse
-read = 0.030                            # Third part of the pulse
-period = init + manipulate + read       # Total pulse period
+init = 20                             # First part of the pulse in num of points
+manipulate = 140                    # Second part of the pulse in num of points
+read = 20                             # Third part of the pulse in num of points
+period = init + manipulate + read     # Total pulse period in num of points
                        
 
-t_burst = arange(0.006,0.160,0.001)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
+t_burst = arange(6,10,1)     # Array of increasing durations between the pulses (in the Ramsey experiment case)
 
-delay = 0.023                           # Delay of the IQ in ns
+delay = 23                           # Delay of the IQ in ns
 
-gate_to_IQ = 0.010                      # Intentional pause between the onset of the C.B. part of the gate pulse (CH3) and the IQ pulse in ns
+gate_to_IQ = 10                      # Intentional pause between the onset of the C.B. part of the gate pulse (CH3) and the IQ pulse in ns
 
-delay_IQ_to_PM = 0.040                  # Additional delay between the IQ and PM in ns  
+delay_IQ_to_PM = 40                  # Additional delay between the IQ and PM in ns  
                                         # Reason is that PM delays after IQ in the instrument and therefore need to be sent earlier to compensate
 
-PM_before_IQ = 0.010                    # Since the rise time of the PM is slower (approx 10 ns)
+PM_before_IQ = 10                    # Since the rise time of the PM is slower (approx 10 ns)
                                         # The start of the PM pulse is 10 ns before and the end is 10 ns after the IQ pulse
                                         # In other words - PM pulse is a window around IQ pulse, 20 ns wider
 
