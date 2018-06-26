@@ -138,7 +138,7 @@ class Pulse():
 
             
             
-            Length = self.timings[key]  # Taking directly the number of points assuming that the number of points is given in the timings dict
+            Length = self.rescaleLength(self.timings[key]) # Rescaling length 
             
             Start_amp = self.amplitudes[key][0]         # Amplitude of starting wavefrom part             
             End_amp = self.amplitudes[key][1]           # Amplitude of ending wavefrom part 
