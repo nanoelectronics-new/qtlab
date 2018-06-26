@@ -10,7 +10,7 @@ from Waveform_PresetAmp import Pulse as pul
 
 ### SETTING AWG
 ##
-AWG_clock = 1.0e9    # AWG sampling rate     
+AWG_clock = 0.5e9    # AWG sampling rate     
                                             
                         
 AWGMax_amp = 0.5       
@@ -102,9 +102,9 @@ for i,t in enumerate(t_burst):          # Creating waveforms for all sequence el
 #
     
 
-    #print len(p.CH1.waveform)
-    #print len(p.CH2.waveform)
-    #print len(p.CH3.waveform)
+    print len(p.CH1.waveform)
+    print len(p.CH2.waveform)
+    print len(p.CH3.waveform)
 
     seqCH1.append(p.CH1) 
     seqCH2.append(p.CH2) 
