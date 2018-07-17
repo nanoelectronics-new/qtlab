@@ -11,9 +11,9 @@ import UHFLI_lib
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')   # Initialize dmm
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
 
-gain = 100e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = 300
+bias = -1000
 
 leak_test = True
 
@@ -79,7 +79,7 @@ for v in v_vec:
     # readout form UHFLI
     # argument Num_of_TC represents number of time constants to wait before raeding the value
     # it is important because of the settling time of the low pass filter
-    result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)/gain_Lockin  # Reading the lockin and correcting for M1b gain
+    result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)  # Reading the lockin and correcting for M1b gain
 
     # save the data point to the file
     data.add_data_point(v, result_lockin)  
