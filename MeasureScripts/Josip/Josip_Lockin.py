@@ -20,7 +20,7 @@ leak_test = True
 gain_Lockin = 1 # Conversion factor for the Lockin
 
 # Sweeping vector
-v_vec = arange(3000,4000,0.5)  ##''' !! Take care about step sign '''
+v_vec = arange(0.0,500.0,0.5)  ##''' !! Take care about step sign '''
 
 
 # you indicate that a measurement is about to start and other
@@ -35,7 +35,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data = qt.Data(name='5-24 reflectometry test sensor gate')  # Put one space before name
+data = qt.Data(name=' IVG_21-23_G22=0mV_G24_swept')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the

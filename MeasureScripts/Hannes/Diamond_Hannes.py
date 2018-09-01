@@ -18,17 +18,17 @@ import numpy as np
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')
 #dmm.set_NPLC = 1  # Setting PLCs of dmm
 
-file_name = '1_3 IV 72'
+file_name = '19_23__21_22 IV 31'
 
-gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 100e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
 
 
 
-v1_vec = arange(-360,-420.1,-0.1)   #V_g
-v2_vec = arange(-260,-263,-0.1)  #V_sd 
+v1_vec = arange(830,-0.2,-0.5)   #V_g
+v2_vec = arange(-1000,1000,20)  #V_sd 
 
 
 
@@ -85,11 +85,10 @@ vec_count = 0
 try:
     for i,v1 in enumerate(v1_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
         
-        
         start = time()
         # set the voltage
         #IVVI.set_dac2(v1)
-        #IVVI.set_dac12(v1) 
+        #IVVI.set_dac8(v1) 
         #IVVI.set_dac4(v1)
         IVVI.set_dac5(v1)
         #IVVI.set_dac6(v1)
@@ -99,10 +98,10 @@ try:
         
         for j,v2 in enumerate(v2_vec):  # CHANGE THIS LINE FOR MATRIX FILE SAVING
 
-            IVVI.set_dac6(v2)
+            IVVI.set_dac1(v2)
 
             # readout
-            result = dmm.get_readval()/gain*1e12
+            result = dmm2.get_readval()/gain*1e12
         
             # save the data point to the file, this will automatically trigger
             # the plot windows to update

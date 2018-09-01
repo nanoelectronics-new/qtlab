@@ -1,6 +1,7 @@
 from numpy import pi, random, arange, size
 from time import time,sleep
 import UHFLI_lib
+reload(UHFLI_lib)
 import numpy as np
 
 
@@ -10,16 +11,16 @@ import numpy as np
 #####################################################
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)  # Initialize IVVI
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')   # Initialize dmm
-UHFLI_lib.UHF_init_scope()  # Initialize UHF LI
-gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
+gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = -1000
+#bias = -1000
 
 leak_test = True
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(-356.0,-359.0,-0.06)   #V_G 4
+v_vec = arange(120.0,150.0,0.2)   #V_G 4
 
 # you indicate that a measurement is about to start and other
 # processes should stop (like batterycheckers, or temperature
@@ -33,7 +34,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data = qt.Data(name='IV 646')  # Put one space before name
+data = qt.Data(name=' IVG_21-23_G22=0mV_G24_swept_refl')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the
@@ -46,7 +47,7 @@ data = qt.Data(name='IV 646')  # Put one space before name
 
 data.add_coordinate('Voltage [mV]')   # Underline makes the next letter as index
 
-data.add_value(' Current_lockin [pA]')      # Underline makes the next letter as index
+data.add_value(' Phase [deg]')      # Underline makes the next letter as index
 
 data.add_value('Current [pA]')      # Underline makes the next letter as index
 
@@ -63,10 +64,10 @@ data_path = data.get_dir()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='lockin7', autoupdate=False, valdim =1)
+plot2d = qt.Plot2D(data, name='lockin8', autoupdate=False, valdim =1)
 plot2d.set_style('lines')
 
-plot2d_dmm = qt.Plot2D(data, name='dmm7', autoupdate=False, valdim =2)
+plot2d_dmm = qt.Plot2D(data, name='dmm8', autoupdate=False, valdim =2)
 plot2d_dmm.set_style('lines')
 
 
@@ -77,14 +78,14 @@ plot2d_dmm.set_style('lines')
 start = time()
 for v in v_vec:
     # set the voltage
-    IVVI.set_dac5(v)
+    IVVI.set_dac6(v)
 
     # readout form UHFLI
     # argument Num_of_TC represents number of time constants to wait before raeding the value
     # it is important because of the settling time of the low pass filter
-    result_lockin = UHFLI_lib.UHF_measure_scope_single_shot(maxtime = 0.5)
-    result_lockin = result_lockin[0] 
-    result_lockin = np.mean(result_lockin)/gain*1e12
+    result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)[1]
+    #result_lockin = result_lockin[0] 
+    #result_lockin = np.mean(result_lockin)/gain*1e12
     # readout_dmm
     result_dmm = dmm.get_readval()/gain*1e12
 

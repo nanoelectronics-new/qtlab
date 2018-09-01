@@ -13,18 +13,18 @@ from time import time,sleep
 #####################################################
 
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)
-#dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54506631::INSTR')
+#dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505188::INSTR')
 
 gain = 1000e6 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 
-bias = 500
+bias = 200
 
 leak_test = False
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(-200,-240,-1)
+v_vec = arange(-200,-600,-2)
 
 
 # you indicate that a measurement is about to start and other
@@ -38,7 +38,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name='1_3 IV 2')
+data = qt.Data(name='19_23__21_22 IV 28')
 
 
 # Now you provide the information of what data will be saved in the
@@ -75,15 +75,15 @@ start = time()
 for v in v_vec:
     # set the voltage
     #IVVI.set_dac1(v)
-    #IVVI.set_dac12(v)
+    IVVI.set_dac8(v)
     #IVVI.set_dac4(v)
-    IVVI.set_dac5(v)
+    #IVVI.set_dac5(v)
     #IVVI.set_dac6(v)
     #IVVI.set_dac7(v)    
     #IVVI.set_dac2(v)
 
     # readout
-    result = dmm._ins.get_readval()/(gain)*1e12 # Remove Lockin gain if you are not measuring with it
+    result = dmm2._ins.get_readval()/(gain)*1e12 # Remove Lockin gain if you are not measuring with it
 
     # save the data point to the file, this will automatically trigger
     # the plot windows to update
