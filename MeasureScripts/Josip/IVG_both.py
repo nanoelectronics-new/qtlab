@@ -12,7 +12,7 @@ import numpy as np
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)  # Initialize IVVI
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')   # Initialize dmm
 UHFLI_lib.UHF_init_demod(demod_c = 3)  # Initialize UHF LI
-gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 #bias = -1000
 
@@ -20,7 +20,7 @@ leak_test = True
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(120.0,150.0,0.2)   #V_G 4
+v_vec = arange(2000.0,-2000.0,-1.0)   #V_G 4
 
 # you indicate that a measurement is about to start and other
 # processes should stop (like batterycheckers, or temperature
@@ -34,7 +34,7 @@ qt.mstart()
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
 
-data = qt.Data(name=' IVG_21-23_G22=0mV_G24_swept_refl')  # Put one space before name
+data = qt.Data(name=' IVG_8-10_G9=-70mV_G12_swept_refl')  # Put one space before name
 
 
 # Now you provide the information of what data will be saved in the
@@ -83,7 +83,7 @@ for v in v_vec:
     # readout form UHFLI
     # argument Num_of_TC represents number of time constants to wait before raeding the value
     # it is important because of the settling time of the low pass filter
-    result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 3)[1]
+    result_lockin = UHFLI_lib.UHF_measure_demod(Num_of_TC = 0.5)[1]
     #result_lockin = result_lockin[0] 
     #result_lockin = np.mean(result_lockin)/gain*1e12
     # readout_dmm
