@@ -24,7 +24,7 @@ leak_test = True
 
 # you define two vectors of what you want to sweep. In this case
 # a magnetic field (b_vec) and a frequency (f_vec)
-v_vec = arange(-120.0,150.0,0.5)   #V_G 4
+v_vec = arange(0.0,-2000.0,-0.1)   #V_G 4
 
 
 
@@ -40,7 +40,7 @@ qt.mstart()
 # and will be called:
 # <timestamp>_testmeasurement.dat
 # to find out what 'datadir' is set to, type: qt.config.get('datadir')
-data = qt.Data(name=' IVG_15-17_G18_swept_G16_-120mV')
+data = qt.Data(name=' Leak_check_24_to_2')
 
 
 # Now you provide the information of what data will be saved in the
@@ -64,7 +64,7 @@ data.create_file()
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-plot2d = qt.Plot2D(data, name='plot', autoupdate=False)
+plot2d = qt.Plot2D(data, name='plot1', autoupdate=False)
 plot2d.set_style('lines')
 
 
@@ -76,8 +76,8 @@ plot2d.set_style('lines')
 start = time()
 for v in v_vec:
     # set the voltage
-    IVVI.set_dac6(v)
-    #IVVI.set_dac5(v)
+    #IVVI.set_dac1(v)
+    IVVI.set_dac5(v)
     # readout
     result = dmm._ins.get_readval()/(gain)*1e12 # Remove Lockin gain if you are not measuring with it
    
