@@ -14,13 +14,13 @@ Horizontal or vertical cut of the interdot transition is repeated for each UHFLI
 daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-frequencies = np.linspace(221.43e6, 223.53e6, 20) #Hz
+frequencies = np.linspace(219.00e6, 224.00e6, 50) #Hz
 
 leak_test = False
 
 
-v_vec = arange(15.25,16.75,0.06)   #V_G 24
-V_G_static = 3.26  
+v_vec = arange(15.00,16.75,0.06)   #V_G 24
+V_G_static = 3.30  
 bias = 0
 
 
@@ -87,7 +87,8 @@ try:
             # save the data point to the file
             data.add_data_point(v,freq, result_phase)  
         
-        
+            # Add to the matrix
+            temp[i] = result_phase
         
             qt.msleep(0.003)
         data.new_block()
@@ -119,7 +120,7 @@ finally:
     data_path = data.get_dir() 
     # Saving UHFLI setting to the measurement data folder
     # You can load this settings file from UHFLI user interface 
-    UHFLI_lib.UHF_save_settings(path = data_path)
+    UHFLI_lib.UHF_save_settings(daq, path = data_path)
     # after the measurement ends, you need to close the data file.
     data.close_file()
     # lastly tell the secondary processes (if any) that they are allowed to start again.
