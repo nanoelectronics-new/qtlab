@@ -102,6 +102,14 @@ for v in v_vec:
 stop = time()
 print 'Duration: %s sec' % (stop - start, )
 
+
+#Saving plot images
+plot2d.save_png(filepath = data.get_dir())
+plot2d.save_eps(filepath = data.get_dir())
+
+plot2d_dmm.save_png(filepath = data.get_dir())
+plot2d_dmm.save_eps(filepath = data.get_dir())
+
 # Saving UHFLI setting to the measurement data folder
 # You can load this settings file from UHFLI user interface 
 UHFLI_lib.UHF_save_settings(path = data_path)
