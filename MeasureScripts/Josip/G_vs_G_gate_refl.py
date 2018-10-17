@@ -8,7 +8,7 @@ import UHFLI_lib
 
 
 
-daq = UHFLI_lib.UHF_init_demod_multiple(demod_c = [3])
+daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
     
 
@@ -17,16 +17,16 @@ daq = UHFLI_lib.UHF_init_demod_multiple(demod_c = [3])
 
 
 
-file_name = 'G_vs_G_5-7_G4&6_'
+file_name = 'G_vs_G_1-3_G2&24_'
 
 gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 
-#bias = 50.0
+bias = 0.0
 
 
-v1_vec = arange(500.0,530.0,0.06)      #outer
-v2_vec = arange(98.0,112.0,0.06)      #inner
+v1_vec = arange(14.5,18.0,0.06)      #outer
+v2_vec = arange(2.5,4.5,0.06)      #inner
 
 
 
@@ -41,17 +41,17 @@ data_phase = qt.Data(name=file_name + 'refl_phase')
 
 
 ##CURRENT
-data.add_coordinate('V_G 6 [mV]')
-data.add_coordinate('V_G 4 [mV]')
+data.add_coordinate('V_G 2 [mV]')
+data.add_coordinate('V_G 24 [mV]')
 data.add_value('Current [pA]')
 
 ##REFL f1
-data_mag.add_coordinate('V_G 6 [mV]')
-data_mag.add_coordinate('V_G 4 [mV]')
+data_mag.add_coordinate('V_G 2 [mV]')
+data_mag.add_coordinate('V_G 24 [mV]')
 data_mag.add_value('Refl_mag [V]')
 
-data_phase.add_coordinate('V_G 6 [mV]')
-data_phase.add_coordinate('V_G 4 [mV]')
+data_phase.add_coordinate('V_G 2 [mV]')
+data_phase.add_coordinate('V_G 24 [mV]')
 data_phase.add_value('Refl_phase [deg]')
 
 
@@ -84,7 +84,7 @@ plot2d_phase = qt.Plot2D(data_phase, name='measure2D_phase',autoupdate=False)
 
 # preparation is done, now start the measurement.
 
-#IVVI.set_dac1(bias)  
+IVVI.set_dac1(bias)  
 
 init_start = time()
 vec_count = 0
@@ -92,7 +92,7 @@ vec_count = 0
  
 
 try:
-    daq.setInt('/dev2148/sigins/0/autorange', 1)  # Autoset amplification
+    daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
     
     for i,v1 in enumerate(v1_vec):
         
@@ -100,14 +100,14 @@ try:
         start = time()
         # set the voltage
    
-        IVVI.set_dac5(v1)
+        IVVI.set_dac6(v1)
 
 
         
 
         for j,v2 in enumerate(v2_vec):
 
-            IVVI.set_dac6(v2)
+            IVVI.set_dac5(v2)
             
 
             # readout
@@ -166,11 +166,22 @@ try:
 
 finally:
 
+    #Saving plot images
+    plot3d_phase.save_png(filepath = data_phase.get_dir())
+    plot3d_phase.save_eps(filepath = data_phase.get_dir())
+
+    plot3d_mag.save_png(filepath = data_mag.get_dir())
+    plot3d_mag.save_eps(filepath = data_mag.get_dir())
+
+    plot3d.save_png(filepath = data.get_dir())
+    plot3d.save_eps(filepath = data.get_dir())
     # after the measurement ends, you need to close the data files.
     data.close_file()
     data_mag.close_file()
     data_phase.close_file()
 
-    UHFLI_lib.UHF_save_settings(path = data_mag.get_dir())
+    settings_path = data_mag.get_dir()
+
+    UHFLI_lib.UHF_save_settings(daq, path = settings_path)
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
