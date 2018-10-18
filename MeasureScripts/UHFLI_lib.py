@@ -873,7 +873,7 @@ def UHF_init_demod_multiple(device_id = 'dev2148', demod_c = [0], out_c = 0):
     return daq
 
 
-def UHF_measure_demod_multiple(Num_of_TC = 3):
+def UHF_measure_demod_multiple(Num_of_TC = 3, Integration_time = None, Measure = None):
 
 
     """
@@ -883,13 +883,16 @@ def UHF_measure_demod_multiple(Num_of_TC = 3):
    
 
     Arguments:
-      Num_of_TC(int) - Number of time constant to wait before the measurement
+      Num_of_TC(int) - Number of time constants to wait before the measurement
+      Integration_time(float) - In seconds. Poll lenght defined by the user. If it is None then the default duration, in respect to the sampling rate, is used 
+      Measure(str) - If the string "Quadratures" is passed, then return x and y as the result
       
 
     Returns:
 
       result (list of lists of floats): each entry of the list corresponds to the radout of one deomodulator (0 - demod1, 1 - demod2,...)
-                                        this entry itself is a list with the first element (index 0) equal to R and second to phase
+                                        this entry itself is a list with the first element (index 0) equal to R and second to phase or
+                                        the first element x and second y
 
     Raises:
 
@@ -901,7 +904,10 @@ def UHF_measure_demod_multiple(Num_of_TC = 3):
     path = path_demod
 
     # Poll data parameters
-    poll_length = 1/sampling_rate * 2000  # [s]   # Data aquisition time for recording 1000 samples
+    if Integration_time == None:
+        poll_length = 1/sampling_rate * 2000  # [s]   # Data aquisition time for recording 2000 samples
+    else:
+        poll_length = Integration_time
     poll_timeout = 500  # [ms]
     poll_flags = 0
     poll_return_flat_dict = True 
@@ -938,7 +944,10 @@ def UHF_measure_demod_multiple(Num_of_TC = 3):
         mean_y = np.mean(sample_y)
         mean_r = np.sqrt(mean_x**2 + mean_y**2)   # Calculating R value from X and y values
         mean_fi = np.arctan2(mean_y,mean_x) * 180 / np.pi  # Calculating the angle value in degrees
-        result.append([mean_r,mean_fi])
+        if Measure == "Quadratures":
+            result.append([mean_x,mean_y])
+        else:
+            result.append([mean_r,mean_fi])
         
       # Mean value of recorded data vector
     #measured_ac_conductance = sample_mean/out_ampl

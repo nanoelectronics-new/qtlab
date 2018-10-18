@@ -114,7 +114,7 @@ try:
 
             # readout
             result = dmm.get_readval()/gain*1e12
-            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5)  # Reading the lockin
+            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 3)  # Reading the lockin
             result_refl = array(result_refl)
             result_phase = result_refl[0,1]  # Getting phase values 
             result_mag = result_refl[0,0] # Getting amplitude values 
