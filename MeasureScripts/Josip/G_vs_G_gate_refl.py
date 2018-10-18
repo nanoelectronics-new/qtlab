@@ -21,6 +21,8 @@ file_name = 'G_vs_G_1-3_G2&24_'
 
 gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
+gate2div = 100.0
+gate24div = 10.0
 
 bias = 0.0
 
@@ -100,14 +102,14 @@ try:
         start = time()
         # set the voltage
    
-        IVVI.set_dac6(v1)
+        IVVI.set_dac4(v1*gate24div)
 
 
         
 
         for j,v2 in enumerate(v2_vec):
 
-            IVVI.set_dac5(v2)
+            IVVI.set_dac2(v2*gate2div)
             
 
             # readout
