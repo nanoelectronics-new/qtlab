@@ -18,11 +18,11 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn on the UHFLI Out 1
 
 
-ON_voltage = 350.0 # DAC2 voltage to be on the interdot transition
-OFF_voltage = 400.0 # DAC2 voltage to be OFF the interdot transition
+ON_voltage = 383.0 # DAC2 voltage to be on the interdot transition
+OFF_voltage = 313.0 # DAC2 voltage to be OFF the interdot transition
 
 
-integration_times = np.array([0.002,0.005,0.01,0.02,0.05])  # In seconds
+integration_times = np.array([0.02])  # In seconds
 
 qt.mstart()
 
