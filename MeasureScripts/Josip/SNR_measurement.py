@@ -18,42 +18,30 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn on the UHFLI Out 1
 
 
-
-raw_input("\nSet the bias point then press Enter to continue...\n")
-
-
-
-
-
-I_buffer = np.zeros(Nsamples) # Buffer for I values
-Q_buffer = np.zeros(Nsamples) # Buffer for Q values
-
-
-
+ON_voltage = 350.0 # DAC2 voltage to be on the interdot transition
+OFF_voltage = 400.0 # DAC2 voltage to be OFF the interdot transition
 
 
 qt.mstart()
 
 # Creating folders and defining coordinates and values
-data_I = qt.Data(name=' SNR_measurement_ON_I') 
-data_Q = qt.Data(name=' SNR_measurement_ON_Q') 
-data_I.add_coordinate(' Number of samples') 
-data_Q.add_coordinate(' Number of samples') 
-data_I.add_value(' I [V]')
-data_Q.add_value(' Q [V]')    
-data_I.create_file()
-data_Q.create_file()
+data = qt.Data(name=' SNR_measurement') 
 
 
+data.add_coordinate(' Number of samples') 
+data.add_value(' I_ON [V]')
+data.add_value(' Q_ON [V]')  
+data.add_value(' I_OFF [V]')
+data.add_value(' Q_OFF [V]')  
+
+  
+data.create_file()
 
 
-
-
-
-
-
-
-
+result_I_ON = np.zeros(Nsamples)
+result_I_OFF = np.zeros(Nsamples)
+result_Q_ON = np.zeros(Nsamples)
+result_Q_OFF = np.zeros(Nsamples)
 
 
 
@@ -64,38 +52,61 @@ daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset UHFLI demod amplificatio
 
 try:
 
+    # Setting the DC point ON the interdot transition
+    IVVI.set_dac2(ON_voltage)
+    # Gathering the sampled I and Q data ON the interdot transition
     for i in xrange(Nsamples):
-    
     
         result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 3, Integration_time = 0.01, Measure = "Quadratures")  # Reading the UHFLI
         result_refl = array(result_refl)
-        result_I = result_refl[0,0]  # Getting I value integrated for the integration time
-        result_Q = result_refl[0,1]  # Getting Q value integrated for the integration time
+        result_I_ON[i] = result_refl[0,0]  # Getting I value integrated for the integration time
+        result_Q_ON[i] = result_refl[0,1]  # Getting Q value integrated for the integration time
 
     
-        # save the data point to the file
-        data_I.add_data_point(i,result_I) 
-        data_Q.add_data_point(i,result_Q) 
+    
+        qt.msleep(0.003)
+
+
+
+    # Setting the DC point OFF the interdot transition
+    IVVI.set_dac2(OFF_voltage)
+    # Gathering the sampled I and Q data OFF the interdot transition
+    for i in xrange(Nsamples):
+    
+        result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 3, Integration_time = 0.01, Measure = "Quadratures")  # Reading the UHFLI
+        result_refl = array(result_refl)
+        result_I_OFF[i] = result_refl[0,0]  # Getting I value integrated for the integration time
+        result_Q_OFF[i] = result_refl[0,1]  # Getting Q value integrated for the integration time
+     
     
     
         qt.msleep(0.003)
 
     
+    # save the data to the file
+    data.add_data_point(np.linspace(1,Nsamples,Nsamples),result_I_ON, result_Q_ON, result_I_OFF, result_Q_OFF)  
     
-    stop = time() # Get the time stamp 
+    stop = time() # Get the time stamp FI_b
     print 'Overall duration: %s sec' % (stop - init_start, )
 
 
 
 finally:      
+
+    # Calculating SNR
+    S = np.square(np.mean(result_I_ON - result_I_OFF)) + np.square(np.mean(result_Q_ON - result_Q_OFF))
+    N = np.std(np.square(result_I_ON - result_I_OFF) + np.square(result_Q_ON - result_Q_OFF))
+
+    SNR = S/N
+    print ("SNR is %.2f"%SNR)
     
     # Getting filepath to the data file
-    data_path = data_I.get_dir() 
+    data_path = data.get_dir() 
     # Saving UHFLI setting to the measurement data folder
     # You can load this settings file from UHFLI user interface 
     UHFLI_lib.UHF_save_settings(daq, path = data_path)
     # after the measurement ends, you need to close the data file.
-    data_I.close_file()
-    data_Q.close_file()
+    data.close_file()
+
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
