@@ -23,8 +23,12 @@ gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 bias = 50.0
 
 
-v1_vec = arange(-40.0,40.0,0.25)      #outer
-v2_vec = arange(-20.0,20.0,0.15)      #inner
+gate2div = 100.0
+gate24div = 10.0
+
+
+v1_vec = arange(13.5,19.0,0.01)      #outer
+v2_vec = arange(2.0,5.0,0.01)      #inner
 
 
 
@@ -79,14 +83,14 @@ try:
         start = time()
         # set the voltage
    
-        IVVI.set_dac6(v1)
+        IVVI.set_dac4(v1*gate24div)
 
 
         
 
         for j,v2 in enumerate(v2_vec):
 
-            IVVI.set_dac5(v2)
+            IVVI.set_dac2(v2*gate2div)
             
 
             # readout
