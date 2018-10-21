@@ -27,8 +27,8 @@ gate2div = 100.0
 gate24div = 10.0
 
 
-v1_vec = arange(13.5,19.0,0.01)      #outer
-v2_vec = arange(2.0,5.0,0.01)      #inner
+v1_vec = arange(13.5,19.0,0.05)      #outer
+v2_vec = arange(2.0,5.0,0.05)      #inner
 
 
 
