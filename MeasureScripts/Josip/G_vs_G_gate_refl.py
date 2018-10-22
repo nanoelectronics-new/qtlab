@@ -24,11 +24,11 @@ gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 gate2div = 100.0
 gate24div = 10.0
 
-bias = 20.0
+bias = 0.0
 
 
-v1_vec = arange(14.5,18.0,0.01)      #outer
-v2_vec = arange(2.5,4.5,0.01)      #inner
+v1_vec = arange(14.5,18.0,0.05)      #outer
+v2_vec = arange(2.5,4.5,0.05)      #inner
 
 
 
