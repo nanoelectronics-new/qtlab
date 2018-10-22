@@ -28,7 +28,7 @@ bias = 0.0
 
 
 v1_vec = arange(14.5,18.0,0.05)      #outer
-v2_vec = arange(2.5,4.5,0.05)      #inner
+v2_vec = arange(2.5,5.0,0.05)      #inner
 
 
 
