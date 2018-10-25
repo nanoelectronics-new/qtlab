@@ -27,8 +27,8 @@ gate24div = 10.0
 bias = 40.0
 
 
-v1_vec = arange(90.0,100.0,0.1)      #outer
-v2_vec = arange(5.0,10.0,0.1)      #inner
+v1_vec = arange(10.0,20.0,0.1)      #outer
+v2_vec = arange(-10.0,10.0,0.1)      #inner
 
 
 
