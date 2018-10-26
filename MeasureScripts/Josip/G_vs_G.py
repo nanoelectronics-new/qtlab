@@ -20,15 +20,15 @@ def do_meas_current():
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    bias = -40.0
+    bias = 100.0
     
     
     gate2div = 100.0
     gate24div = 10.0
     
     
-    v1_vec = arange(15.0,17.0,0.02)      #outer
-    v2_vec = arange(2.5,7.0,0.02)      #inner
+    v1_vec = arange(50.0,100.0,0.2)      #outer
+    v2_vec = arange(0.0,10.0,0.2)      #inner
     
     
     
@@ -133,6 +133,10 @@ def do_meas_current():
         print 'Overall duration: %s sec' % (stop - init_start, )
     
     finally:
+
+        #Saving plot images
+        plot3d.save_png(filepath = data.get_dir())
+        plot3d.save_eps(filepath = data.get_dir())
     
         # after the measurement ends, you need to close the data files.
         data.close_file()
