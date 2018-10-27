@@ -17,7 +17,7 @@ from Background_correction import Back_corr as bc
 #####################################################
 
 #UHFLI_lib.UHF_init_demod(demod_c = 2)  # Initialize UHF LI
-
+#VSG = qt.instruments.create('VSG','RS_SMW200A',address = 'TCPIP::10.21.64.105::hislip0::INSTR')
 
 file_name = '1_3 IV 699'
 
