@@ -15,7 +15,8 @@ import UHFLI_lib
 
 
 def do_meas_current():
-    file_name = 'G_vs_G_1-3_G2&24'
+
+    file_name = 'G_vs_G_5-7_G4&6'
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -23,12 +24,12 @@ def do_meas_current():
     bias = 50.0
     
     
-    gate2div = 100.0
-    gate24div = 10.0
+    gate4div = 10.0
+    gate6div = 10.0
     
     
-    v1_vec = arange(87.0,90.0,0.02)      #outer
-    v2_vec = arange(-1.5,1.0,0.02)      #inner
+    v1_vec = arange(-40.0,60.0,0.08)      #outer
+    v2_vec = arange(-20.0,20.0,0.08)       #inner
     
     
     
@@ -42,8 +43,8 @@ def do_meas_current():
     
     
     ##CURRENT
-    data.add_coordinate('V_G 2 [mV]')
-    data.add_coordinate('V_G 24 [mV]')
+    data.add_coordinate('V_G 4 [mV]')
+    data.add_coordinate('V_G 6 [mV]')
     data.add_value('Current [pA]')
     
     
@@ -83,14 +84,14 @@ def do_meas_current():
             start = time()
             # set the voltage
        
-            IVVI.set_dac4(v1*gate24div)
+            IVVI.set_dac4(v1*gate6div)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac2(v2*gate2div)
+                IVVI.set_dac2(v2*gate4div)
                 
     
                 # readout

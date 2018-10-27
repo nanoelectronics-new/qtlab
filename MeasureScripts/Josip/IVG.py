@@ -20,18 +20,18 @@ gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for
 
 bias = 50.0
 
-leak_test = False
+leak_test = True
 
 
-v_vec = arange(20.0,-20.0,-0.1)   
+v_vec = arange(-20.0,20.0,0.1)   
 
-
+divgate = 10
 
 
 
 qt.mstart()
 
-data = qt.Data(name=' IVG_1-3_V_G24=0mV_VG2_swept')
+data = qt.Data(name=' IVG_5-7_V_G4_swept_VG6=0mV')
 
 
 
@@ -43,7 +43,7 @@ data.add_value('Current [pA]')
 data.create_file()
 
 
-plot2d = qt.Plot2D(data, name='plot2', autoupdate=False)
+plot2d = qt.Plot2D(data, name='plot11', autoupdate=False)
 plot2d.set_style('lines')
 
 
@@ -55,7 +55,7 @@ IVVI.set_dac1(bias)
 start = time()
 for v in v_vec:
 
-    IVVI.set_dac5(v)
+    IVVI.set_dac2(v*divgate)
 
     result = dmm._ins.get_readval()/(gain)*1e12 
    
