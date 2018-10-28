@@ -18,12 +18,12 @@ import UHFLI_lib
 
 gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = 50.0
+bias = 20.0
 
 leak_test = True
 
 
-v_vec = arange(-20.0,20.0,0.1)   
+v_vec = arange(20.0,-10.0,-0.1)   
 
 divgate = 10
 
@@ -31,7 +31,7 @@ divgate = 10
 
 qt.mstart()
 
-data = qt.Data(name=' IVG_5-7_V_G4_swept_VG6=0mV')
+data = qt.Data(name=' IVG_8-10_V_G9=0mV_VG12_swept')
 
 
 
@@ -43,7 +43,7 @@ data.add_value('Current [pA]')
 data.create_file()
 
 
-plot2d = qt.Plot2D(data, name='plot11', autoupdate=False)
+plot2d = qt.Plot2D(data, name='plot_tolp', autoupdate=False)
 plot2d.set_style('lines')
 
 
@@ -55,7 +55,7 @@ IVVI.set_dac1(bias)
 start = time()
 for v in v_vec:
 
-    IVVI.set_dac2(v*divgate)
+    IVVI.set_dac4(v*divgate)
 
     result = dmm._ins.get_readval()/(gain)*1e12 
    
