@@ -21,15 +21,15 @@ def do_meas_current():
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    bias = 1000.0
+    bias = -1000.0
     
     
     gate2div = 10.0
     gate24div = 10.0
     
     
-    v1_vec = arange(118.0,134.0,0.042)      #outer
-    v2_vec = arange(7.0,14.0,0.042)       #inner
+    v1_vec = arange(120.0,134.0,0.042)      #outer
+    v2_vec = arange(7.0,13.0,0.042)       #inner
     
     
     
