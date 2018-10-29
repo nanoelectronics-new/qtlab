@@ -24,12 +24,12 @@ def do_meas_current():
     bias = 1000.0
     
     
-    gate2div = 1.0
-    gate24div = 1.0
+    gate2div = 10.0
+    gate24div = 10.0
     
     
-    v1_vec = arange(100.0,300.0,0.1)      #outer
-    v2_vec = arange(0.0,20.0,0.1)       #inner
+    v1_vec = arange(118.0,134.0,0.042)      #outer
+    v2_vec = arange(7.0,14.0,0.042)       #inner
     
     
     
@@ -84,14 +84,14 @@ def do_meas_current():
             start = time()
             # set the voltage
        
-            IVVI.set_dac6(v1*gate24div)
+            IVVI.set_dac4(v1*gate24div)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac5(v2*gate2div)
+                IVVI.set_dac2(v2*gate2div)
                 
     
                 # readout
