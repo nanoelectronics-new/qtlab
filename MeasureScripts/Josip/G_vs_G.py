@@ -21,15 +21,15 @@ def do_meas_current():
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    bias = -1000.0
+    bias = 1000.0
     
     
-    gate2div = 10.0
-    gate24div = 10.0
+    gate2div = 1.0
+    gate24div = 1.0
     
     
-    v1_vec = arange(120.0,134.0,0.042)      #outer
-    v2_vec = arange(7.0,13.0,0.042)       #inner
+    v1_vec = arange(0.0,300.0,0.1)      #outer
+    v2_vec = arange(0.0,-20.0,-0.1)       #inner
     
     
     
@@ -84,14 +84,14 @@ def do_meas_current():
             start = time()
             # set the voltage
        
-            IVVI.set_dac4(v1*gate24div)
+            IVVI.set_dac6(v1*gate24div)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac2(v2*gate2div)
+                IVVI.set_dac5(v2*gate2div)
                 
     
                 # readout
