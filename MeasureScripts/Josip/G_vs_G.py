@@ -29,7 +29,7 @@ def do_meas_current():
     
     
     v1_vec = arange(-250,0.0,0.2)      #outer
-    v2_vec = arange(0.0,20.0,0.2)       #inner
+    v2_vec = arange(0.0,-20.0,-0.2)       #inner
     
     
     
