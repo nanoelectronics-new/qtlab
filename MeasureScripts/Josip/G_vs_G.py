@@ -14,22 +14,22 @@ import UHFLI_lib
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_current():
+def do_meas_current(bias = -1000):
 
     file_name = 'G_vs_G_1-3_G2&24'
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    bias = 1000.0
+    bias = bias
     
     
     gate2div = 1.0
     gate24div = 1.0
     
     
-    v1_vec = arange(0,300.0,0.2)      #outer
-    v2_vec = arange(0.0,20.0,0.2)       #inner
+    v1_vec = arange(-100,250.0,0.12)      #outer
+    v2_vec = arange(-20.0,20.0,0.12)       #inner
     
     
     
@@ -144,3 +144,8 @@ def do_meas_current():
     
         # lastly tell the secondary processes (if any) that they are allowed to start again.
         qt.mend()
+
+
+for bias in [-1000,-500]:
+    do_meas_current(bias)
+
