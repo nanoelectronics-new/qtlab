@@ -18,12 +18,12 @@ import UHFLI_lib
 
 gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
-bias = 20.0
+bias = 500.0
 
 leak_test = True
 
 
-v_vec = arange(20.0,-10.0,-0.1)   
+v_vec = arange(-10.0,6.0,0.1)   
 
 divgate = 10
 
@@ -31,7 +31,7 @@ divgate = 10
 
 qt.mstart()
 
-data = qt.Data(name=' IVG_8-10_V_G9=0mV_VG12_swept')
+data = qt.Data(name=' IVG_13-16_V_G14=0mV_VG18_swept')
 
 
 

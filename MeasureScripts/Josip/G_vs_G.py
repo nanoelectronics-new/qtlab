@@ -28,8 +28,8 @@ def do_meas_current():
     gate24div = 1.0
     
     
-    v1_vec = arange(0.0,300.0,0.1)      #outer
-    v2_vec = arange(0.0,-20.0,-0.1)       #inner
+    v1_vec = arange(-250,0.0,0.2)      #outer
+    v2_vec = arange(0.0,20.0,0.2)       #inner
     
     
     
@@ -109,7 +109,7 @@ def do_meas_current():
                 # the next function is necessary to keep the gui responsive. It
                 # checks for instance if the 'stop' button is pushed. It also checks
                 # if the plots need updating.
-                qt.msleep(0.003)
+                qt.msleep(0.001)
             data.new_block()
     
             stop = time()
