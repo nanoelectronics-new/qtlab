@@ -20,17 +20,17 @@ from Background_correction import Back_corr as bc
 
 def do_auto_EDSR():
 
-    gate2div = 100.0
+    gate2div = 10.0
     gate24div = 10.0
 
-    DAC2_values = np.array([-0.15, 0.0, 0.16])*gate2div # Multiplied with corresponding S3b division
+    DAC2_values = np.array([-0.370, -0.134, 0.123, 0.295, -0.033, -0.300, -0.180, 0.071, 0.329])*gate2div # Multiplied with corresponding S3b division
     #mean = 0.0  #  Effective (on the sample) mean value of the AWG pulse in mV
     #DAC5_values = DAC5_values - mean
-    DAC4_values = np.array([88.3,88.44,88.5])*gate24div # Multiplied with corresponding S3b division
+    DAC4_values = np.array([87.46, 87.78, 88.103, 88.106, 87.686, 87.312, 87.206, 87.590, 87.948])*gate24div # Multiplied with corresponding S3b division
 
 
     
-    name_counter = 10
+    name_counter = 30
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     power = -10.0 # in dBm
@@ -50,31 +50,34 @@ def do_auto_EDSR():
     #AWG.set_ch4_output(1)
     
     init_start = time()
-    vec_count = 0
+   
     
  
     for z,DAC2 in enumerate(DAC2_values): 
     	IVVI.set_dac2(DAC2_values[z])               # Set the DAC2 voltage
         IVVI.set_dac4(DAC4_values[z])       		# Set the DAC4 volt
 
-        start = time()
+        
+        vec_count = 0
+
+
         file_name = '1_3 IV %d_V_G2=%.2fmV_V_G24=%.2fmV'%(name_counter,IVVI.get_dac2()/gate2div,IVVI.get_dac4()/gate24div)
         name_counter += 1 
         
             
             
         ramp_rate_Y = 0.0005 #T/s
-        step_size_BY = 2e-3 
+        step_size_BY = 4e-3 
         
         
         
         
-        BY_vector = np.arange(50e-3,150e-3+step_size_BY,step_size_BY) #T  #
+        BY_vector = np.arange(80e-3,120e-3+step_size_BY,step_size_BY) #T  #
         
         magnetY.set_rampRate_T_s(ramp_rate_Y)
         
         
-        freq_vec = arange(3e9,6e9,3e6)  # frequency 
+        freq_vec = arange(2e9,8e9,3e6)  # frequency 
         
         qt.mstart()
         
@@ -98,8 +101,7 @@ def do_auto_EDSR():
 
         for i,v1 in enumerate(BY_vector):  
             
-          			
-            
+            start = time()	
             
             magnetY.set_field(BY_vector[i])  
     
@@ -110,7 +112,7 @@ def do_auto_EDSR():
                 qt.msleep(0.050)
     
     
-    
+            
     
     
     
@@ -147,16 +149,19 @@ def do_auto_EDSR():
             plot2d.update()
     
             plot3d.update()
-        
-                
-                
-                
-        
             
+            stop = time()
+            vec_count = vec_count + 1
+            print 'Estimated time left for the current measurement: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(BY_vector.size - vec_count))))
+    
+                
+                
+                
+
         
-        stop = time()
-        vec_count = vec_count + 1
-        print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(len(DAC2_values) - vec_count))))
+        #stop = time()
+        #vec_count = vec_count + 1
+        #print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(len(DAC2_values) - vec_count))))
     	   
         bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
     	   # after the measurement ends, you need to close the data file.
