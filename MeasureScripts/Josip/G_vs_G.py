@@ -14,7 +14,7 @@ import UHFLI_lib
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_current(bias = -1000):
+def do_meas_current(bias = 500):
 
     file_name = 'G_vs_G_1-3_G2&24'
     
@@ -24,12 +24,12 @@ def do_meas_current(bias = -1000):
     bias = bias
     
     
-    gate2div = 1.0
-    gate24div = 1.0
+    gate2div = 10.0
+    gate24div = 10.0
     
     
-    v1_vec = arange(-100,250.0,0.12)      #outer
-    v2_vec = arange(-20.0,20.0,0.12)       #inner
+    v1_vec = arange(87.0,89.0,0.018)      #outer
+    v2_vec = arange(-0.4,2.0,0.018)       #inner
     
     
     
@@ -84,14 +84,14 @@ def do_meas_current(bias = -1000):
             start = time()
             # set the voltage
        
-            IVVI.set_dac6(v1*gate24div)
+            IVVI.set_dac4(v1*gate24div)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac5(v2*gate2div)
+                IVVI.set_dac2(v2*gate2div)
                 
     
                 # readout
@@ -146,6 +146,6 @@ def do_meas_current(bias = -1000):
         qt.mend()
 
 
-for bias in [-1000,-500]:
-    do_meas_current(bias)
+#for bias in [-1000,-500]:
+    #do_meas_current(bias)
 
