@@ -14,7 +14,7 @@ import zhinst
 
 
 
-def UHF_init_scope(device_id = 'dev2148'):
+def UHF_init_scope(device_id = 'dev2169'):
     
     """
     Connecting to the device specified by device_id and setting initial parameters through LabOne GUI
@@ -25,7 +25,7 @@ def UHF_init_scope(device_id = 'dev2148'):
         
 
       device_id (str): The ID of the device to run the example with. For
-        example, 'dev2148'.
+        example, 'dev2169'.
 
 
 
@@ -95,7 +95,7 @@ def UHF_init_scope(device_id = 'dev2148'):
 
 
 
-def UHF_init_scope_module(device_id = 'dev2148', mode = 1, PSD = 0):
+def UHF_init_scope_module(device_id = 'dev2169', mode = 1, PSD = 0):
 
     """
     Function for the initialization of the UHFLI's scope module.
@@ -193,7 +193,7 @@ def UHF_init_scope_module(device_id = 'dev2148', mode = 1, PSD = 0):
 
 
 
-def get_scope_record(device = 'dev2148', daq = None, scopeModule = None):
+def get_scope_record(device = 'dev2169', daq = None, scopeModule = None):
 
     """
     Obtain one scope record (consisting of multiple segments) from the device
@@ -262,7 +262,7 @@ def get_scope_record(device = 'dev2148', daq = None, scopeModule = None):
 
 
 
-def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
+def UHF_measure_scope(device_id = 'dev2169', maxtime = 5, AWG_instance = None):
 
     """
     Obtaining data from UHF LI using ziDAQServer's blocking (synchronous) poll() command
@@ -275,7 +275,7 @@ def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
         
 
       device_id (str): The ID of the device to run the example with. For
-        example, 'dev2148'.
+        example, 'dev2169'.
 
       maxtime (int): Maximum measurement time in seconds - after this 
         period expires measurement is stopped and data collected until that
@@ -298,7 +298,7 @@ def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
     poll_flags = 0
     poll_return_flat_dict = True
     
-    daq.setInt('/dev2148/scopes/0/enable', 1)  # Enable scope
+    daq.setInt('/dev2169/scopes/0/enable', 1)  # Enable scope
     time.sleep(0.01)  # Wait for everything to be proper initialized
     
     #START MEASURE
@@ -328,7 +328,7 @@ def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
     daq.unsubscribe('*')
     
     # Disable the scope
-    daq.setInt('/dev2148/scopes/0/enable', 0)
+    daq.setInt('/dev2169/scopes/0/enable', 0)
     
 
     if bool(data[0]) == False:  # If no data is returned
@@ -400,7 +400,7 @@ def UHF_measure_scope(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
 
 
 
-def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instance = None):
+def UHF_measure_scope_single_shot(device_id = 'dev2169', maxtime = 5, AWG_instance = None):
 
     """
     Obtaining data from UHF LI using ziDAQServer's blocking (synchronous) poll() command
@@ -413,7 +413,7 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
         
 
       device_id (str): The ID of the device to run the example with. For
-        example, 'dev2148'.
+        example, 'dev2169'.
 
       maxtime (int): Maximum measurement time in seconds - after this 
         period expires measurement is stopped and data collected until that
@@ -437,7 +437,7 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
     poll_return_flat_dict = True
     
     
-    daq.setInt('/dev2148/scopes/0/enable', 1)  # Enable scope
+    daq.setInt('/dev2169/scopes/0/enable', 1)  # Enable scope
     time.sleep(0.01)  # Wait for everything to be proper initialized
     
     #START MEASURE
@@ -451,7 +451,7 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
     
  
     #time.sleep(maxtime)   # Empirically proven that here we need to wait at least the scope shot length
-    daq.setInt('/dev2148/scopes/0/trigforce', 1) # Force trigger UHFLI scope
+    daq.setInt('/dev2169/scopes/0/trigforce', 1) # Force trigger UHFLI scope
     #time.sleep(maxtime)   # Empirically proven that here we need to wait at least the scope shot length
     
    
@@ -472,7 +472,7 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
     daq.unsubscribe('*')
     
     # Disable the scope
-    daq.setInt('/dev2148/scopes/0/enable', 0)
+    daq.setInt('/dev2169/scopes/0/enable', 0)
     
 
     if bool(data[0]) == False:  # If no data is returned
@@ -537,7 +537,7 @@ def UHF_measure_scope_single_shot(device_id = 'dev2148', maxtime = 5, AWG_instan
 
 
 
-def UHF_init_demod(device_id = 'dev2148', demod_c = 0, out_c = 0):
+def UHF_init_demod(device_id = 'dev2169', demod_c = 0, out_c = 0):
     
     """
     Connecting to the device specified by device_id and setting initial parameters through LabOne GUI
@@ -548,7 +548,7 @@ def UHF_init_demod(device_id = 'dev2148', demod_c = 0, out_c = 0):
         
 
       device_id (str): The ID of the device to run the example with. For
-                       example, 'dev2148'.
+                       example, 'dev2169'.
       demod_c (int): One of {0 - 7} demodulators of UHF LI 
       out_c (int): One of {0,1} output channels of UHF LI
 
@@ -730,11 +730,11 @@ def UHF_measure_demod(Num_of_TC = 3):
     mean_fi = np.arctan2(mean_y,mean_x) * 180 / np.pi  # Calculating the angle value in degrees
     #measured_ac_conductance = sample_mean/out_ampl
   
-    return sample_mean, mean_fi
+    return mean_x
 
 
 
-def UHF_init_demod_multiple(device_id = 'dev2148', demod_c = [0], out_c = 0):
+def UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [0], out_c = 0):
     
     """
     Connecting to the device specified by device_id and setting initial parameters through LabOne GUI
@@ -745,7 +745,7 @@ def UHF_init_demod_multiple(device_id = 'dev2148', demod_c = [0], out_c = 0):
         
 
       device_id (str): The ID of the device to run the example with. For
-                       example, 'dev2148'.
+                       example, 'dev2169'.
       demod_c (list): Elements of the list are integers {0 - 7} that represents demodulators of UHF LI 
       out_c (int): One of {0,1} output channels of UHF LI
 

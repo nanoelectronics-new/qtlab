@@ -9,7 +9,7 @@ from time import time,sleep
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x0957::0x0607::MY53003401::INSTR')  # Initialize dmm
 #dmm.set_NPLC = 0.1  # Setting PLCs of dmm
 
-gain = 1e6 # hoose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e8 # hoose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 #bias = 500
 
@@ -40,22 +40,22 @@ data = qt.Data(name=' lockin_DC_block_AMP_sat_test')  # Put one space before nam
 # Adding coordinate and value info is optional, but recommended.
 # If you don't supply it, the data class will guess your data format.
 
-#data.add_coordinate(' Voltage [mV]')     # Underline makes the next letter as index
+data.add_coordinate(' Voltage [mV]')     # Underline makes the next letter as index
 
-#data.add_value(' Current [pA]')          # Underline makes the next letter as index
+data.add_value(' Current [pA]')          # Underline makes the next letter as index
 
 # The next command will actually create the dirs and files, based
 # on the information provided above. Additionally a settingsfile
 # is created containing the current settings of all the instruments.
-#data.create_file()
+data.create_file()
 
 # Next two plot-objects are created. First argument is the data object
 # that needs to be plotted. To prevent new windows from popping up each
 # measurement a 'name' can be provided so that window can be reused.
 # If the 'name' doesn't already exists, a new window with that name
 # will be created. For 3d plots, a plotting style is set.
-#plot2d = qt.Plot2D(data, name='measure2D', autoupdate=False)
-#plot2d.set_style('lines')
+plot2d = qt.Plot2D(data, name='measure2D', autoupdate=False)
+plot2d.set_style('lines')
 
 
 # preparation is done, now start the measurement.
@@ -82,9 +82,11 @@ print 'Duration: %s sec' % (stop - start, )
 
 
    
-
+#Saving plot images
+plot3d_phase.save_png(filepath = data.get_dir())
+plot3d_phase.save_eps(filepath = data.get_dir())
 
 # after the measurement ends, you need to close the data file.
-#data.close_file()
+data.close_file()
 # lastly tell the secondary processes (if any) that they are allowed to start again.
 qt.mend()
