@@ -21,14 +21,14 @@ def do_meas_both():
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
-    bias = 1000.0
+    bias = 0.0
     
    
     gatediv = 10
     
     
-    v1_vec = arange(-50.0,40.0,0.5)      #outer
-    v2_vec = arange(-30.0,30.0,0.5)       #inner
+    v1_vec = arange(-40.0,-20.0,0.1)      #outer
+    v2_vec = arange(-20.0,10.0,0.1)       #inner
     
     
     
