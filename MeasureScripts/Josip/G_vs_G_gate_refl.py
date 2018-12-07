@@ -27,8 +27,8 @@ def do_meas_both():
     gatediv = 10
     
     
-    v1_vec = arange(-50.0,40.0,0.2)      #outer
-    v2_vec = arange(-30.0,30.0,0.2)       #inner
+    v1_vec = arange(-50.0,40.0,0.5)      #outer
+    v2_vec = arange(-30.0,30.0,0.5)       #inner
     
     
     
