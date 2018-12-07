@@ -17,7 +17,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 def do_meas_both():
-    file_name = 'G_vs_G_1-3_G2&24_'
+    file_name = 'GvsG_13-16_G14&18_'
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
