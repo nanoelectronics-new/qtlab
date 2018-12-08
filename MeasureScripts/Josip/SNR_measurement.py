@@ -18,11 +18,11 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn on the UHFLI Out 1
 
 
-ON_voltage = 360.0 # DAC2 voltage to be on the interdot transition
-OFF_voltage = 240.0 # DAC2 voltage to be OFF the interdot transition
+ON_voltage = -87.78 # DAC3 voltage to be on the interdot transition
+OFF_voltage = -70.0 # DAC3 voltage to be OFF the interdot transition
 
 
-integration_times = np.array([0.02])  # In seconds
+integration_times = np.array([0.010, 0.020, 0.050, 0.100])  # In seconds
 
 qt.mstart()
 
@@ -66,7 +66,7 @@ for integ in integration_times:
     
         
     # Setting the DC point ON the interdot transition
-    IVVI.set_dac2(ON_voltage)
+    IVVI.set_dac3(ON_voltage)
     # Gathering the sampled I and Q data ON the interdot transition
     for i in xrange(Nsamples):
     
@@ -82,7 +82,7 @@ for integ in integration_times:
 
 
     # Setting the DC point OFF the interdot transition
-    IVVI.set_dac2(OFF_voltage)
+    IVVI.set_dac3(OFF_voltage)
     # Gathering the sampled I and Q data OFF the interdot transition
     for i in xrange(Nsamples):
     
