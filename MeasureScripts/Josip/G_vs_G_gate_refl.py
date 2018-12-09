@@ -17,7 +17,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 def do_meas_both():
-    file_name = 'GvsG_5-7_G4&6_'
+    file_name = 'GvsG_8-10_G9&12_'
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -28,8 +28,8 @@ def do_meas_both():
     
     
     
-    v1_vec = arange(-10.0,6.0,0.1)      #outer
-    v2_vec = arange(-10.0,10.0,0.1)       #inner
+    v1_vec = arange(-8.0,8.0,0.02)      #outer
+    v2_vec = arange(-4.0,4.0,0.02)       #inner
     
     
     
@@ -44,17 +44,17 @@ def do_meas_both():
     
     
     ##CURRENT
-    data.add_coordinate('V_G 6 [mV]')
-    data.add_coordinate('V_G 4 [mV]')
+    data.add_coordinate('V_G 12 [mV]')   # inner
+    data.add_coordinate('V_G 9 [mV]')  #  outer
     data.add_value('Current [pA]')
     
     ##REFL f1
-    data_mag.add_coordinate('V_G 6 [mV]')
-    data_mag.add_coordinate('V_G 4 [mV]')
+    data_mag.add_coordinate('V_G 12 [mV]')
+    data_mag.add_coordinate('V_G 9 [mV]')
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 6 [mV]')
-    data_phase.add_coordinate('V_G 4 [mV]')
+    data_phase.add_coordinate('V_G 12 [mV]')
+    data_phase.add_coordinate('V_G 9 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -115,7 +115,7 @@ def do_meas_both():
     
                 # readout
                 result = dmm.get_readval()/gain*1e12
-                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5)  # Reading the lockin
+                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 1)  # Reading the lockin
                 result_refl = array(result_refl)
                 result_phase = result_refl[0,1]  # Getting phase values 
                 result_mag = result_refl[0,0] # Getting amplitude values 
