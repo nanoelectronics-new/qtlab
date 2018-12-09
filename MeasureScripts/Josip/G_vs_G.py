@@ -27,8 +27,8 @@ def do_meas_current(bias = 1000):
     gatediv = 100
     
     
-    v1_vec = arange(-10.0,6.0,0.2)      #outer
-    v2_vec = arange(-10.0,10.0,0.2)       #inner
+    v1_vec = arange(-10.0,6.0,0.05)      #outer
+    v2_vec = arange(-10.0,10.0,0.05)       #inner
     
     
     
