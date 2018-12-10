@@ -28,8 +28,8 @@ def do_meas_both():
     
     
     
-    v1_vec = arange(-2.2,3.0,0.05)      #outer
-    v2_vec = arange(-2.6,4.0,0.05)      #inner
+    v1_vec = arange(-1.2,0.4,0.05)      #outer
+    v2_vec = arange(-1.5,0.0,0.05)      #inner
     
     
     
@@ -76,11 +76,11 @@ def do_meas_both():
     
     
     
-    plot3d = qt.Plot3D(data, name='measure3D_current', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    plot3d = qt.Plot3D(data, name='measure3D_current2', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
     plot2d = qt.Plot2D(data, name='measure2D_current',autoupdate=False)
-    plot3d_mag = qt.Plot3D(data_mag, name='measure3D_magnitude', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    plot3d_mag = qt.Plot3D(data_mag, name='measure3D_magnitude2', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
     plot2d_mag = qt.Plot2D(data_mag, name='measure2D_magnitude',autoupdate=False)
-    plot3d_phase = qt.Plot3D(data_phase, name='measure3D_phase', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    plot3d_phase = qt.Plot3D(data_phase, name='measure3D_phase2', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
     plot2d_phase = qt.Plot2D(data_phase, name='measure2D_phase',autoupdate=False)
     
     
