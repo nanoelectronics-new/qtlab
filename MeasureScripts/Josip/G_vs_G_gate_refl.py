@@ -21,7 +21,7 @@ def do_meas_both():
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
-    bias = 1000.0
+    bias = 0.0
     
    
     gatediv = 100
