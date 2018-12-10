@@ -16,7 +16,7 @@ import UHFLI_lib
 
 def do_meas_current(bias = 1000):
 
-    file_name = 'GvsG_5-7_G4&6'
+    file_name = 'GvsG_8-10_G9&12'
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -27,8 +27,8 @@ def do_meas_current(bias = 1000):
     gatediv = 100
     
     
-    v1_vec = arange(-10.0,6.0,0.05)      #outer
-    v2_vec = arange(-10.0,10.0,0.05)       #inner
+    v1_vec = arange(-2.2,3.0,0.05)      #outer
+    v2_vec = arange(-2.6,4.0,0.05)       #inner
     
     
     
@@ -42,8 +42,8 @@ def do_meas_current(bias = 1000):
     
     
     ##CURRENT
-    data.add_coordinate('V_G 6 [mV]')
-    data.add_coordinate('V_G 4 [mV]')
+    data.add_coordinate('V_G 12 [mV]')
+    data.add_coordinate('V_G 9 [mV]')
     data.add_value('Current [pA]')
     
     
