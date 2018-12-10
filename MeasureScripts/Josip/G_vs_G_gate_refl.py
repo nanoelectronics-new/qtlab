@@ -28,8 +28,8 @@ def do_meas_both():
     
     
     
-    v1_vec = arange(-8.0,8.0,0.02)      #outer
-    v2_vec = arange(-4.0,4.0,0.02)       #inner
+    v1_vec = arange(-2.2,3.0,0.05)      #outer
+    v2_vec = arange(-2.6,4.0,0.05)      #inner
     
     
     
