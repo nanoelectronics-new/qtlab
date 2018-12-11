@@ -16,20 +16,21 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_both():
-    file_name = 'GvsG_8-10_G9&12_'
+def do_meas_both(bias = 100):
+
+    file_name = 'GvsG_8-10_G9&12_Vsd=%duV'%bias
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
-    bias = 0.0
+    bias = bias
     
    
     gatediv = 100
     
     
     
-    v1_vec = arange(-1.2,0.4,0.05)      #outer
-    v2_vec = arange(-1.5,0.0,0.05)      #inner
+    v1_vec = arange(-1.2,0.4,0.02)      #outer
+    v2_vec = arange(-1.5,0.0,0.02)      #inner
     
     
     
@@ -115,7 +116,7 @@ def do_meas_both():
     
                 # readout
                 result = dmm.get_readval()/gain*1e12
-                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 1)  # Reading the lockin
+                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5)  # Reading the lockin
                 result_refl = array(result_refl)
                 result_phase = result_refl[0,1]  # Getting phase values 
                 result_mag = result_refl[0,0] # Getting amplitude values 
@@ -188,3 +189,10 @@ def do_meas_both():
         UHFLI_lib.UHF_save_settings(daq, path = settings_path)
         # lastly tell the secondary processes (if any) that they are allowed to start again.
         qt.mend()   
+
+
+
+biases = [-50,50,100,200]
+
+for Vsd in biases:
+    do_meas_both(bias = Vsd)
