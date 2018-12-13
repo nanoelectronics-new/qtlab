@@ -33,4 +33,4 @@ def Back_corr(path = None, fname = None):
 
     #plt.show()
          
-    np.savetxt(fname=path + "/" + "Mean_substracted_row.dat", X=mat, fmt='%1.4e', delimiter=' ', newline='\n')  
+    np.savetxt(fname=path + "/" + "CORR_" + fname, X=mat, fmt='%1.4e', delimiter=' ', newline='\n')  

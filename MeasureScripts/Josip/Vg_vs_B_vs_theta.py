@@ -3,6 +3,8 @@ from time import time,sleep
 import datetime
 import convert_for_diamond_plot as cnv
 import numpy as np
+from Background_correction import Back_corr as bc
+
 
 
 
@@ -21,7 +23,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 def do_Vg_vs_B():
     
-    thetas = np.linspace(0,360,13) # Angle between the By and Bx axis
+    thetas = np.linspace(30,360,12) # Angle between the By and Bx axis
     
     name_counter = 0
     
@@ -41,23 +43,23 @@ def do_Vg_vs_B():
         
             
             
-        ramp_rate_Y = 0.0005 #T/s
+        ramp_rate_Y = 0.0003 #T/s
         ramp_rate_Z = 0.0005 #T/s
         step_size_BY = -1e-3 
         step_size_BZ = -1e-3
 
-        Bmin = 0  # Min total field in T
-        Bmax = 500e-3 # Max total field in T
+        Bmin = 500e-3  # Min total field in T
+        Bmax = 2000e-3 # Max total field in T
         Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
         Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
         Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
         Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-        BY_vector = np.linspace(Bymin,Bymax,50) # Defining the By vector in T  
+        BY_vector = np.linspace(Bymin,Bymax,150) # Defining the By vector in T  
         magnetY.set_rampRate_T_s(ramp_rate_Y)
 
-        BZ_vector = np.linspace(Bzmin,Bzmax,50) # Defining the Bz vector in T  
+        BZ_vector = np.linspace(Bzmin,Bzmax,150) # Defining the Bz vector in T  
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
@@ -153,6 +155,9 @@ def do_Vg_vs_B():
             stop = time()
             vec_count = vec_count + 1
             print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(len(thetas) - vec_count))))
+
+            # Substracting the background
+            bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
     	      
     	      # after the measurement ends, you need to close the data file.
             data.close_file()
