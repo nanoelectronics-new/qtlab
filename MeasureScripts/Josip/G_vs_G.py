@@ -27,8 +27,8 @@ def do_meas_current(bias = 500):
     gatediv = 100
     
     
-    v1_vec = arange(-2.0,1.0,0.01)      #outer
-    v2_vec = arange(-2.0,3.0,0.01)       #inner
+    v1_vec = arange(-4.0,5.0,0.1)      #outer
+    v2_vec = arange(-7.0,6.0,0.1)       #inner
     
     
     
@@ -42,7 +42,7 @@ def do_meas_current(bias = 500):
     
     
     ##CURRENT
-    data.add_coordinate('V_G 12 [mV]')
+    data.add_coordinate('V_G 11 [mV]')
     data.add_coordinate('V_G 9 [mV]')
     data.add_value('Current [pA]')
     
