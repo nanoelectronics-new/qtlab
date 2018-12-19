@@ -16,7 +16,7 @@ import UHFLI_lib
 
 def do_meas_current(bias = 500):
 
-    file_name = 'GvsG_8-10_G9&12'
+    file_name = 'GvsG_8-10_G9&11'
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     

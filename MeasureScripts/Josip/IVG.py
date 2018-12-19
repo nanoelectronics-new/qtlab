@@ -16,22 +16,22 @@ import UHFLI_lib
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505177::INSTR') 
 
-gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 
 bias = 1000.0
 
 leak_test = True
 
 
-v_vec = arange(-30.0,30.0,0.2)   
+v_vec = arange(0.0,-2000.0,-0.2)   
 
-divgate = 10
+divgate = 1
 
 
 
 qt.mstart()
 
-data = qt.Data(name='IVG_13-16_VG14=0mV_VG18_swept')
+data = qt.Data(name=' Leak_check_9_to_11')
 
 
 
@@ -49,13 +49,14 @@ plot2d.set_style('lines')
 
 
 
-IVVI.set_dac1(bias)
+#IVVI.set_dac1(bias)
 
 try:
 	start = time()
 	for v in v_vec:
 	
-	    IVVI.set_dac3(v*divgate)
+	    #IVVI.set_dac6(v*divgate)
+	    IVVI.set_dac5(v*divgate)
 	
 	    result = dmm._ins.get_readval()/(gain)*1e12 
 	   
