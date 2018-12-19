@@ -16,9 +16,9 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_both(bias = 100):
+def do_meas_both(bias = 500):
 
-    file_name = 'GvsG_8-10_G9&12_Vsd=%duV'%bias
+    file_name = 'GvsG_8-10_G9&11_'
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -29,8 +29,8 @@ def do_meas_both(bias = 100):
     
     
     
-    v1_vec = arange(-1.2,0.4,0.02)      #outer
-    v2_vec = arange(-1.5,0.0,0.02)      #inner
+    v1_vec = arange(-4.0,5.0,0.1)      #outer
+    v2_vec = arange(-7.0,6.0,0.1)       #inner
     
     
     
@@ -45,16 +45,16 @@ def do_meas_both(bias = 100):
     
     
     ##CURRENT
-    data.add_coordinate('V_G 12 [mV]')   # inner
+    data.add_coordinate('V_G 11 [mV]')   # inner
     data.add_coordinate('V_G 9 [mV]')  #  outer
     data.add_value('Current [pA]')
     
     ##REFL f1
-    data_mag.add_coordinate('V_G 12 [mV]')
+    data_mag.add_coordinate('V_G 11 [mV]')
     data_mag.add_coordinate('V_G 9 [mV]')
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 12 [mV]')
+    data_phase.add_coordinate('V_G 11 [mV]')
     data_phase.add_coordinate('V_G 9 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
@@ -192,7 +192,7 @@ def do_meas_both(bias = 100):
 
 
 
-biases = [-50,50,100,200]
+#biases = [-50,50,100,200]
 
-for Vsd in biases:
-    do_meas_both(bias = Vsd)
+#for Vsd in biases:
+#    do_meas_both(bias = Vsd)
