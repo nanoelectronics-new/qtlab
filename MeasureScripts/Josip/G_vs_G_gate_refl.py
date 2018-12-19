@@ -16,7 +16,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_both(bias = 500):
+def do_meas_both(bias = 0.0):
 
     file_name = 'GvsG_8-10_G9&11_'
     
@@ -29,8 +29,8 @@ def do_meas_both(bias = 500):
     
     
     
-    v1_vec = arange(-4.0,5.0,0.1)      #outer
-    v2_vec = arange(-7.0,6.0,0.1)       #inner
+    v1_vec = arange(-4.0,5.0,0.05)      #outer
+    v2_vec = arange(-7.0,6.0,0.05)       #inner
     
     
     
