@@ -24,7 +24,7 @@ def dBm_to_volts_50ohm(P_dBm):
 
 
 
-def IVG_vs_Power(P1 = -60.0, P2 = -30.0, numpts = 10):
+def IVG_vs_Power(P1 = -65.0, P2 = -30.0, numpts = 10, freq = 306.5e6):
     """
     This function performs gate voltage sweeps vs UHFLI carrier amplitude and records phase and amplitude response of the lockin.
     The carrier amplitude is swept linearly in linear scale (volts).
@@ -73,7 +73,7 @@ def IVG_vs_Power(P1 = -60.0, P2 = -30.0, numpts = 10):
     qt.mstart()
     
     
-    data = qt.Data(name=' V_G11_vs_UHFLI_amplitude')  # Put one space before name
+    data = qt.Data(name=' V_G11_vs_UHFLI_amplitude_freq=%dHz'%(freq*1e6))  # Put one space before name
     data.add_coordinate('V_G 11 [mV]')   # Underline makes the next letter as index
     data.add_coordinate('UHFLI_amplitude [mV]')
     data.add_value(' Phase [deg]')      # Underline makes the next letter as index
@@ -100,6 +100,10 @@ def IVG_vs_Power(P1 = -60.0, P2 = -30.0, numpts = 10):
     
     IVVI.set_dac1(bias)  
     IVVI.set_dac2(V_G_static*divgate)
+
+    # Set the UHFLI_frequency
+    daq.setDouble('/dev2169/oscs/0/freq', freq)
+    sleep(2.0)
     
     # For counting the overall time to finish
     init_start = time()
@@ -183,3 +187,14 @@ def IVG_vs_Power(P1 = -60.0, P2 = -30.0, numpts = 10):
         data.close_file()
         # lastly tell the secondary processes (if any) that they are allowed to start again.
         qt.mend()
+
+
+
+
+
+
+#Performing the VG vs Power for different carrier frequencies
+Freqs = np.array([305.65, 306.136, 306.604, 307.117, 307.682])*1e6 # Frequencies in MHz
+
+for freq in Freqs:
+    IVG_vs_Power(freq=freq)
