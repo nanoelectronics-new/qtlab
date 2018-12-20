@@ -18,11 +18,11 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn on the UHFLI Out 1
 
 
-ON_voltage = -90.0 # DAC3 voltage to be on the interdot transition
-OFF_voltage = -20.0 # DAC3 voltage to be OFF the interdot transition
+ON_voltage = -525.0 # DAC3 voltage to be on the interdot transition
+OFF_voltage = -460.0 # DAC3 voltage to be OFF the interdot transition
 
 
-integration_times = np.array([0.010, 0.020, 0.050, 0.100])  # In seconds
+integration_times = np.array([0.001, 0.003, 0.010, 0.020, 0.050, 0.100])  # In seconds
 
 qt.mstart()
 
@@ -119,6 +119,8 @@ for integ in integration_times:
        
 # Getting filepath to the data file
 data_path = data_SNR.get_dir() 
+#Saving plot images
+plot2d.save_png(filepath = data_path)
 # Saving UHFLI setting to the measurement data folder
 # You can load this settings file from UHFLI user interface 
 UHFLI_lib.UHF_save_settings(daq, path = data_path)
