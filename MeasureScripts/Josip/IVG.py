@@ -23,7 +23,7 @@ bias = 1000.0
 leak_test = True
 
 
-v_vec = arange(0.0,-2000.0,-0.2)   
+v_vec = arange(0.0,-2000.0,-0.5)   
 
 divgate = 1
 
@@ -31,7 +31,7 @@ divgate = 1
 
 qt.mstart()
 
-data = qt.Data(name=' Leak_check_9_to_11')
+data = qt.Data(name=' Leak_check_14_to_17')
 
 
 
@@ -57,13 +57,17 @@ try:
 	
 	    #IVVI.set_dac6(v*divgate)
 	    IVVI.set_dac5(v*divgate)
+
+	    #if abs(result) > 30:
+			#raise Exception("LEAK\n")
 	
 	    result = dmm._ins.get_readval()/(gain)*1e12 
 	   
-	
+
 	
 	    data.add_data_point(v, result)
 	
+
 	    if leak_test:
 	        plot2d.update()   # If leak_test is True update every point 
 	    elif not bool(mod(v,10)):    
@@ -77,9 +81,11 @@ try:
 
 
 finally:
+	IVVI.set_dac5(0.0)
 	#Saving plot images
 	plot2d.save_png(filepath = data.get_dir())
 	plot2d.save_eps(filepath = data.get_dir())
+
 	
 	
 	
