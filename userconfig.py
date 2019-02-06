@@ -25,8 +25,8 @@ config['allowed_ips'] = (
 config['instrument_server'] = False
 
 ## This sets a default location for data-storage
-config['tempdir'] = 'K:\\katsagrp\\Measurement\\Josip\\Gate_refl_S228_111\\With_NbTiN_coils_after_temp_recycle_2\\tmp'
-config['datadir'] = 'K:\\katsagrp\\Measurement\\Josip\\Gate_refl_S228_111\\With_NbTiN_coils_after_temp_recycle_2'
+config['tempdir'] = 'K:\\katsagrp\\Measurement\\Josip\\Gate_refl_S228_103\\tmp'
+config['datadir'] = 'K:\\katsagrp\\Measurement\\Josip\\Gate_refl_S228_103'
 ## This sets a default directory for qtlab to start in
 #config['startdir'] = 'd:/scripts'
 
