@@ -74,7 +74,7 @@ for i,t in enumerate(t_burst):          # Creating waveforms for all sequence el
 
 
     p.setValuesCH3([init, 200.0],[read,200.0],[manipulate, 0.0])  # Gate pulse analog wavefrom
-    p.setMarkersCH3([0,0,0],[0,0,0])                              # Gate pulse markers
+    p.setMarkersCH3([0,1,0],[0,1,0])                              # Gate pulse markers
 
 
     start_to_start_PM_pulses = t + IQ_duration  # Duration from the start of the first until the start of the second PM pulse
