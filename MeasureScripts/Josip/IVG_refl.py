@@ -26,7 +26,7 @@ def run_IVG():
     leak_test = True
     gate2div = 1.0
     
-    v_vec = arange(100.0,-200.0,-0.2)   
+    v_vec = arange(-200.0,100.0,0.2)   
     
     
     
@@ -34,7 +34,7 @@ def run_IVG():
     
     qt.mstart()
     
-    data = qt.Data(name=' 1-3 IV 6')
+    data = qt.Data(name=' 1-3 IV 7')
     
     
     
