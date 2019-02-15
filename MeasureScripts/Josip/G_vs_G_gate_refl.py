@@ -16,21 +16,21 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_both(bias = -200.0):
+def do_meas_both(bias = 100.0):
 
-    file_name = 'GvsG_8-10_G9&11_'
+    file_name = '1-3 IV 9 GvsG_'
     
-    gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+    gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     bias = bias
     
    
-    gatediv = 100
+    gatediv = 1.0
     
     
     
-    v1_vec = arange(-4.2,-3.4,0.05)      #outer
-    v2_vec = arange(-4.5,-6.5,-0.05)       #inner
+    v1_vec = arange(0.0,200.0,0.2)      #outer
+    v2_vec = arange(0.0,200.0,0.2)       #inner
     
     
     
@@ -45,17 +45,17 @@ def do_meas_both(bias = -200.0):
     
     
     ##CURRENT
-    data.add_coordinate('V_G 11 [mV]')   # inner
-    data.add_coordinate('V_G 9 [mV]')  #  outer
+    data.add_coordinate('V_G 23 [mV]')   # inner
+    data.add_coordinate('V_G 2 [mV]')  #  outer
     data.add_value('Current [pA]')
     
     ##REFL f1
-    data_mag.add_coordinate('V_G 11 [mV]')
-    data_mag.add_coordinate('V_G 9 [mV]')
+    data_mag.add_coordinate('V_G 23 [mV]')
+    data_mag.add_coordinate('V_G 2 [mV]')
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 11 [mV]')
-    data_phase.add_coordinate('V_G 9 [mV]')
+    data_phase.add_coordinate('V_G 23 [mV]')
+    data_phase.add_coordinate('V_G 2 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -104,19 +104,19 @@ def do_meas_both(bias = -200.0):
             start = time()
             # set the voltage
        
-            IVVI.set_dac2(v1*gatediv)
+            IVVI.set_dac5(v1*gatediv)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac3(v2*gatediv)
+                IVVI.set_dac6(v2*gatediv)
                 
     
                 # readout
                 result = dmm.get_readval()/gain*1e12
-                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5)  # Reading the lockin
+                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 3.0)  # Reading the lockin
                 result_refl = array(result_refl)
                 result_phase = result_refl[0,1]  # Getting phase values 
                 result_mag = result_refl[0,0] # Getting amplitude values 
