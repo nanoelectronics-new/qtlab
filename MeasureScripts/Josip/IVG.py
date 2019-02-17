@@ -33,6 +33,8 @@ def DAC_set(dac_num = 4, step_size = 5.0):
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505177::INSTR') 
 
+name_counter +=1
+
 def run_IVG():
 	''' 
 	Just to run the code below in the separate function
@@ -45,14 +47,14 @@ def run_IVG():
 	leak_test = True
 	
 	
-	v_vec = arange(-200.0,100.0,1.0)   
+	v_vec = arange(0.0,-2000.0,-2.0)   
 	
 	divgate = 1.0
 	
 	
 	
 	qt.mstart()
-	name = ' 1-3 IV 3'
+	name = ' 7-19 IV %d'%name_counter
 	data = qt.Data(name=name)
 	
 	
@@ -71,7 +73,7 @@ def run_IVG():
 	
 	
 	
-	IVVI.set_dac1(bias)
+	#IVVI.set_dac1(bias)
 	
 	try:
 		start = time()
@@ -79,12 +81,12 @@ def run_IVG():
 		
 	
 	
-		    IVVI.set_dac3(v*divgate)
-		    IVVI.set_dac4(v*divgate)
+		    IVVI.set_dac5(v*divgate)
+		    #IVVI.set_dac4(v*divgate)
 	
 		    result = dmm._ins.get_readval()/(gain)*1e12 
-		    #if abs(result) > 30.0:
-				#raise Exception("LEAK\n")
+		    if (abs(result) > 15.0):
+				raise Exception("LEAK\n")
 	
 		
 		    data.add_data_point(v, result)
@@ -103,7 +105,7 @@ def run_IVG():
 	
 	
 	finally:
-		#DAC1_back()
+		IVVI.set_dac5(0.0)
 		#Saving plot images
 		plot2d.save_png(filepath = data.get_dir())
 		plot2d.save_eps(filepath = data.get_dir())
@@ -113,6 +115,10 @@ def run_IVG():
 		
 		data.close_file()
 		qt.mend()
+
+
+#Run the measurement
+run_IVG()
 	
 
 

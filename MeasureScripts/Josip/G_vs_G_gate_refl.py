@@ -11,14 +11,15 @@ import UHFLI_lib
 daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
     
-
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
+name_counter +=1
 
 
-def do_meas_both(bias = 0.0):
 
-    file_name = '1-3 IV 12 GvsG_'
+def do_meas_both(bias = 200.0):
+
+    file_name = '7-19 IV %d GvsG_'%name_counter
     
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -29,8 +30,8 @@ def do_meas_both(bias = 0.0):
     
     
     
-    v1_vec = arange(500.0,600.0,0.2)      #outer
-    v2_vec = arange(400.0,500.0,0.2)       #inner
+    v1_vec = arange(-100.0,100.0,0.3)      #outer
+    v2_vec = arange(-100.0,100.0,0.3)       #inner
     
     
     
@@ -45,17 +46,17 @@ def do_meas_both(bias = 0.0):
     
     
     ##CURRENT
-    data.add_coordinate('V_G 23 [mV]')   # inner
-    data.add_coordinate('V_G 2 [mV]')  #  outer
+    data.add_coordinate('V_G 5 [mV]')   # inner
+    data.add_coordinate('V_G 4 [mV]')  #  outer
     data.add_value('Current [pA]')
     
     ##REFL f1
-    data_mag.add_coordinate('V_G 23 [mV]')
-    data_mag.add_coordinate('V_G 2 [mV]')
+    data_mag.add_coordinate('V_G 5 [mV]')
+    data_mag.add_coordinate('V_G 4 [mV]')
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 23 [mV]')
-    data_phase.add_coordinate('V_G 2 [mV]')
+    data_phase.add_coordinate('V_G 5 [mV]')
+    data_phase.add_coordinate('V_G 4 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -116,7 +117,7 @@ def do_meas_both(bias = 0.0):
     
                 # readout
                 result = dmm.get_readval()/gain*1e12
-                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 3.0)  # Reading the lockin
+                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 1.0)  # Reading the lockin
                 result_refl = array(result_refl)
                 result_phase = result_refl[0,1]  # Getting phase values 
                 result_mag = result_refl[0,0] # Getting amplitude values 
@@ -190,7 +191,8 @@ def do_meas_both(bias = 0.0):
         # lastly tell the secondary processes (if any) that they are allowed to start again.
         qt.mend()   
 
-
+# Run the measurement
+do_meas_both()
 
 #biases = [-50,50,100,200]
 
