@@ -18,7 +18,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 def do_meas_both(bias = 0.0):
 
-    file_name = '1-3 IV 11 GvsG_'
+    file_name = '1-3 IV 12 GvsG_'
     
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -29,8 +29,8 @@ def do_meas_both(bias = 0.0):
     
     
     
-    v1_vec = arange(142.0,150.0,0.06)      #outer
-    v2_vec = arange(42.0,58.0,0.06)       #inner
+    v1_vec = arange(500.0,600.0,0.2)      #outer
+    v2_vec = arange(400.0,500.0,0.2)       #inner
     
     
     
