@@ -54,7 +54,7 @@ def run_IVG():
 	
 	
 	qt.mstart()
-	name = ' 8-10 IV %d'%name_counter
+	name = ' 13-15 IV %d'%name_counter
 	data = qt.Data(name=name)
 	
 	
@@ -85,8 +85,8 @@ def run_IVG():
 		    #IVVI.set_dac4(v*divgate)
 	
 		    result = dmm._ins.get_readval()/(gain)*1e12 
-		    if (abs(result) > 15.0):
-				raise Exception("LEAK\n")
+		    #if (abs(result) > 30.0):
+				#raise Exception("LEAK\n")
 	
 		
 		    data.add_data_point(v, result)
