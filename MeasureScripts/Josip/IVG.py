@@ -54,7 +54,7 @@ def run_IVG():
 	
 	
 	qt.mstart()
-	name = ' 7-19 IV %d'%name_counter
+	name = ' 8-10 IV %d'%name_counter
 	data = qt.Data(name=name)
 	
 	

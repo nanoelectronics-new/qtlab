@@ -19,13 +19,13 @@ name_counter +=1
 def run_IVG_both():
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
-    bias = 200
+    bias = 100
     
     leak_test = False
     
     # you define two vectors of what you want to sweep. In this case
     # a magnetic field (b_vec) and a frequency (f_vec)
-    v_vec = arange(-200.0,300.0,0.2)   #V_G 4
+    v_vec = arange(-250.0,1000.0,1.0)   #V_G 4
     
     # you indicate that a measurement is about to start and other
     # processes should stop (like batterycheckers, or temperature
@@ -39,7 +39,7 @@ def run_IVG_both():
     # <timestamp>_testmeasurement.dat
     # to find out what 'datadir' is set to, type: qt.config.get('datadir')
     
-    name = ' 7-19 IV %d'%name_counter
+    name = ' 8-10 IV %d'%name_counter
     data = qt.Data(name=name)  # Put one space before name
     
     
@@ -92,7 +92,7 @@ def run_IVG_both():
         # readout form UHFLI
         # argument Num_of_TC represents number of time constants to wait before raeding the value
         # it is important because of the settling time of the low pass filter
-        result_lockin = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 3)  # Reading the lockin
+        result_lockin = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 1)  # Reading the lockin
         result_refl = array(result_lockin)
         result_phase = result_refl[0,1]  # Getting phase values 
     
