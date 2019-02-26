@@ -19,7 +19,7 @@ name_counter +=1
 
 def do_meas_both(bias = 200.0):
 
-    file_name = '13-15 IV %d GvsG_'%name_counter
+    file_name = '13-16 IV %d GvsG_'%name_counter
     
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
