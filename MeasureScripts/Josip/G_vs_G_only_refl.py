@@ -16,7 +16,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 name_counter +=1
 
 
-def do_meas_refl(bias = 200):
+def do_meas_refl(bias = 0.0):
 
     file_name = '8-10 IV %d GvsG_'%name_counter
 
@@ -27,8 +27,8 @@ def do_meas_refl(bias = 200):
     bias = bias
     
     
-    v1_vec = arange(15.5,17.0,0.05)      #outer
-    v2_vec = arange(2.5,4.5,0.05)      #inner
+    v1_vec = arange(-35.0,30.0,0.2)      #outer
+    v2_vec = arange(-25.0,25.0,0.2)      #inner
     
     
     
@@ -44,13 +44,13 @@ def do_meas_refl(bias = 200):
     
     
     
-    ##REFL f1
-    data_mag.add_coordinate('V_G 2 [mV]')
-    data_mag.add_coordinate('V_G 24 [mV]')
+
+    data_mag.add_coordinate('V_G 11 [mV]')       # inner
+    data_mag.add_coordinate('V_G 9 [mV]')      # outer
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 2 [mV]')
-    data_phase.add_coordinate('V_G 24 [mV]')
+    data_phase.add_coordinate('V_G 11 [mV]')
+    data_phase.add_coordinate('V_G 9 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -95,14 +95,14 @@ def do_meas_refl(bias = 200):
             start = time()
             # set the voltage
        
-            IVVI.set_dac4(v1*gate2div)
+            IVVI.set_dac2(v1*gate1div)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac2(v2*gate1div)
+                IVVI.set_dac3(v2*gate2div)
                 
     
                 # readout
@@ -169,3 +169,7 @@ def do_meas_refl(bias = 200):
         UHFLI_lib.UHF_save_settings(daq, path = settings_path)
         # lastly tell the secondary processes (if any) that they are allowed to start again.
         qt.mend()
+
+
+# Do measurement
+do_meas_refl()
