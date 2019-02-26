@@ -16,6 +16,17 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 name_counter +=1
 
 
+def dBm_to_volts_50ohm(P_dBm):
+    '''
+    Function for converting the power in dBm to a corresponding voltage on the 50 ohm resistor.
+    Since UHFLI wants volts peak-peak through the API
+    '''
+    P_mW = 10**(P_dBm/10.0)
+    P_volts = np.sqrt(0.05*P_mW)*np.sqrt(2)
+    return P_volts
+
+
+
 def do_meas_refl(bias = 0.0):
 
     file_name = '8-10 IV %d GvsG_'%name_counter
@@ -171,5 +182,27 @@ def do_meas_refl(bias = 0.0):
         qt.mend()
 
 
-# Do measurement
-do_meas_refl()
+
+
+def sweep_power(P1 = -50,P2 = -10,numpts = 10):
+    """
+    This function runs do_meas_refl for different UHFLI amplitudes
+    Inputs:
+        P1 (float) - starting power in dBm (coverted to volts afterwards)
+        P2 (float) - ending power in dBm (coverted to volts afterwards)
+        numpts (int) - number of different powers
+    """
+
+    Amplitudes = np.linspace(dBm_to_volts_50ohm(P1), dBm_to_volts_50ohm(P2), numpts) # Amplitude of the UHFLI carrier signal in Volts
+
+    for ampl in Amplitudes:
+
+        daq.setDouble('/dev2169/sigouts/0/amplitudes/3',ampl)  # Set the UHFLI carrier signal amplitude
+        daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+        sleep(0.5) # Wait for the parameters to be properly set
+        # Do G vs G measurement
+        do_meas_refl()
+
+
+#Do measurement
+sweep_power()
