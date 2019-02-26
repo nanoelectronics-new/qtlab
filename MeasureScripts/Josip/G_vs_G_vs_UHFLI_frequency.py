@@ -27,9 +27,12 @@ def dBm_to_volts_50ohm(P_dBm):
 
 
 
-def do_meas_refl(bias = 0.0, ampl = None):
+def do_meas_refl(bias = 0.0, freq = None):
 
-    file_name = '8-10 IV %d GvsG_%d'%(name_counter, ampl)
+    global name_counter
+    name_counter +=1  # Increase the measurement file name counter by one
+
+    file_name = '8-10 IV %d GvsG_%.3fkHz_'%(name_counter, freq/1000)
 
     
     gate1div = 10.0
@@ -38,8 +41,8 @@ def do_meas_refl(bias = 0.0, ampl = None):
     bias = bias
     
     
-    v1_vec = arange(-23.0,-13.0,0.2)      #outer
-    v2_vec = arange(-25.0,-15.0,0.2)      #inner
+    v1_vec = arange(-25.0,30.0,0.15)      #outer
+    v2_vec = arange(-25.0,-15.0,0.15)      #inner
     
     
     
@@ -184,25 +187,25 @@ def do_meas_refl(bias = 0.0, ampl = None):
 
 
 
-def sweep_power(name_counter = name_counter, P1 = -50,P2 = -10,numpts = 10):
+def sweep_frequency(f1 = -70e3,f2 = 70e3, center_frequency = 304.455e6, numpts = 15):
     """
-    This function runs do_meas_refl for different UHFLI amplitudes
+    This function runs do_meas_refl for different UHFLI carrier frequency offsets from the center frequency (typicaly a resonant frequency)
     Inputs:
-        P1 (float) - starting power in dBm (coverted to volts afterwards)
-        P2 (float) - ending power in dBm (coverted to volts afterwards)
-        numpts (int) - number of different powers
+        f1 (float) - starting frequency in Hz 
+        f2 (float) - ending frequency in Hz 
+        center_frequency (float) - central frequency of the reflectometry resonance dip in Hz
+        numpts (int) - number of different frequency offsets
     """
 
-    Amplitudes = np.linspace(-35,-20, numpts) # Amplitude of the UHFLI carrier signal in dBm
+    frequency_offset = np.linspace(f1,f2, numpts) # Amplitude of the UHFLI carrier signal in dBm
 
-    for ampl in Amplitudes:
-        name_counter +=1
-        daq.setDouble('/dev2169/sigouts/0/amplitudes/3', dBm_to_volts_50ohm(ampl))  # Set the UHFLI carrier signal amplitude in volts
+    for freq in frequency_offset:
+        daq.setDouble('/dev2169/oscs/0/freq', (center_frequency + freq)) # Set the frequency of the UHFLI carrier signal 
         daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
         sleep(0.5) # Wait for the parameters to be properly set
         # Do G vs G measurement
-        do_meas_refl(ampl = ampl)
+        do_meas_refl(freq = freq)
 
 
 #Do measurement
-sweep_power()
+sweep_frequency() 
