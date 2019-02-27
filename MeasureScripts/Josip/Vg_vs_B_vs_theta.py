@@ -14,7 +14,7 @@ from Background_correction import Back_corr as bc
 
 
 
-#magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.180')
+#magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.158')
 #magnetY = qt.instruments.create('magnetY', 'AMI430_By', address='10.21.64.184')
 daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
@@ -22,24 +22,22 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 def do_Vg_vs_B():
+
+    global name_counter
     
-    thetas = np.linspace(30,360,12) # Angle between the By and Bx axis
+    thetas = np.linspace(90,360,4) # Angle between the By and Bx axis
     
-    name_counter = 0
-    
-    gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
     init_start = time()
     vec_count = 0
     
-      
     for z,theta in enumerate(thetas): 
 
         start = time()
-        
+        name_counter += 1
         file_name = '8_10 IV %d_theta=%d'%(name_counter,theta)
-        name_counter += 1 
+         
         
             
             
@@ -63,8 +61,8 @@ def do_Vg_vs_B():
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        Vg = arange(-0.2,-1.4,-0.01)  # gate voltage
-        divgate = 100
+        Vg = arange(-19.0,-25.0,-0.1)  # gate voltage
+        divgate = 10
         
         qt.mstart()
         
@@ -76,14 +74,17 @@ def do_Vg_vs_B():
         data_temp = np.zeros(len(Vg))  # Temporary vector for storing the data
         
         
-        data.add_coordinate('Vg 12 [mV]')  #v2
+        data.add_coordinate('Vg 11 [mV]')  #v2
         data.add_coordinate('B [T]')   #v1
         data.add_value('Refl_phase [deg]')
+        data.add_value('Refl_amplitude [arb.u.]')
 
         data.create_file()
         
-        plot2d = qt.Plot2D(data, name=file_name+' 2D_2',autoupdate=False)
-        plot3d = qt.Plot3D(data, name=file_name+' 3D_2_%d'%theta, coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+        plot2d_phase = qt.Plot2D(data, name=file_name+' 2D',autoupdate=False)
+        plot3d_phase = qt.Plot3D(data, name=file_name+' 3D_phase_%d'%theta, coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+
+        plot3d_amp = qt.Plot3D(data, name=file_name+' 3D_amplitude_%d'%theta, coorddims=(1,0), valdim=3, style='image')
         
         
         
@@ -122,13 +123,13 @@ def do_Vg_vs_B():
                     # readout
                     result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2)  # Reading the lockin
                     result_refl = array(result_refl)
-                    result_phase = result_refl[0,1]  # Getting phase values
-                    result = result_phase 
+                    result_phase = result_refl[0,1]  # Getting phase values 
+                    result_amp = result_refl[0,0] # Getting amplitude values 
                     
-                    data_temp[j] = result
+                    data_temp[j] = result_phase
                     # save the data point to the file, this will automatically trigger
                     # the plot windows to update
-                    data.add_data_point(Vg_val,total_field,result)  
+                    data.add_data_point(Vg_val,total_field,result_phase, result_amp)  
                 
                     
         
@@ -139,11 +140,11 @@ def do_Vg_vs_B():
                 new_mat = np.column_stack((new_mat, data_temp))
                 if i == 0: #Kicking out the first column filled with zero
                     new_mat = new_mat[:,1:]
-                np.savetxt(fname = data.get_filepath()+ "_matrix", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+                np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')
                 
-                plot2d.update()
-        
-                plot3d.update()
+                plot2d_phase.update()
+                plot3d_phase.update()
+                plot3d_amp.update()
                 stop = time()
                 print 'Estimated remaining time of the ongoing measurement: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start_Vg_trace)*(len(BY_vector) - Vg_traces_counter))))
                 Vg_traces_counter += 1
@@ -156,6 +157,11 @@ def do_Vg_vs_B():
             vec_count = vec_count + 1
             print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(len(thetas) - vec_count))))
 
+            #Saving plot images
+            plot3d_phase.save_png(filepath = data_phase.get_dir())
+            plot3d_phase.save_eps(filepath = data_phase.get_dir())
+            plot3d_amp.save_png(filepath = data_phase.get_dir())
+            plot3d_amp.save_eps(filepath = data_phase.get_dir())
             # Substracting the background
             bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
     	      
@@ -171,3 +177,5 @@ def do_Vg_vs_B():
 
 
 
+#Do measurement
+do_Vg_vs_B()
