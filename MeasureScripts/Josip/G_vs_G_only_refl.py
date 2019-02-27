@@ -18,7 +18,7 @@ name_counter +=1
 
 def do_meas_refl(bias = 0.0):
 
-    file_name = '13-16 IV %d GvsG_'%name_counter
+    file_name = '1-3 IV %d GvsG_'%name_counter
 
     
     gate1div = 10.0
@@ -27,8 +27,8 @@ def do_meas_refl(bias = 0.0):
     bias = bias
     
     
-    v1_vec = arange(-20.0,20.0,0.2)      #outer
-    v2_vec = arange(-12.0,11.0,0.2)      #inner
+    v1_vec = arange(-50.0,60.0,0.15)      #outer
+    v2_vec = arange(-30.0,60.0,0.15)      #inner
     
     
     
@@ -45,12 +45,12 @@ def do_meas_refl(bias = 0.0):
     
     
 
-    data_mag.add_coordinate('V_G 17 [mV]')       # inner
-    data_mag.add_coordinate('V_G 14 [mV]')      # outer
+    data_mag.add_coordinate('V_G 2 [mV]')       # inner
+    data_mag.add_coordinate('V_G 23 [mV]')      # outer
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 17 [mV]')
-    data_phase.add_coordinate('V_G 14 [mV]')
+    data_phase.add_coordinate('V_G 2 [mV]')
+    data_phase.add_coordinate('V_G 23 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -95,14 +95,14 @@ def do_meas_refl(bias = 0.0):
             start = time()
             # set the voltage
        
-            IVVI.set_dac2(v1*gate1div)
+            IVVI.set_dac3(v1*gate1div)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac3(v2*gate2div)
+                IVVI.set_dac2(v2*gate2div)
                 
     
                 # readout
