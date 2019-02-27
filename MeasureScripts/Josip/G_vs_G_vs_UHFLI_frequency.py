@@ -32,7 +32,7 @@ def do_meas_refl(bias = 0.0, freq = None):
     global name_counter
     name_counter +=1  # Increase the measurement file name counter by one
 
-    file_name = '8-10 IV %d GvsG_%.3fkHz_'%(name_counter, freq/1000)
+    file_name = '13-16 IV %d GvsG_%.3fkHz_'%(name_counter, freq/1000)
 
     
     gate1div = 10.0
@@ -41,8 +41,8 @@ def do_meas_refl(bias = 0.0, freq = None):
     bias = bias
     
     
-    v1_vec = arange(-25.0,30.0,0.2)      #outer
-    v2_vec = arange(-25.0,-15.0,0.2)      #inner
+    v1_vec = arange(-20.0,20.0,0.2)      #outer
+    v2_vec = arange(-12.0,11.0,0.2)      #inner
     
     
     
@@ -59,12 +59,12 @@ def do_meas_refl(bias = 0.0, freq = None):
     
     
 
-    data_mag.add_coordinate('V_G 11 [mV]')       # inner
-    data_mag.add_coordinate('V_G 9 [mV]')      # outer
+    data_mag.add_coordinate('V_G 17 [mV]')       # inner
+    data_mag.add_coordinate('V_G 14 [mV]')      # outer
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 11 [mV]')
-    data_phase.add_coordinate('V_G 9 [mV]')
+    data_phase.add_coordinate('V_G 17 [mV]')
+    data_phase.add_coordinate('V_G 14 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -187,7 +187,7 @@ def do_meas_refl(bias = 0.0, freq = None):
 
 
 
-def sweep_frequency(f1 = -30e3,f2 = 70e3, center_frequency = 304.455e6, numpts = 11):
+def sweep_frequency(f1 = 20e3,f2 = -20e3, center_frequency = 165.683e6, numpts = 5):
     """
     This function runs do_meas_refl for different UHFLI carrier frequency offsets from the center frequency (typicaly a resonant frequency)
     Inputs:
@@ -197,7 +197,7 @@ def sweep_frequency(f1 = -30e3,f2 = 70e3, center_frequency = 304.455e6, numpts =
         numpts (int) - number of different frequency offsets
     """
 
-    frequency_offset = np.linspace(f1,f2, numpts) # Amplitude of the UHFLI carrier signal in dBm
+    frequency_offset = np.linspace(f1,f2, numpts) # Frequency offset from the center frequency of the resonant dip
 
     for freq in frequency_offset:
         daq.setDouble('/dev2169/oscs/0/freq', (center_frequency + freq)) # Set the frequency of the UHFLI carrier signal 
