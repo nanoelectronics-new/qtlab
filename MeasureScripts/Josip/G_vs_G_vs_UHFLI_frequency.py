@@ -41,8 +41,8 @@ def do_meas_refl(bias = 0.0, freq = None):
     bias = bias
     
     
-    v1_vec = arange(-25.0,30.0,0.15)      #outer
-    v2_vec = arange(-25.0,-15.0,0.15)      #inner
+    v1_vec = arange(-25.0,30.0,0.2)      #outer
+    v2_vec = arange(-25.0,-15.0,0.2)      #inner
     
     
     
@@ -187,7 +187,7 @@ def do_meas_refl(bias = 0.0, freq = None):
 
 
 
-def sweep_frequency(f1 = -70e3,f2 = 70e3, center_frequency = 304.455e6, numpts = 15):
+def sweep_frequency(f1 = -30e3,f2 = 70e3, center_frequency = 304.455e6, numpts = 11):
     """
     This function runs do_meas_refl for different UHFLI carrier frequency offsets from the center frequency (typicaly a resonant frequency)
     Inputs:
