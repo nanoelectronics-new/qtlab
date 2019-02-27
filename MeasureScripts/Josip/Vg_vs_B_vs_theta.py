@@ -158,10 +158,10 @@ def do_Vg_vs_B():
             print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(len(thetas) - vec_count))))
 
             #Saving plot images
-            plot3d_phase.save_png(filepath = data_phase.get_dir())
-            plot3d_phase.save_eps(filepath = data_phase.get_dir())
-            plot3d_amp.save_png(filepath = data_phase.get_dir())
-            plot3d_amp.save_eps(filepath = data_phase.get_dir())
+            plot3d_phase.save_png(filepath = data.get_dir())
+            plot3d_phase.save_eps(filepath = data.get_dir())
+            plot3d_amp.save_png(filepath = data.get_dir())
+            plot3d_amp.save_eps(filepath = data.get_dir())
             # Substracting the background
             bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
     	      
