@@ -47,14 +47,14 @@ def run_IVG():
 	leak_test = True
 	
 	
-	v_vec = arange(-50.0,60.0,0.5)   
+	v_vec = arange(-1000.0,1000.0,1.0)   
 	
-	divgate = 10.0
+	divgate = 1.0
 	
 	
 	
 	qt.mstart()
-	name = ' 1-3 IV %d'%name_counter
+	name = ' 7-22 IV %d'%name_counter
 	data = qt.Data(name=name)
 	
 	
@@ -81,7 +81,7 @@ def run_IVG():
 		
 	
 	
-		    IVVI.set_dac3(v*divgate)
+		    IVVI.set_dac5(v*divgate)
 		    #IVVI.set_dac3(v*divgate)
 	
 		    result = dmm._ins.get_readval()/(gain)*1e12 
@@ -105,7 +105,7 @@ def run_IVG():
 	
 	
 	finally:
-		IVVI.set_dac3(0.0)
+		IVVI.set_dac5(0.0)
 		#IVVI.set_dac3(0.0)
 		#Saving plot images
 		plot2d.save_png(filepath = data.get_dir())

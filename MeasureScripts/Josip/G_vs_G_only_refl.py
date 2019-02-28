@@ -13,22 +13,22 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
-name_counter +=1
+name_counter += 1
 
 
 def do_meas_refl(bias = 0.0):
 
-    file_name = '1-3 IV %d GvsG_'%name_counter
+    file_name = '7-22 IV %d GvsG_'%name_counter
 
     
-    gate1div = 10.0
+    gate1div = 1.0
     gate2div = 10.0
     
     bias = bias
     
     
-    v1_vec = arange(-50.0,60.0,0.15)      #outer
-    v2_vec = arange(-30.0,60.0,0.15)      #inner
+    v1_vec = arange(-1000.0,1000.0,2.0)      #outer
+    v2_vec = arange(-25.0,20.0,0.4)      #inner
     
     
     
@@ -45,12 +45,12 @@ def do_meas_refl(bias = 0.0):
     
     
 
-    data_mag.add_coordinate('V_G 2 [mV]')       # inner
-    data_mag.add_coordinate('V_G 23 [mV]')      # outer
+    data_mag.add_coordinate('V_G 21 [mV]')       # inner
+    data_mag.add_coordinate('V_G 5 [mV]')      # outer
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 2 [mV]')
-    data_phase.add_coordinate('V_G 23 [mV]')
+    data_phase.add_coordinate('V_G 21 [mV]')
+    data_phase.add_coordinate('V_G 5 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -95,7 +95,7 @@ def do_meas_refl(bias = 0.0):
             start = time()
             # set the voltage
        
-            IVVI.set_dac3(v1*gate1div)
+            IVVI.set_dac5(v1*gate1div)
     
     
             
