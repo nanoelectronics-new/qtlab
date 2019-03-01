@@ -18,7 +18,7 @@ name_counter += 1
 
 def do_meas_refl(bias = 0.0):
 
-    file_name = '8-10 IV %d GvsG_bias=%dmV_'%(name_counter, bias/10)
+    file_name = '8-10 IV %d GvsG_'%(name_counter)
 
     
     gate1div = 10.0
@@ -27,8 +27,8 @@ def do_meas_refl(bias = 0.0):
     bias = bias
     
     
-    v1_vec = arange(-35.0,30.0,0.2)      #outer
-    v2_vec = arange(-25.0,25.0,0.2)      #inner
+    v1_vec = arange(-20.0,-10.0,0.2)      #outer
+    v2_vec = arange(-25.0,-11.0,0.2)      #inner
     
     
     
@@ -172,8 +172,8 @@ def do_meas_refl(bias = 0.0):
 
 
 # Do measurement for different biases:
+do_meas_refl()
+#biases = np.linspace(-300,300,13) # Bias voltages in mV *10
 
-biases = np.linspace(-300,300,13) # Bias voltages in mV *10
-
-for Vsd in biases:
-    do_meas_refl(bias = Vsd)
+#for Vsd in biases:
+    #do_meas_refl(bias = Vsd)
