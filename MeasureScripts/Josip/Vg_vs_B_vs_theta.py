@@ -4,7 +4,8 @@ import datetime
 import convert_for_diamond_plot as cnv
 import numpy as np
 from Background_correction import Back_corr as bc
-
+import UHFLI_lib
+reload(UHFLI_lib)
 
 
 
@@ -27,7 +28,7 @@ def do_Vg_vs_B():
     
     thetas = np.linspace(90,360,4) # Angle between the By and Bx axis
     
-    
+    TC = 10e-3 # Time constant of the UHFLI in seconds
     
     init_start = time()
     vec_count = 0
@@ -46,7 +47,7 @@ def do_Vg_vs_B():
         step_size_BY = -1e-3 
         step_size_BZ = -1e-3
 
-        Bmin = 500e-3  # Min total field in T
+        Bmin = 0.0  # Min total field in T
         Bmax = 2000e-3 # Max total field in T
         Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
         Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
@@ -61,8 +62,8 @@ def do_Vg_vs_B():
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        Vg = arange(-19.0,-25.0,-0.1)  # gate voltage
-        divgate = 10
+        Vg = arange(-25.0,-11.0,0.1)  # gate voltage
+        divgate = 10.0
         
         qt.mstart()
         
@@ -89,91 +90,97 @@ def do_Vg_vs_B():
         
         
         Vg_traces_counter = 0    # Counter of the frequency traces used for the remaining measurement time estimation
-        try:
-            for i,v1 in enumerate(BY_vector):  
-                
-              			
-                
-                start_Vg_trace = time()  # Remebering the time when the ongoing freq trace started
-                
-                magnetY.set_field(BY_vector[i])   # Set the By field first
-                
-                while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
-                    qt.msleep(0.050)
-                magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
-                while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
-                    qt.msleep(0.050)
-                
-                total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
         
-        
-        
-                daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
-                qt.msleep(0.10)
-        
-                for j,Vg_val in enumerate(Vg):  
-                    IVVI.set_dac3(Vg_val*divgate)
-    
-        
-                    # the next function is necessary to keep the gui responsive. It
-                    # checks for instance if the 'stop' button is pushed. It also checks
-                    # if the plots need updating.
-                    qt.msleep(0.010)
-        
-                    # readout
-                    result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2)  # Reading the lockin
-                    result_refl = array(result_refl)
-                    result_phase = result_refl[0,1]  # Getting phase values 
-                    result_amp = result_refl[0,0] # Getting amplitude values 
-                    
-                    data_temp[j] = result_phase
-                    # save the data point to the file, this will automatically trigger
-                    # the plot windows to update
-                    data.add_data_point(Vg_val,total_field,result_phase, result_amp)  
-                
-                    
-        
-                 
-                    
-                data.new_block()
-                
-                new_mat = np.column_stack((new_mat, data_temp))
-                if i == 0: #Kicking out the first column filled with zero
-                    new_mat = new_mat[:,1:]
-                np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')
-                
-                plot2d_phase.update()
-                plot3d_phase.update()
-                plot3d_amp.update()
-                stop = time()
-                print 'Estimated remaining time of the ongoing measurement: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start_Vg_trace)*(len(BY_vector) - Vg_traces_counter))))
-                Vg_traces_counter += 1
+        for i,v1 in enumerate(BY_vector):  
             
+          			
             
-    
-        finally:
-    
-            stop = time()
-            vec_count = vec_count + 1
-            print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(len(thetas) - vec_count))))
+            start_Vg_trace = time()  # Remebering the time when the ongoing freq trace started
+            
+            magnetY.set_field(BY_vector[i])   # Set the By field first
+            
+            while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
+                qt.msleep(0.050)
+            magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
+            while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
+                qt.msleep(0.050)
+            
+            total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
+            # After the field is at the set point, we need to check where is the resonant freuqency and set it
+            freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 290e6, stop = 308e6, num_samples = 200, do_plot= False)
+            ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
+            f_res = freq[ind_res]
 
-            #Saving plot images
-            plot3d_phase.save_png(filepath = data.get_dir())
-            plot3d_phase.save_eps(filepath = data.get_dir())
-            plot3d_amp.save_png(filepath = data.get_dir())
-            plot3d_amp.save_eps(filepath = data.get_dir())
-            # Substracting the background
-            bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
-    	      
-    	      # after the measurement ends, you need to close the data file.
-            data.close_file()
-    	      # lastly tell the secondary processes (if any) that they are allowed to start again.
-            qt.mend()
+            # Now set the readout frequency to be the new resonance frequency
+            daq.setDouble('/dev2169/oscs/0/freq', f_res[0])
+            # Set the TC back to previous
+            daq.setDouble('/dev2169/demods/3/timeconstant', TC)
     
+            daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+            qt.msleep(0.10)
+    
+            for j,Vg_val in enumerate(Vg):  
+                IVVI.set_dac3(Vg_val*divgate)
+
+    
+                # the next function is necessary to keep the gui responsive. It
+                # checks for instance if the 'stop' button is pushed. It also checks
+                # if the plots need updating.
+                qt.msleep(0.010)
+    
+                # readout
+                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2)  # Reading the lockin
+                result_refl = array(result_refl)
+                result_phase = result_refl[0,1]  # Getting phase values 
+                result_amp = result_refl[0,0] # Getting amplitude values 
+                
+                data_temp[j] = result_phase
+                # save the data point to the file, this will automatically trigger
+                # the plot windows to update
+                data.add_data_point(Vg_val,total_field,result_phase, result_amp)  
+            
+                
+    
+             
+                
+            data.new_block()
+            
+            new_mat = np.column_stack((new_mat, data_temp))
+            if i == 0: #Kicking out the first column filled with zero
+                new_mat = new_mat[:,1:]
+            np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+            
+            plot2d_phase.update()
+            plot3d_phase.update()
+            plot3d_amp.update()
+            stop = time()
+            print 'Estimated remaining time of the ongoing measurement: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start_Vg_trace)*(len(BY_vector) - Vg_traces_counter))))
+            Vg_traces_counter += 1
         
-    	   
         
-    	    print 'Overall duration: %s sec' % (stop - init_start, )
+
+    
+
+        stop = time()
+        vec_count = vec_count + 1
+        print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(len(thetas) - vec_count))))
+        #Saving plot images
+        plot3d_phase.save_png(filepath = data.get_dir())
+        plot3d_phase.save_eps(filepath = data.get_dir())
+        plot3d_amp.save_png(filepath = data.get_dir())
+        plot3d_amp.save_eps(filepath = data.get_dir())
+        # Substracting the background
+        bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
+    	     
+    	     # after the measurement ends, you need to close the data file.
+        data.close_file()
+    	     # lastly tell the secondary processes (if any) that they are allowed to start again.
+        qt.mend()
+
+    
+    	
+    
+    	print 'Overall duration: %s sec' % (stop - init_start, )
 
 
 
