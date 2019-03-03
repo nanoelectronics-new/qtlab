@@ -30,7 +30,7 @@ def do_meas_refl(bias = 0.0):
     v1_vec = arange(-20.0,-10.0,0.2)      #outer
     v2_vec = arange(-25.0,-11.0,0.2)      #inner
     
-    TC = 10e-3 # Time constant of the UHFLI in seconds
+
     
     qt.mstart()
     
