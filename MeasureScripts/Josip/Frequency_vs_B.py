@@ -4,7 +4,8 @@ import datetime
 import convert_for_diamond_plot as cnv
 import numpy as np
 from Background_correction import Back_corr as bc
-
+import UHFLI_lib
+reload(UHFLI_lib)
 #####################################################
 # this part is to simulate some data, you can skip it
 #####################################################
@@ -26,6 +27,7 @@ def f_vs_B():
 
     file_name = file_name = '8-10 IV %d'%(name_counter)
     
+    TC = 10e-3 # Time constant of the UHFLI in seconds
     
     power = -10.0
     theta = 0.0 
@@ -99,116 +101,114 @@ def f_vs_B():
     vec_count = 0
     
     
-    try:
-        for i,v1 in enumerate(BY_vector):  
-            
-            
-            start = time()
+    
+    for i,v1 in enumerate(BY_vector):  
         
-            
-            magnetY.set_field(BY_vector[i])   # Set the By field first
-            while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
-                qt.msleep(0.050)
+        
+        start = time()
     
-            magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
-            while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
-                qt.msleep(0.050)
-                
-            total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
-    
-            
-            # After the field is at the set point, we need to check where is the resonant freuqency and set it
-            freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 290e6, stop = 308e6, num_samples = 200, do_plot= False)
-            ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
-            f_res = freq[ind_res] 
-            f_res = f_res[0] - 130e3 # Readout fruequency is offset for -130 kHz from the resonant frequency
+        
+        magnetY.set_field(BY_vector[i])   # Set the By field first
+        while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
+            qt.msleep(0.050)
 
-            # Now set the readout frequency to be the new resonance frequency
-            daq.setDouble('/dev2169/oscs/0/freq', f_res)
-            # Set the TC back to previous
-            daq.setDouble('/dev2169/demods/3/timeconstant', TC)
-    
-            daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
-            qt.msleep(0.10)
-    
-    
-    
-            for j,freq in enumerate(freq_vec):  
-    
+        magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
+        while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
+            qt.msleep(0.050)
+            
+        total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
 
-    
-                VSG.set_frequency(freq)
-    
-                # the next function is necessary to keep the gui responsive. It
-                # checks for instance if the 'stop' button is pushed. It also checks
-                # if the plots need updating.
-                qt.msleep(0.010)
-    
-                # readout
-                # readout
-                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2)  # Reading the lockin
-                result_refl = array(result_refl)
-                result_phase = result_refl[0,1]  # Getting phase values 
-                result_amp = result_refl[0,0] # Getting amplitude values 
-                
-                data_temp_amplitude[j] = result_amp
-                data_temp_phase[j] = result_phase
-                # save the data point to the file, this will automatically trigger
-                # the plot windows to update
-                data.add_data_point(freq,total_field, result_amp, result_phase)  
-    
-          
-                
-    
-             
-                
-            data.new_block()
-            stop = time()
-            # Converting the reflectometry amplitude data to the matrix format
-            new_mat = np.column_stack((new_mat_amplitude, data_temp_amplitude))
-            if i == 0: #Kicking out the first column filled with zero
-                new_mat_amplitude = new_mat_amplitude[:,1:]
-            np.savetxt(fname = data.get_dir() + '/' + file_name + "_amplitude_matrix.dat", X = new_mat_amplitude, fmt = '%1.4e', delimiter = '  ', newline = '\n')
-    
-            # Converting the reflectometry phase data to the matrix format
-            new_mat_phase = np.column_stack((new_mat_phase, data_temp_phase))
-            if i == 0: #Kicking out the first column filled with zero
-                new_mat_lockin = new_mat_lockin[:,1:]
-            np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X = new_mat_lockin, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+        
+        # After the field is at the set point, we need to check where is the resonant freuqency and set it
+        freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 290e6, stop = 308e6, num_samples = 200, do_plot= False)
+        ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
+        f_res = freq[ind_res] 
+        f_res = f_res[0] - 130e3 # Readout fruequency is offset for -130 kHz from the resonant frequency
+        # Now set the readout frequency to be the new resonance frequency
+        daq.setDouble('/dev2169/oscs/0/freq', f_res)
+        # Set the TC back to previous
+        daq.setDouble('/dev2169/demods/3/timeconstant', TC)
+
+        daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+        qt.msleep(0.10)
+
+
+
+        for j,freq in enumerate(freq_vec):  
+
+
+            VSG.set_frequency(freq)
+
+            # the next function is necessary to keep the gui responsive. It
+            # checks for instance if the 'stop' button is pushed. It also checks
+            # if the plots need updating.
+            qt.msleep(0.010)
+
+            # readout
+            # readout
+            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2)  # Reading the lockin
+            result_refl = array(result_refl)
+            result_phase = result_refl[0,1]  # Getting phase values 
+            result_amp = result_refl[0,0] # Getting amplitude values 
             
-            plot3d_amplitude.update()
-            plot3d_phase.update()
-            plot2d_amplitude.update()
-            plot2d_phase.update()
-    
-            vec_count = vec_count + 1
-            print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(BY_vector.size - vec_count))))
+            data_temp_amplitude[j] = result_amp
+            data_temp_phase[j] = result_phase
+            # save the data point to the file, this will automatically trigger
+            # the plot windows to update
+            data.add_data_point(freq,total_field, result_amp, result_phase)  
+
+      
             
+
+         
             
-    
-        print 'Overall duration: %s sec' % (stop - init_start, )
-    
-    finally:
-    
-        # Switching off the RF 
-        VSG.set_status("off") 
-    
-        #Stop the AWG sequence 
-        #AWG.stop()
-        #Turn OFF all necessary AWG channels
-        #AWG.set_ch1_output(0)
-        #AWG.set_ch2_output(0)
-        #AWG.set_ch3_output(0)
-        #AWG.set_ch4_output(0)
-    
-        # after the measurement ends, you need to close the data file.
-        data.close_file()
-    
-        bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
-        bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
-    
-        # lastly tell the secondary processes (if any) that they are allowed to start again.
-        qt.mend()
+        data.new_block()
+        stop = time()
+        # Converting the reflectometry amplitude data to the matrix format
+        new_mat_amplitude = np.column_stack((new_mat_amplitude, data_temp_amplitude))
+        if i == 0: #Kicking out the first column filled with zero
+            new_mat_amplitude = new_mat_amplitude[:,1:]
+        np.savetxt(fname = data.get_dir() + '/' + file_name + "_amplitude_matrix.dat", X = new_mat_amplitude, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+
+        # Converting the reflectometry phase data to the matrix format
+        new_mat_phase = np.column_stack((new_mat_phase, data_temp_phase))
+        if i == 0: #Kicking out the first column filled with zero
+            new_mat_phase = new_mat_phase[:,1:]
+        np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X = new_mat_phase, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+        
+        plot3d_amplitude.update()
+        plot3d_phase.update()
+        plot2d_amplitude.update()
+        plot2d_phase.update()
+
+        vec_count = vec_count + 1
+        print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(BY_vector.size - vec_count))))
+        
+        
+
+    print 'Overall duration: %s sec' % (stop - init_start, )
+
+
+
+    # Switching off the RF 
+    VSG.set_status("off") 
+
+    #Stop the AWG sequence 
+    #AWG.stop()
+    #Turn OFF all necessary AWG channels
+    #AWG.set_ch1_output(0)
+    #AWG.set_ch2_output(0)
+    #AWG.set_ch3_output(0)
+    #AWG.set_ch4_output(0)
+
+    # after the measurement ends, you need to close the data file.
+    data.close_file()
+
+    bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
+    bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
+
+    # lastly tell the secondary processes (if any) that they are allowed to start again.
+    qt.mend()
 
 # Do measurement
 f_vs_B()
