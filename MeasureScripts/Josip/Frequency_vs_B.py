@@ -20,12 +20,15 @@ reload(UHFLI_lib)
 daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #VSG = qt.instruments.create('VSG','RS_SMW200A',address = 'TCPIP::10.21.64.105::hislip0::INSTR')
 
-name_counter += 1
 
-def f_vs_B():
+def f_vs_B(vg11 = None):
     """Function for running frequency vs magnetic field sweep."""
 
-    file_name = file_name = '8-10 IV %d'%(name_counter)
+    global name_counter
+
+    name_counter += 1
+
+    file_name = file_name = '8-10 IV %d_Vg11=%.3f'%(name_counter, vg11)
     
     TC = 10e-3 # Time constant of the UHFLI in seconds
     
@@ -204,11 +207,19 @@ def f_vs_B():
     # after the measurement ends, you need to close the data file.
     data.close_file()
 
-    bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
-    bc(path = data.get_dir(), fname = data.get_filename()+"_matrix")
+    bc(path = data.get_dir(), fname = file_name + "_amplitude_matrix.dat")
+    bc(path = data.get_dir(), fname = file_name + "_phase_matrix.dat")
 
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
 
-# Do measurement
-f_vs_B()
+
+
+V_G11 = np.linspace(-18.5,-21.0,5) 
+gatediv = 10.0
+
+for vg in V_G11:  # Do measurement for different DC points
+    IVVI.set_dac3(vg*gatediv)
+    f_vs_B(vg11 = vg)
+
+
