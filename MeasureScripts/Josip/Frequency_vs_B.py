@@ -146,7 +146,7 @@ def f_vs_B(vg11 = None):
             #    temp_freq = freq
             #    VSG.set_power(power + 1)
 
-            #VSG.set_frequency(freq)
+            VSG.set_frequency(freq)
 
             # the next function is necessary to keep the gui responsive. It
             # checks for instance if the 'stop' button is pushed. It also checks
