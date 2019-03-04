@@ -39,21 +39,21 @@ def f_vs_B(vg11 = None):
     ramp_rate_Z = 0.0005 #T/s
     step_size_BY = 1e-3 
     step_size_BZ = 1e-3
-    Bmin = 50e-3  # Min total field in T
-    Bmax = 300e-3 # Max total field in T
+    Bmin = 100e-3  # Min total field in T
+    Bmax = 1000e-3 # Max total field in T
     Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
     Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
     Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-    BY_vector = np.linspace(Bymax,Bymin,100) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,100) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmax,Bzmin,100) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,100) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(4e9,7e9,3e6)  # frequency 
+    freq_vec = arange(4e9,15e9,3e6)  # frequency 
     
     qt.mstart()
     
