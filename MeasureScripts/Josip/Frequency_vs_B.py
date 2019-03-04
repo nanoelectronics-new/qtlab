@@ -135,12 +135,18 @@ def f_vs_B(vg11 = None):
         daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
         qt.msleep(0.10)
 
+        #temp_freq = freq_vec[0] # Initial temporary frequency is the first value in the frequency sweep
 
 
         for j,freq in enumerate(freq_vec):  
 
+            # For the coax line L1 the power drop from 5 to 15 GHz is 10 dB and it looks linear in this units -> 1dB per GHz
+            # Therefore, each time the frequency increases for 1 GHz we are increasing the power for 1 dB
+            #if freq >= (temp_freq + 1e9):
+            #    temp_freq = freq
+            #    VSG.set_power(power + 1)
 
-            VSG.set_frequency(freq)
+            #VSG.set_frequency(freq)
 
             # the next function is necessary to keep the gui responsive. It
             # checks for instance if the 'stop' button is pushed. It also checks
