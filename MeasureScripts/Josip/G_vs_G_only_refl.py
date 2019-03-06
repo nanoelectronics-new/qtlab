@@ -16,7 +16,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 name_counter += 1
 
 
-def do_meas_refl(bias = 0.0):
+def do_meas_refl(bias = 0.0, fmw = None):
 
     def V_G1(V_G2):
         '''In order to record paralelogram instead of the rectangle, in the gate space,
@@ -24,7 +24,7 @@ def do_meas_refl(bias = 0.0):
            y-axis values for given x-axis value''' 
         return 1.344*V_G2 - 0.791
 
-    file_name = '8-10 IV %d GvsG_'%(name_counter)
+    file_name = '8-10 IV %d GvsG_fmw=%.1fGHz_'%(name_counter, fmw/1e9)
 
     
     gate1div = 10.0
@@ -181,8 +181,36 @@ def do_meas_refl(bias = 0.0):
 
 
 # Do measurement for different biases:
-do_meas_refl()
+#do_meas_refl()
 #biases = np.linspace(-300,300,13) # Bias voltages in mV *10
 
 #for Vsd in biases:
     #do_meas_refl(bias = Vsd)
+
+# Turn the RF on
+VSG.set_status("on") 
+
+power = -35 # dBm
+freq_vec = np.arange(1.5e9,6.5e9,100e6) # in Hz
+temp_freq = freq_vec[0]
+
+for j,freq in enumerate(freq_vec): 
+    # Set frequency
+    VSG.set_frequency(freq)
+
+    if freq >= (temp_freq + 1e9):
+        temp_freq = freq
+        power = power + 1
+        # Set the VSG power units
+        VSG.set_power_units("dbm") 
+        # Set the RF power
+        VSG.set_power(power)
+
+
+
+    # Do measurement
+    do_meas_refl(fmw = freq)
+
+
+# Turn the RF on
+VSG.set_status("off") 

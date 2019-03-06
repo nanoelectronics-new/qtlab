@@ -62,7 +62,7 @@ class RS_SMW200A(Instrument):
             tags=['sweep'])
         self.add_parameter('power', type=types.FloatType,
             flags=Instrument.FLAG_GETSET | Instrument.FLAG_GET_AFTER_SET,
-            minval=-30, maxval=30,
+            minval=-60, maxval=30,
             tags=['sweep'])
         self.add_parameter('power_units', type=types.StringType,
             flags=Instrument.FLAG_GETSET | Instrument.FLAG_GET_AFTER_SET)

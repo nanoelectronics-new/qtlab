@@ -32,7 +32,7 @@ def f_vs_B(vg = None):
     
     TC = 10e-3 # Time constant of the UHFLI in seconds
     
-    power = -20.0
+    power = -35.0
     theta = 0.0 
     
     ramp_rate_Y = 0.00054 #T/s
@@ -135,7 +135,7 @@ def f_vs_B(vg = None):
         daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
         qt.msleep(0.10)
 
-        #temp_freq = freq_vec[0] # Initial temporary frequency is the first value in the frequency sweep
+        temp_freq = freq_vec[0] # Initial temporary frequency is the first value in the frequency sweep
 
 
         for j,freq in enumerate(freq_vec):  
