@@ -18,6 +18,12 @@ name_counter += 1
 
 def do_meas_refl(bias = 0.0):
 
+    def V_G1(V_G2):
+        '''In order to record paralelogram instead of the rectangle, in the gate space,
+           a functional dependance of y-axis gate vales is needed. This function returns the 
+           y-axis values for given x-axis value''' 
+        return 1.344*V_G2 - 0.791
+
     file_name = '8-10 IV %d GvsG_'%(name_counter)
 
     
@@ -27,9 +33,10 @@ def do_meas_refl(bias = 0.0):
     bias = bias
     
     
-    v1_vec = arange(-17.0,-13.5,0.05)      #outer
-    v2_vec = arange(-23.0,-17.0,0.05)      #inner
-    
+    v1_vec = arange(-17.0,-13.5,0.05)      # outer
+    v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
+
+
 
     
     qt.mstart()
@@ -90,6 +97,8 @@ def do_meas_refl(bias = 0.0):
         daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
         
         for i,v1 in enumerate(v1_vec):
+
+            v2_vec = arange(V_G1(v1),V_G1(v1)+2.0,0.05)      #Inner, scanning only a diagonal stripe 2 mV in width
             
             
             start = time()
