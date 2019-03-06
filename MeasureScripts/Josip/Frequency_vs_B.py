@@ -21,21 +21,21 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #VSG = qt.instruments.create('VSG','RS_SMW200A',address = 'TCPIP::10.21.64.105::hislip0::INSTR')
 
 
-def f_vs_B(vg11 = None):
+def f_vs_B(vg = None):
     """Function for running frequency vs magnetic field sweep."""
 
     global name_counter
 
     name_counter += 1
 
-    file_name = file_name = '8-10 IV %d_Vg11=%.3f'%(name_counter, vg11)
+    file_name = file_name = '8-10 IV %d_Vg9_Vg11=%.2f_%.2fmV'%(name_counter, vg[0], vg[1])
     
     TC = 10e-3 # Time constant of the UHFLI in seconds
     
-    power = -10.0
+    power = -20.0
     theta = 0.0 
     
-    ramp_rate_Y = 0.0003 #T/s
+    ramp_rate_Y = 0.00054 #T/s
     ramp_rate_Z = 0.0005 #T/s
     step_size_BY = 1e-3 
     step_size_BZ = 1e-3
@@ -53,7 +53,7 @@ def f_vs_B(vg11 = None):
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(4e9,15e9,3e6)  # frequency 
+    freq_vec = arange(10e9,20e9,3e6)  # frequency 
     
     qt.mstart()
     
@@ -221,11 +221,13 @@ def f_vs_B(vg11 = None):
 
 
 
-V_G11 = np.linspace(-18.5,-21.0,5) 
+#V_G11 = np.linspace(-18.5,-21.0,5)
+V_Gs = [(-16.00,-21.60),(-15.60,-21.00),(-15.20,-20.55),(-14.80,-20.00),(-14.40,-19.50)] 
 gatediv = 10.0
 
-for vg in V_G11:  # Do measurement for different DC points
-    IVVI.set_dac3(vg*gatediv)
-    f_vs_B(vg11 = vg)
+for vg in V_Gs:  # Do measurement for different DC points
+    IVVI.set_dac2(vg[0]*gatediv)
+    IVVI.set_dac3(vg[1]*gatediv)
+    f_vs_B(vg = vg)
 
 
