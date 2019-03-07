@@ -136,7 +136,7 @@ def f_vs_B(vg = None):
             qt.msleep(0.10)
     
             temp_freq = freq_vec[0] # Initial temporary frequency is the first value in the frequency sweep
-    
+            temp_power = power
     
             for j,freq in enumerate(freq_vec):  
     
@@ -144,11 +144,11 @@ def f_vs_B(vg = None):
                 # Therefore, each time the frequency increases for 1 GHz we are increasing the power for 1 dB
                 if freq >= (temp_freq + 1e9):
                     temp_freq = freq
-                    power = power + 1
+                    temp_power += 1
                     # Set the VSG power units
                     VSG.set_power_units("dbm") 
                     # Set the RF power
-                    VSG.set_power(power)
+                    VSG.set_power(temp_power)
     
                 VSG.set_frequency(freq)
     
