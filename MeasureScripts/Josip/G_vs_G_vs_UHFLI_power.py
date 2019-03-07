@@ -27,9 +27,18 @@ def dBm_to_volts_50ohm(P_dBm):
 
 
 
-def do_meas_refl(bias = 0.0, ampl = None):
+def do_meas_refl2(bias = 0.0, ampl = None):
 
-    file_name = '8-10 IV %d GvsG_%d'%(name_counter, ampl)
+    def V_G1(V_G2):
+        '''In order to record paralelogram instead of the rectangle, in the gate space,
+        a functional dependance of y-axis gate vales is needed. This function returns the 
+        y-axis values for given x-axis value''' 
+        return 1.344*V_G2 - 0.791
+
+    global name_counter
+    name_counter += 1
+
+    file_name = '8-10 IV %d GvsG_%ddBm_'%(name_counter, ampl)
 
     
     gate1div = 10.0
@@ -38,8 +47,8 @@ def do_meas_refl(bias = 0.0, ampl = None):
     bias = bias
     
     
-    v1_vec = arange(-23.0,-13.0,0.2)      #outer
-    v2_vec = arange(-25.0,-15.0,0.2)      #inner
+    v1_vec = arange(-17.0,-13.5,0.05)      # outer
+    v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
     
     
     
@@ -101,6 +110,8 @@ def do_meas_refl(bias = 0.0, ampl = None):
         daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
         
         for i,v1 in enumerate(v1_vec):
+
+            v2_vec = arange(V_G1(v1),V_G1(v1)+2.0,0.05)      #Inner, scanning only a diagonal stripe 2 mV in width
             
             
             start = time()
@@ -184,7 +195,7 @@ def do_meas_refl(bias = 0.0, ampl = None):
 
 
 
-def sweep_power(name_counter = name_counter, P1 = -50,P2 = -10,numpts = 10):
+def sweep_power(P1 = -50,P2 = -10,numpts = 7):
     """
     This function runs do_meas_refl for different UHFLI amplitudes
     Inputs:
@@ -193,15 +204,14 @@ def sweep_power(name_counter = name_counter, P1 = -50,P2 = -10,numpts = 10):
         numpts (int) - number of different powers
     """
 
-    Amplitudes = np.linspace(-35,-20, numpts) # Amplitude of the UHFLI carrier signal in dBm
+    Amplitudes = np.linspace(-46,-25, numpts) # Amplitude of the UHFLI carrier signal in dBm
 
     for ampl in Amplitudes:
-        name_counter +=1
         daq.setDouble('/dev2169/sigouts/0/amplitudes/3', dBm_to_volts_50ohm(ampl))  # Set the UHFLI carrier signal amplitude in volts
         daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
         sleep(0.5) # Wait for the parameters to be properly set
         # Do G vs G measurement
-        do_meas_refl(ampl = ampl)
+        do_meas_refl2(ampl = ampl)
 
 
 #Do measurement

@@ -30,7 +30,7 @@ def f_vs_B(vg = None):
 
     file_name = file_name = '8-10 IV %d_Vg9_Vg11=%.2f_%.2fmV'%(name_counter, vg[0], vg[1])
     
-    TC = 10e-3 # Time constant of the UHFLI in seconds
+    TC = 50e-3 # Time constant of the UHFLI in seconds
     
     power = -35.0
     theta = 0.0 
@@ -135,7 +135,7 @@ def f_vs_B(vg = None):
         daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
         qt.msleep(0.10)
 
-        temp_freq = freq_vec[0] # Initial temporary frequency is the first value in the frequency sweep
+        #temp_freq = freq_vec[0] # Initial temporary frequency is the first value in the frequency sweep
 
 
         for j,freq in enumerate(freq_vec):  
@@ -221,13 +221,14 @@ def f_vs_B(vg = None):
 
 
 
-#V_G11 = np.linspace(-18.5,-21.0,5)
-V_Gs = [(-16.00,-21.60),(-15.60,-21.00),(-15.20,-20.55),(-14.80,-20.00),(-14.40,-19.50)] 
-gatediv = 10.0
+V_G9 = np.linspace(-16.0,-14.75,7)
 
-for vg in V_Gs:  # Do measurement for different DC points
-    IVVI.set_dac2(vg[0]*gatediv)
-    IVVI.set_dac3(vg[1]*gatediv)
+gatediv = 10.0
+IVVI.set_dac3(-20.0*gatediv)
+
+for vg in V_G9:  # Do measurement for different DC points
+    IVVI.set_dac2(vg*gatediv)
+    
     f_vs_B(vg = vg)
 
 

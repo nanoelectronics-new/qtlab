@@ -13,7 +13,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
-name_counter += 1
+
 
 
 def do_meas_refl(bias = 0.0, fmw = None):
@@ -23,6 +23,10 @@ def do_meas_refl(bias = 0.0, fmw = None):
            a functional dependance of y-axis gate vales is needed. This function returns the 
            y-axis values for given x-axis value''' 
         return 1.344*V_G2 - 0.791
+
+
+    global name_counter
+    name_counter += 1
 
     file_name = '8-10 IV %d GvsG_fmw=%.1fGHz_'%(name_counter, fmw/1e9)
 
@@ -181,36 +185,36 @@ def do_meas_refl(bias = 0.0, fmw = None):
 
 
 # Do measurement for different biases:
-#do_meas_refl()
+do_meas_refl()
 #biases = np.linspace(-300,300,13) # Bias voltages in mV *10
 
 #for Vsd in biases:
     #do_meas_refl(bias = Vsd)
 
 # Turn the RF on
-VSG.set_status("on") 
+#VSG.set_status("on") 
 
-power = -35 # dBm
-freq_vec = np.arange(1.5e9,6.5e9,100e6) # in Hz
-temp_freq = freq_vec[0]
+#power = -35 # dBm
+#freq_vec = np.arange(1.5e9,6.5e9,100e6) # in Hz
+#temp_freq = freq_vec[0]
 
-for j,freq in enumerate(freq_vec): 
+#for j,freq in enumerate(freq_vec): 
     # Set frequency
-    VSG.set_frequency(freq)
+    #VSG.set_frequency(freq)
 
-    if freq >= (temp_freq + 1e9):
-        temp_freq = freq
-        power = power + 1
+    #if freq >= (temp_freq + 1e9):
+        #temp_freq = freq
+        #power = power + 1
         # Set the VSG power units
-        VSG.set_power_units("dbm") 
+        #VSG.set_power_units("dbm") 
         # Set the RF power
-        VSG.set_power(power)
+        #VSG.set_power(power)
 
 
 
     # Do measurement
-    do_meas_refl(fmw = freq)
+    #do_meas_refl(fmw = freq)
 
 
 # Turn the RF on
-VSG.set_status("off") 
+#VSG.set_status("off") 
