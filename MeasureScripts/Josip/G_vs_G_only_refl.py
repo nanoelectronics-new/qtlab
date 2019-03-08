@@ -28,7 +28,7 @@ def do_meas_refl(bias = 0.0, fmw = None):
     global name_counter
     name_counter += 1
 
-    file_name = '8-10 IV %d GvsG_fmw=%.1fGHz_'%(name_counter, fmw/1e9)
+    file_name = '8-10 IV %d GvsG_'%(name_counter)
 
     
     gate1div = 10.0
