@@ -28,11 +28,11 @@ def f_vs_B(vg = None):
 
     name_counter += 1
 
-    file_name = file_name = '8-10 IV %d_Vg9=%.2fmV'%(name_counter, vg)
+    file_name = '8-10 IV %d_Vg9=%.2fmV'%(name_counter, vg)
     
     TC = 50e-3 # Time constant of the UHFLI in seconds
     
-    power = -25.0
+    power = -15.0
     theta = 0.0 
     
     ramp_rate_Y = 0.00054 #T/s
@@ -47,13 +47,13 @@ def f_vs_B(vg = None):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-    BY_vector = np.linspace(Bymin,Bymax,50) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,100) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,50) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,100) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(3e9,12e9,6e6)  # frequency 
+    freq_vec = arange(3e9,12e9,5e6)  # frequency 
     
     qt.mstart()
     
