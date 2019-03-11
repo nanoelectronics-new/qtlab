@@ -32,7 +32,7 @@ def f_vs_B(vg = None):
     
     TC = 50e-3 # Time constant of the UHFLI in seconds
     
-    power = -15.0
+    power = -35.0
     theta = 0.0 
     
     ramp_rate_Y = 0.00054 #T/s
@@ -225,7 +225,7 @@ def f_vs_B(vg = None):
 
 
 
-V_G9 = [-15.37]
+V_G9 = np.linspace(-15.60,-14.80,8)
 
 gatediv = 10.0
 IVVI.set_dac3(-20.0*gatediv)
