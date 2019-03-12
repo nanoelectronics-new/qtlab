@@ -126,7 +126,7 @@ def f_vs_B(vg = None):
             freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 290e6, stop = 308e6, num_samples = 200, do_plot= False)
             ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
             f_res = freq[ind_res] 
-            f_res = f_res[0] - 160e3 # Readout fruequency is offset for -130 kHz from the resonant frequency
+            f_res = f_res[0] - 160e3 # Readout fruequency is offseted from the resonant frequency, it turned out to be better like this
             # Now set the readout frequency to be the new resonance frequency
             daq.setDouble('/dev2169/oscs/0/freq', f_res)
             # Set the TC back to previous
@@ -225,7 +225,7 @@ def f_vs_B(vg = None):
 
 
 
-V_G9 = np.linspace(-15.60,-14.80,8)
+V_G9 = np.linspace(-15.60,-15.00,4)
 
 gatediv = 10.0
 IVVI.set_dac3(-20.0*gatediv)
