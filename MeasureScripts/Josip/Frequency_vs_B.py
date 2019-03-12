@@ -30,7 +30,7 @@ def f_vs_B(vg = None):
 
     file_name = '8-10 IV %d_Vg9=%.2fmV'%(name_counter, vg)
     
-    TC = 50e-3 # Time constant of the UHFLI in seconds
+    TC = 20e-3 # Time constant of the UHFLI in seconds
     
     power = -35.0
     theta = 0.0 
