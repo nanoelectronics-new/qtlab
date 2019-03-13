@@ -28,18 +28,18 @@ def f_vs_B(vg = None):
 
     name_counter += 1
 
-    file_name = '8-10 IV %d_Vg9=%.2fmV'%(name_counter, vg)
+    file_name = '8-10 IV %d_Vg9=%.2fmV_Vg11=%.2fmV'%(name_counter, vg[0], vg[1])
     
     TC = 20e-3 # Time constant of the UHFLI in seconds
     
-    power = -35.0
+    power = -15.0
     theta = 0.0 
     
     ramp_rate_Y = 0.00054 #T/s
     ramp_rate_Z = 0.0005 #T/s
     step_size_BY = 1e-3 
     step_size_BZ = 1e-3
-    Bmin = 130e-3  # Min total field in T
+    Bmin = 100e-3  # Min total field in T
     Bmax = 400e-3 # Max total field in T
     Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
     Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
@@ -225,14 +225,16 @@ def f_vs_B(vg = None):
 
 
 
-V_G9 = np.linspace(-15.60,-15.00,4)
+V_G11 = [-20.5, -20.5,-20.5, -20.2, -20.2, -20.2, -19.9, -19.9, -19.9, -19.6, -19.6, -19.6]
+V_G9 = [-15.87, -15.63, -15.45, -15.65, -15.45, -15.25, -15.43, -15.23, -15.03, -15.20, -15.00, -14.80]
 
 gatediv = 10.0
-IVVI.set_dac3(-20.0*gatediv)
 
-for vg in V_G9:  # Do measurement for different DC points
-    IVVI.set_dac2(vg*gatediv)
+
+for nj,vg in enumerate(V_G11):     # Do measurement for different DC points
+    IVVI.set_dac3(gatediv*V_G11[nj])
+    IVVI.set_dac2(gatediv*V_G9[nj])
     # Do_measurement
-    f_vs_B(vg = vg)
+    f_vs_B(vg = [V_G9[nj], V_G11[nj]])
 
 
