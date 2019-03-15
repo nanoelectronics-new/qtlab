@@ -28,9 +28,10 @@ def f_vs_B(vg = None):
 
     name_counter += 1
 
-    file_name = '8-10 IV %d_Vg9=%.2fmV_Vg11=%.2fmV'%(name_counter, vg[0], vg[1])
+    #file_name = '8-10 IV %d_Vg9=%.2fmV_Vg11=%.2fmV'%(name_counter, vg[0], vg[1])
+    file_name = '8-10 IV %d_'%(name_counter)
     
-    TC = 20e-3 # Time constant of the UHFLI in seconds
+    TC = 100e-3 # Time constant of the UHFLI in seconds
     
     power = -15.0
     theta = 0.0 
@@ -40,20 +41,20 @@ def f_vs_B(vg = None):
     step_size_BY = 1e-3 
     step_size_BZ = 1e-3
     Bmin = 100e-3  # Min total field in T
-    Bmax = 400e-3 # Max total field in T
+    Bmax = 250e-3 # Max total field in T
     Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
     Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
     Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-    BY_vector = np.linspace(Bymin,Bymax,100) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,200) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,100) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,200) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(3e9,9e9,5e6)  # frequency 
+    freq_vec = arange(7e9,11e9,2e6)  # frequency 
     
     qt.mstart()
     
@@ -225,16 +226,19 @@ def f_vs_B(vg = None):
 
 
 
-V_G11 = [-20.5, -20.5,-20.5, -20.2, -20.2, -20.2, -19.9, -19.9, -19.9, -19.6, -19.6, -19.6]
-V_G9 = [-15.87, -15.63, -15.45, -15.65, -15.45, -15.25, -15.43, -15.23, -15.03, -15.20, -15.00, -14.80]
+#V_G11 = [-20.5, -20.5,-20.5, -20.2, -20.2, -20.2, -19.9, -19.9, -19.9, -19.6, -19.6, -19.6]
+#V_G9 = [-15.87, -15.63, -15.45, -15.65, -15.45, -15.25, -15.43, -15.23, -15.03, -15.20, -15.00, -14.80]
 
-gatediv = 10.0
+#gatediv = 10.0
 
 
-for nj,vg in enumerate(V_G11):     # Do measurement for different DC points
-    IVVI.set_dac3(gatediv*V_G11[nj])
-    IVVI.set_dac2(gatediv*V_G9[nj])
+#for nj,vg in enumerate(V_G11):     # Do measurement for different DC points
+    #IVVI.set_dac3(gatediv*V_G11[nj])
+    #IVVI.set_dac2(gatediv*V_G9[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G11[nj]])
+    #f_vs_B(vg = [V_G9[nj], V_G11[nj]])
 
+
+# Do measurement
+f_vs_B()
 
