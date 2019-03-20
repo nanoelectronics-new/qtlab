@@ -15,20 +15,18 @@ def run_IV():
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    v_vec = arange(0.0,-2000.0,-1.0)   
+    v_vec = arange(0.0,-2000.0,-5.0)   
     
+
     div = 1.0
     
     
-    
     qt.mstart()
-    name = ' 1-3 IV %d_leak_check_23_to_2'%name_counter
+    name = '8-10 IV %d_leak_check_12_to_9'%name_counter
     data = qt.Data(name=name)
     
     
-    
     data.add_coordinate('Voltage [mV]')
-    
     data.add_value('Current [pA]')
     
     
@@ -46,17 +44,19 @@ def run_IV():
         start = time()
         for v in v_vec:
     
-    
+        
             IVVI.set_dac5(v*div)
 
     
             result = dmm._ins.get_readval()/(gain)*1e12 
+            if abs(result) > 80.0:
+                raise Exception("LEAK")
         
             data.add_data_point(v, result)
         
 
             plot2d.update()  
-        
+
         
             qt.msleep(0.003)
         stop = time()

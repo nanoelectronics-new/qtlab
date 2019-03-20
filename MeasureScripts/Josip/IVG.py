@@ -42,14 +42,14 @@ def run_IVG():
 
 	gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 	
-	bias = 0.0
+	bias = 100.0
 	
 	leak_test = True
 	
 	
-	v_vec = arange(-25.0,-11.0,0.2)
+	v_vec = arange(-2000.0,2000.0,2.0)
 	
-	divgate = 10.0
+	divgate = 1.0
 	
 	
 	
@@ -60,7 +60,6 @@ def run_IVG():
 	
 	
 	data.add_coordinate('Voltage [mV]')
-	
 	data.add_value('Current [pA]')
 	
 	
@@ -81,8 +80,8 @@ def run_IVG():
 		
 	
 	
-		    IVVI.set_dac3(v*divgate)
-		    #IVVI.set_dac3(v*divgate)
+		    #IVVI.set_dac5(v*divgate)
+		    IVVI.set_dac6(v*divgate)
 	
 		    result = dmm._ins.get_readval()/(gain)*1e12 
 		    #if (abs(result) > 30.0):
