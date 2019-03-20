@@ -14,7 +14,7 @@ import UHFLI_lib
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_current(bias = 100):
+def do_meas_current(bias = 50):
 
     file_name = 'GvsG_8-10_G9&12'
     
@@ -26,8 +26,8 @@ def do_meas_current(bias = 100):
     gatediv = 1.0
     
     
-    v1_vec = arange(-500.0,0.0,1.0)     #outer
-    v2_vec = arange(-2000.0,500.0,10.0)       #inner
+    v1_vec = arange(-300.0,0,0.2)     #outer
+    v2_vec = arange(-400.0,400.0,1.0)       #inner
     
     
     
