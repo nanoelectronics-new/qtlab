@@ -40,14 +40,14 @@ def run_IVG():
 	Just to run the code below in the separate function
 	not to polute common memory space'''
 
-	gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+	gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 	
 	bias = 100.0
 	
 	leak_test = True
 	
 	
-	v_vec = arange(-2000.0,2000.0,2.0)
+	v_vec = arange(-300.0,2000.0,1.0)
 	
 	divgate = 1.0
 	
@@ -80,8 +80,8 @@ def run_IVG():
 		
 	
 	
-		    #IVVI.set_dac5(v*divgate)
-		    IVVI.set_dac6(v*divgate)
+		    IVVI.set_dac5(v*divgate)
+		    #IVVI.set_dac6(v*divgate)
 	
 		    result = dmm._ins.get_readval()/(gain)*1e12 
 		    #if (abs(result) > 30.0):

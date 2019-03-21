@@ -14,11 +14,11 @@ import UHFLI_lib
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_current(bias = 50):
+def do_meas_current(bias = 50.0):
 
-    file_name = 'GvsG_8-10_G9&12'
+    file_name = 'GvsG_8-10_G9&11'
     
-    gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+    gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
     bias = bias
@@ -26,8 +26,8 @@ def do_meas_current(bias = 50):
     gatediv = 1.0
     
     
-    v1_vec = arange(-300.0,0,0.2)     #outer
-    v2_vec = arange(-400.0,400.0,1.0)       #inner
+    v1_vec = arange(-300.0,-100.0,1.0)     #outer
+    v2_vec = arange(-300.0,100.0,1.0)       #inner
     
     
     
@@ -41,7 +41,7 @@ def do_meas_current(bias = 50):
     
     
     ##CURRENT
-    data.add_coordinate('V_G 12 [mV]')    # inner
+    data.add_coordinate('V_G 11 [mV]')    # inner
     data.add_coordinate('V_G 9 [mV]')      #  outer
     data.add_value('Current [pA]')
     
