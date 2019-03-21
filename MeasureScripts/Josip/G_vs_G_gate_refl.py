@@ -17,7 +17,7 @@ name_counter +=1
 
 
 
-def do_meas_both(bias = 100.0):
+def do_meas_both(bias = 50.0):
 
     file_name = '8-10 IV %d GvsG_'%name_counter
     
@@ -30,8 +30,8 @@ def do_meas_both(bias = 100.0):
     
     
     
-    v1_vec = arange(1000.0,1200.0,0.4)      #outer
-    v2_vec = arange(1000.0,1200.0,0.4)       #inner
+    v1_vec = arange(0.0,500.0,0.6)      #outer
+    v2_vec = arange(0.0,500.0,0.6)       #inner
     
     
     
@@ -117,7 +117,7 @@ def do_meas_both(bias = 100.0):
     
                 # readout
                 result = dmm.get_readval()/gain*1e12
-                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 1.0)  # Reading the lockin
+                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2.0)  # Reading the lockin
                 result_refl = array(result_refl)
                 result_phase = result_refl[0,1]  # Getting phase values 
                 result_mag = result_refl[0,0] # Getting amplitude values 
