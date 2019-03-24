@@ -17,7 +17,7 @@ name_counter +=1
 
 
 
-def do_meas_both(bias = 500.0):
+def do_meas_both(bias = 0.0):
 
     file_name = '8-10 IV %d GvsG_'%name_counter
     
@@ -30,8 +30,8 @@ def do_meas_both(bias = 500.0):
     
     
     
-    v1_vec = arange(300.0,1500.0,0.5)      #outer
-    v2_vec = arange(0.0,200.0,0.5)       #inner
+    v1_vec = arange(325.0,600.0,0.2)      #outer
+    v2_vec = arange(20.0,100.0,0.2)       #inner
     
     
     
