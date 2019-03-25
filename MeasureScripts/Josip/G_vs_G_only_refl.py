@@ -37,9 +37,9 @@ def do_meas_refl(bias = 0.0, fmw = None):
     bias = bias
     
     
-    v1_vec = arange(0.0,2000.0,0.5)      #outer
+    v1_vec = arange(-500.0,2000.0,0.5)      #outer
     #v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
-    v2_vec = arange(300.0,400.0,0.5)       #inner
+    v2_vec = arange(100.0,200.0,0.5)       #inner
 
 
 
