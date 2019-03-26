@@ -47,14 +47,14 @@ def run_IVG():
 	leak_test = True
 	
 	
-	v_vec = arange(-400.0,2000.0,1.0)
+	v_vec = arange(-300.0,2000.0,1.0)
 	
 	divgate = 1.0
 	
 	
 	
 	qt.mstart()
-	name = ' 7-19 IV %d'%name_counter
+	name = ' 13-16 IV %d'%name_counter
 	data = qt.Data(name=name)
 	
 	
@@ -80,8 +80,8 @@ def run_IVG():
 		
 	
 	
-		    IVVI.set_dac5(v*divgate)
-		    #IVVI.set_dac6(v*divgate)
+		    #IVVI.set_dac5(v*divgate)
+		    IVVI.set_dac6(v*divgate)
 	
 		    result = dmm._ins.get_readval()/(gain)*1e12 
 		    #if (abs(result) > 30.0):

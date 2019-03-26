@@ -19,7 +19,7 @@ name_counter +=1
 
 def do_meas_both(bias = 200.0):
 
-    file_name = '7-19 IV %d GvsG_'%name_counter
+    file_name = '13-16 IV %d GvsG_'%name_counter
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -30,8 +30,8 @@ def do_meas_both(bias = 200.0):
     
     
     
-    v1_vec = arange(-400.0,0.0,1.0)      #outer
-    v2_vec = arange(-400.0,0.0,1.0)       #inner
+    v1_vec = arange(-300.0,0.0,0.5)      #outer
+    v2_vec = arange(-250.0,-150.0,0.5)       #inner
     
     
     
@@ -46,17 +46,17 @@ def do_meas_both(bias = 200.0):
     
     
     ##CURRENT
-    data.add_coordinate('V_G 5 [mV]')   # inner
-    data.add_coordinate('V_G 4 [mV]')  #  outer
+    data.add_coordinate('V_G 17 [mV]')   # inner
+    data.add_coordinate('V_G 14 [mV]')  #  outer
     data.add_value('Current [pA]')
     
     ##REFL f1
-    data_mag.add_coordinate('V_G 5 [mV]')
-    data_mag.add_coordinate('V_G 4 [mV]')
+    data_mag.add_coordinate('V_G 17 [mV]')
+    data_mag.add_coordinate('V_G 14 [mV]')
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 5 [mV]')
-    data_phase.add_coordinate('V_G 4 [mV]')
+    data_phase.add_coordinate('V_G 16 [mV]')
+    data_phase.add_coordinate('V_G 14 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
