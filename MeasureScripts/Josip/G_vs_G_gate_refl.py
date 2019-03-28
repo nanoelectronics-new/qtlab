@@ -30,8 +30,8 @@ def do_meas_both(bias = 200.0):
     
     
     
-    v1_vec = arange(-300.0,2000.0,0.3)      #outer
-    v2_vec = arange(0.0,100.0,0.3)       #inner
+    v1_vec = arange(240.0,300.0,0.3)      #outer
+    v2_vec = arange(75.0,96.0,0.3)       #inner
     
     
     

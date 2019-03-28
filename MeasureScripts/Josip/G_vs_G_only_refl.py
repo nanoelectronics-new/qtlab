@@ -28,7 +28,7 @@ def do_meas_refl(bias = 0.0, fmw = None):
     global name_counter
     name_counter += 1
 
-    file_name = '7-19 IV %d GvsG_'%(name_counter)
+    file_name = '13-16 IV %d GvsG_'%(name_counter)
 
     
     gate1div = 1.0
@@ -36,10 +36,13 @@ def do_meas_refl(bias = 0.0, fmw = None):
     
     bias = bias
     
+
+    v1_vec = arange(240.0,300.0,0.3)      #outer
+    v2_vec = arange(75.0,96.0,0.3)       #inner
     
-    v1_vec = arange(25.0,90.0,0.1)      #outer
+
     #v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
-    v2_vec = arange(126.0,145.0,0.1)       #inner
+
 
 
 
@@ -57,12 +60,12 @@ def do_meas_refl(bias = 0.0, fmw = None):
     
     
 
-    data_mag.add_coordinate('V_G 5 [mV]')       # inner
-    data_mag.add_coordinate('V_G 4 [mV]')      # outer
+    data_mag.add_coordinate('V_G 17 [mV]')       # inner
+    data_mag.add_coordinate('V_G 14 [mV]')      # outer
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 5 [mV]')
-    data_phase.add_coordinate('V_G 4 [mV]')
+    data_phase.add_coordinate('V_G 17 [mV]')
+    data_phase.add_coordinate('V_G 14 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
