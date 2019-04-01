@@ -62,7 +62,7 @@ def do_Vg_vs_B():
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        Vg = arange(88.0,92.0,0.1)  # gate voltage
+        Vg = arange(89.0,92.5,0.06)  # gate voltage
         divgate = 1.0
         
         qt.mstart()
