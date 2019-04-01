@@ -15,8 +15,8 @@ reload(UHFLI_lib)
 
 
 
-#magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.158')
-#magnetY = qt.instruments.create('magnetY', 'AMI430_By', address='10.21.64.184')
+magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.183')
+magnetY = qt.instruments.create('magnetY', 'AMI430_By', address='10.21.64.184')
 daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
@@ -26,7 +26,7 @@ def do_Vg_vs_B():
 
     global name_counter
     
-    thetas = np.linspace(180,360,3) # Angle between the By and Bx axis
+    thetas = np.linspace(90,360,4) # Angle between the By and Bx axis
     
     TC = 10e-3 # Time constant of the UHFLI in seconds
     
@@ -37,7 +37,7 @@ def do_Vg_vs_B():
 
         start = time()
         name_counter += 1
-        file_name = '8_10 IV %d_theta=%d'%(name_counter,theta)
+        file_name = '13_16 IV %d_theta=%d'%(name_counter,theta)
          
         
             
@@ -62,8 +62,8 @@ def do_Vg_vs_B():
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        Vg = arange(-25.0,-11.0,0.1)  # gate voltage
-        divgate = 10.0
+        Vg = arange(88.0,92.0,0.1)  # gate voltage
+        divgate = 1.0
         
         qt.mstart()
         
@@ -75,7 +75,7 @@ def do_Vg_vs_B():
         data_temp = np.zeros(len(Vg))  # Temporary vector for storing the data
         
         
-        data.add_coordinate('Vg 11 [mV]')  #v2
+        data.add_coordinate('Vg 17 [mV]')  #v2
         data.add_coordinate('B [T]')   #v1
         data.add_value('Refl_phase [deg]')
         data.add_value('Refl_amplitude [arb.u.]')
@@ -109,20 +109,21 @@ def do_Vg_vs_B():
                 
                 total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
                 # After the field is at the set point, we need to check where is the resonant freuqency and set it
-                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 290e6, stop = 308e6, num_samples = 200, do_plot= False)
+                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 140e6, stop = 180e6, num_samples = 500, do_plot= False)
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
                 f_res = freq[ind_res]
+                f_res += 200e3 # The readout frequency is shifted 200 kHz from the resonance
     
-                # Now set the readout frequency to be the new resonance frequency
+                # Now set the readout frequency 
                 daq.setDouble('/dev2169/oscs/0/freq', f_res[0])
-                # Set the TC back to previous
+                # Set the TC back to the previous one
                 daq.setDouble('/dev2169/demods/3/timeconstant', TC)
         
                 daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
                 qt.msleep(0.10)
         
                 for j,Vg_val in enumerate(Vg):  
-                    IVVI.set_dac3(Vg_val*divgate)
+                    IVVI.set_dac6(Vg_val*divgate)
     
         
                     # the next function is necessary to keep the gui responsive. It
@@ -131,7 +132,7 @@ def do_Vg_vs_B():
                     qt.msleep(0.010)
         
                     # readout
-                    result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2)  # Reading the lockin
+                    result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 1)  # Reading the lockin
                     result_refl = array(result_refl)
                     result_phase = result_refl[0,1]  # Getting phase values 
                     result_amp = result_refl[0,0] # Getting amplitude values 
