@@ -48,7 +48,7 @@ def do_Vg_vs_B():
         step_size_BZ = -1e-3
 
         Bmin = 0.0  # Min total field in T
-        Bmax = 2000e-3 # Max total field in T
+        Bmax = 0.1e-3 # Max total field in T
         Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
         Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
         Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
@@ -62,7 +62,7 @@ def do_Vg_vs_B():
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        Vg = arange(89.0,92.5,0.06)  # gate voltage
+        Vg = arange(87.0,94.0,0.06)  # gate voltage
         divgate = 1.0
         
         qt.mstart()
