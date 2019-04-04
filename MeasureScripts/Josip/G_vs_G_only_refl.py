@@ -28,7 +28,7 @@ def do_meas_refl(bias = 0.0, fmw = None):
     global name_counter
     name_counter += 1
 
-    file_name = '13-16 IV %d GvsG_'%(name_counter)
+    file_name = '3-7 IV %d GvsG_'%(name_counter)
 
     
     gate1div = 1.0
@@ -37,8 +37,8 @@ def do_meas_refl(bias = 0.0, fmw = None):
     bias = bias
     
 
-    v1_vec = arange(265.0,275.0,0.1)      #outer
-    v2_vec = arange(85.0,94.0,0.1)       #inner
+    v1_vec = arange(-200,500.0,0.5)      #outer
+    v2_vec = arange(-50,50.0,0.5)       #inner
     
 
     #v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
@@ -60,12 +60,12 @@ def do_meas_refl(bias = 0.0, fmw = None):
     
     
 
-    data_mag.add_coordinate('V_G 17 [mV]')       # inner
-    data_mag.add_coordinate('V_G 14 [mV]')      # outer
+    data_mag.add_coordinate('V_G 5 [mV]')       # inner
+    data_mag.add_coordinate('V_G 4 [mV]')      # outer
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 17 [mV]')
-    data_phase.add_coordinate('V_G 14 [mV]')
+    data_phase.add_coordinate('V_G 5 [mV]')
+    data_phase.add_coordinate('V_G 4 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -85,10 +85,10 @@ def do_meas_refl(bias = 0.0, fmw = None):
     
     
     
-    #plot3d_mag = qt.Plot3D(data_mag, name=file_name + "_2D_amplitude", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-    #plot2d_mag = qt.Plot2D(data_mag, name=file_name + "_1D_amplitude",autoupdate=False)
+    plot3d_mag = qt.Plot3D(data_mag, name=file_name + "_2D_amplitude", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    plot2d_mag = qt.Plot2D(data_mag, name=file_name + "_1D_amplitude",autoupdate=False)
     plot3d_phase = qt.Plot3D(data_phase, name=file_name + "_2D_phase", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-    #plot2d_phase = qt.Plot2D(data_phase, name=file_name + "_1D_phase",autoupdate=False)
+    plot2d_phase = qt.Plot2D(data_phase, name=file_name + "_1D_phase",autoupdate=False)
     
     
     
@@ -154,9 +154,9 @@ def do_meas_refl(bias = 0.0, fmw = None):
                 new_mat_phase = new_mat_phase[:,1:]
     
     
-            #plot2d_mag.update()
-            #plot3d_mag.update()
-            #plot2d_phase.update()
+            plot2d_mag.update()
+            plot3d_mag.update()
+            plot2d_phase.update()
             plot3d_phase.update()
     
             # Saving the matrix to the matrix filedata.get_filepath
@@ -174,8 +174,8 @@ def do_meas_refl(bias = 0.0, fmw = None):
         plot3d_phase.save_png(filepath = data_phase.get_dir())
         plot3d_phase.save_eps(filepath = data_phase.get_dir())
     
-        #plot3d_mag.save_png(filepath = data_mag.get_dir())
-        #plot3d_mag.save_eps(filepath = data_mag.get_dir())
+        plot3d_mag.save_png(filepath = data_mag.get_dir())
+        plot3d_mag.save_eps(filepath = data_mag.get_dir())
     
         # after the measurement ends, you need to close the data files.
         data_mag.close_file()
@@ -192,8 +192,8 @@ def do_meas_refl(bias = 0.0, fmw = None):
 
 
 
-for m in xrange(5):
-    do_meas_refl()
+# Do the measurement
+do_meas_refl()
 
 
 # Do measurement for different biases:
