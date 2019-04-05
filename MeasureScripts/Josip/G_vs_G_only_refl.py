@@ -16,7 +16,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 
-def do_meas_refl(bias = 0.0, fmw = None):
+def do_meas_refl(bias = 200.0, fmw = None):
 
     def V_G1(V_G2):
         '''In order to record paralelogram instead of the rectangle, in the gate space,
@@ -28,7 +28,7 @@ def do_meas_refl(bias = 0.0, fmw = None):
     global name_counter
     name_counter += 1
 
-    file_name = '3-7 IV %d GvsG_'%(name_counter)
+    file_name = '8-10 IV %d GvsG_'%(name_counter)
 
     
     gate1div = 1.0
@@ -37,9 +37,8 @@ def do_meas_refl(bias = 0.0, fmw = None):
     bias = bias
     
 
-    v1_vec = arange(-500,1000.0,0.3)      #outer
-    v2_vec = arange(-250,-150.0,0.3)       #inner
-    
+    v1_vec = arange(-400,600.0,0.3)      #outer
+    v2_vec = arange(-50,50,0.3)       #inner
 
     #v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
 
@@ -60,12 +59,12 @@ def do_meas_refl(bias = 0.0, fmw = None):
     
     
 
-    data_mag.add_coordinate('V_G 5 [mV]')       # inner
-    data_mag.add_coordinate('V_G 4 [mV]')      # outer
+    data_mag.add_coordinate('V_G 11 [mV]')       # inner
+    data_mag.add_coordinate('V_G 9 [mV]')      # outer
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 5 [mV]')
-    data_phase.add_coordinate('V_G 4 [mV]')
+    data_phase.add_coordinate('V_G 11 [mV]')
+    data_phase.add_coordinate('V_G 9 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
