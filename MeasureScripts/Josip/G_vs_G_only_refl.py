@@ -16,7 +16,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 
-def do_meas_refl(bias = 200.0, fmw = None):
+def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300):
 
     def V_G1(V_G2):
         '''In order to record paralelogram instead of the rectangle, in the gate space,
@@ -37,8 +37,8 @@ def do_meas_refl(bias = 200.0, fmw = None):
     bias = bias
     
 
-    v1_vec = arange(-200,600.0,0.3)      #outer
-    v2_vec = arange(500,600,0.3)       #inner
+    v1_vec = arange(-300.0,400.0,0.3)      #outer
+    v2_vec = arange(v2_start,v2_stop,0.3)       #inner
 
     #v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
 
@@ -192,7 +192,8 @@ def do_meas_refl(bias = 200.0, fmw = None):
 
 
 # Do the measurement
-do_meas_refl()
+do_meas_refl(v2_start = 800, v2_stop = 900)
+do_meas_refl(v2_start = 200, v2_stop = 300)
 
 
 # Do measurement for different biases:
