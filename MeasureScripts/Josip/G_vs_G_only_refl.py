@@ -16,7 +16,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 
-def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300):
+def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300):
 
     def V_G1(V_G2):
         '''In order to record paralelogram instead of the rectangle, in the gate space,
@@ -28,7 +28,7 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300):
     global name_counter
     name_counter += 1
 
-    file_name = '8-10 IV %d GvsG_'%(name_counter)
+    file_name = '13-16 IV %d GvsG_'%(name_counter)
 
     
     gate1div = 1.0
@@ -37,7 +37,7 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300):
     bias = bias
     
 
-    v1_vec = arange(160.0,210.0,0.3)      #outer
+    v1_vec = arange(-100,300.0,0.3)      #outer
     v2_vec = arange(v2_start,v2_stop,0.3)       #inner
 
     #v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
@@ -59,12 +59,12 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300):
     
     
 
-    data_mag.add_coordinate('V_G 11 [mV]')       # inner
-    data_mag.add_coordinate('V_G 9 [mV]')      # outer
+    data_mag.add_coordinate('V_G 17 [mV]')       # inner
+    data_mag.add_coordinate('V_G 14 [mV]')      # outer
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 11 [mV]')
-    data_phase.add_coordinate('V_G 9 [mV]')
+    data_phase.add_coordinate('V_G 17 [mV]')
+    data_phase.add_coordinate('V_G 14 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -192,8 +192,9 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300):
 
 
 # Do the measurement
-do_meas_refl(v2_start = 565, v2_stop = 595)
-
+do_meas_refl(v2_start = -100, v2_stop = 0)
+do_meas_refl(v2_start = 0, v2_stop = 100)
+do_meas_refl(v2_start = 100, v2_stop = 200)
 
 # Do measurement for different biases:
 #biases = np.linspace(-300,300,13) # Bias voltages in mV *10
