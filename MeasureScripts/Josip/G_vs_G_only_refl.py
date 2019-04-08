@@ -192,7 +192,7 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300):
 
 
 # Do the measurement
-do_meas_refl(v2_start = -400, v2_stop = -300)
+#do_meas_refl(v2_start = -400, v2_stop = -300)
 do_meas_refl(v2_start = -200, v2_stop = -100)
 
 
