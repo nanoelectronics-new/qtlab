@@ -13,10 +13,11 @@ import UHFLI_lib
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
+name_counter +=1
 
-def do_meas_current(bias = 50.0):
+def do_meas_current(bias = 500.0, v2start = 100, v2stop = 100):
 
-    file_name = 'GvsG_8-10_G9&11'
+    file_name = '2-20_GvsG_%d'%name_counter
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -26,9 +27,8 @@ def do_meas_current(bias = 50.0):
     gatediv = 1.0
     
     
-    v1_vec = arange(-300.0,-100.0,1.0)     #outer
-    v2_vec = arange(-300.0,100.0,1.0)       #inner
-    
+    v1_vec = arange(0.0,-1000.0,-1.0)      #outer
+    v2_vec = arange(v2start,v2stop,-1.0)       #inner
     
     
     qt.mstart()
@@ -41,8 +41,8 @@ def do_meas_current(bias = 50.0):
     
     
     ##CURRENT
-    data.add_coordinate('V_G 11 [mV]')    # inner
-    data.add_coordinate('V_G 9 [mV]')      #  outer
+    data.add_coordinate('V_G 17 [mV]')    # inner
+    data.add_coordinate('V_G 4 [mV]')      #  outer
     data.add_value('Current [pA]')
     
     
@@ -82,14 +82,14 @@ def do_meas_current(bias = 50.0):
             start = time()
             # set the voltage
        
-            IVVI.set_dac5(v1*gatediv)
+            IVVI.set_dac3(v1*gatediv)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac6(v2*gatediv)
+                IVVI.set_dac4(v2*gatediv)
                 
     
                 # readout
@@ -148,4 +148,5 @@ def do_meas_current(bias = 50.0):
     #do_meas_current(bias)
 
 #Do measurement
-do_meas_current()
+do_meas_current(v2start = -600, v2stop = -700)
+do_meas_current(v2start = -700, v2stop = -800)

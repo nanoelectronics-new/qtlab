@@ -47,14 +47,14 @@ def run_IVG():
 	leak_test = True
 	
 	
-	v_vec = arange(-400.0,1000.0,1.0)
+	v_vec = arange(-1000.0,0,1.0)
 	
 	divgate = 1.0
 	
 	
 	
 	qt.mstart()
-	name = ' 8-10 IVG %d'%name_counter
+	name = ' 2-20 IVG %d'%name_counter
 	data = qt.Data(name=name)
 	
 	
@@ -69,9 +69,16 @@ def run_IVG():
 	plot2d = qt.Plot2D(data, name=name, autoupdate=False)
 	plot2d.set_style('lines')
 	
-	
-	
-	
+
+
+	IVVI.set_dac5(0.0)  # Left side gate
+	IVVI.set_dac6(0.0)  # Middle gate
+	IVVI.set_dac7(0.0)  # Right side gate
+
+
+
+
+
 	IVVI.set_dac1(bias)
 	
 	try:
@@ -79,9 +86,8 @@ def run_IVG():
 		for v in v_vec:
 		
 	
-	
-		    #IVVI.set_dac5(v*divgate)
-		    IVVI.set_dac6(v*divgate)
+
+		    IVVI.set_dac3(v*divgate)
 	
 		    result = dmm._ins.get_readval()/(gain)*1e12 
 		    #if (abs(result) > 30.0):
