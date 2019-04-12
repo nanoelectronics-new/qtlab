@@ -1048,6 +1048,8 @@ def UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [0], out_c = 0):
     return daq
 
 
+
+
 def UHF_measure_demod_multiple(Num_of_TC = 3, Integration_time = None, Measure = None):
 
 
@@ -1103,7 +1105,6 @@ def UHF_measure_demod_multiple(Num_of_TC = 3, Integration_time = None, Measure =
     assert data, "poll() returned an empty data dictionary, did you subscribe to any paths?"
     # Note, the data could be empty if no data arrived, e.g., if the demods were
     # disabled or had demodulator rate 0
-    
     
     
     #assert path in data, "data dictionary has no key '%s'" % path
