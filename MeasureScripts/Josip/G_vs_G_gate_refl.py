@@ -32,8 +32,8 @@ def do_meas_both(bias = 500.0, v2start = 100, v2stop = 100):
     
 
     
-    v1_vec = arange(-800.0,-1000.0,-0.5)      #outer
-    v2_vec = arange(v2start,v2stop,-0.5)       #inner
+    v1_vec = arange(-180.0,-100.0,1.0)      #outer
+    v2_vec = arange(v2start,v2stop,-1.0)       #inner
     
     
     
@@ -194,7 +194,7 @@ def do_meas_both(bias = 500.0, v2start = 100, v2stop = 100):
         qt.mend()   
 
 # Run the measurement
-do_meas_both(v2start = -240.0, v2stop = -360.0)
+do_meas_both(v2start = -800.0, v2stop = -900.0)
 
 
 
