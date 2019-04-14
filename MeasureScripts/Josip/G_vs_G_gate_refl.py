@@ -17,7 +17,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 
-def do_meas_both(bias = 500.0, v2start = 100, v2stop = 100, v_middle = -500):
+def do_meas_both(bias = 200.0, v2start = 100, v2stop = 100, v_middle = -500):
 
     global name_counter 
     name_counter += 1
@@ -33,7 +33,7 @@ def do_meas_both(bias = 500.0, v2start = 100, v2stop = 100, v_middle = -500):
     
 
     
-    v1_vec = arange(-700,-200,1.0)           #outer
+    v1_vec = arange(-700,-400,1.0)           #outer
     v2_vec = arange(v2start,v2stop,1.0)        #inner
     
     
@@ -93,7 +93,7 @@ def do_meas_both(bias = 500.0, v2start = 100, v2stop = 100, v_middle = -500):
     # preparation is done, now start the measurement
     
     IVVI.set_dac1(bias)  
-    IVVI.set_dac6(v_middle/v_middle_factor)
+    #IVVI.set_dac6(v_middle/v_middle_factor)
     
     init_start = time()
     vec_count = 0
@@ -202,9 +202,10 @@ def do_meas_both(bias = 500.0, v2start = 100, v2stop = 100, v_middle = -500):
 #for ve in v_middle_sweep: 
     #do_meas_both(v2start = -250.0, v2stop = -270.0, v_middle = ve)
 
-do_meas_both(v2start = -900.0, v2stop = -650.0)
-do_meas_both(v2start = -650.0, v2stop = -400.0)
-do_meas_both(v2start = -400.0, v2stop = -150.0)
+do_meas_both(v2start = -2000.0, v2stop = -1800.0)
+do_meas_both(v2start = -1800.0, v2stop = -1600.0)
+do_meas_both(v2start = -1600.0, v2stop = -1400.0)
+do_meas_both(v2start = -1400.0, v2stop = -1200.0)
 
 
 

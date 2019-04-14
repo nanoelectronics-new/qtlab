@@ -42,12 +42,12 @@ def run_IVG():
 
 	gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 	
-	bias = 500.0
+	bias = 200.0
 	
 	leak_test = True
 	
 	
-	v_vec = arange(-900,0,1.0)
+	v_vec = arange(-395.97,-2000.0,-1.0)
 	
 	divgate = 1.0
 	
