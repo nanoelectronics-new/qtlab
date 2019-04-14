@@ -29,12 +29,12 @@ def do_meas_both(bias = 200.0, v2start = 100, v2stop = 100, v_middle = -500):
     
    
     gatediv = 1.0
-    v_middle_factor = 5.0 # S1f amplification
+    v_middle_factor = 1.0 
     
 
     
-    v1_vec = arange(-700,-400,1.0)           #outer
-    v2_vec = arange(v2start,v2stop,1.0)        #inner
+    v1_vec = arange(-620,-460,0.2)           #outer
+    v2_vec = arange(v2start,v2stop,0.2)        #inner
     
     
     
@@ -81,19 +81,19 @@ def do_meas_both(bias = 200.0, v2start = 100, v2stop = 100, v_middle = -500):
     
     
     
-    plot3d = qt.Plot3D(data, name='measure3D_current2', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-    plot2d = qt.Plot2D(data, name='measure2D_current',autoupdate=False)
-    plot3d_mag = qt.Plot3D(data_mag, name='measure3D_magnitude2', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-    plot2d_mag = qt.Plot2D(data_mag, name='measure2D_magnitude',autoupdate=False)
-    plot3d_phase = qt.Plot3D(data_phase, name='measure3D_phase2', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-    plot2d_phase = qt.Plot2D(data_phase, name='measure2D_phase',autoupdate=False)
+    plot3d = qt.Plot3D(data, name=file_name + "_current", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    #plot2d = qt.Plot2D(data, name='measure2D_current',autoupdate=False)
+    plot3d_mag = qt.Plot3D(data_mag, name=file_name + "_amp", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    #plot2d_mag = qt.Plot2D(data_mag, name='measure2D_magnitude',autoupdate=False)
+    plot3d_phase = qt.Plot3D(data_phase, name=file_name + "_phase", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    #plot2d_phase = qt.Plot2D(data_phase, name='measure2D_phase',autoupdate=False)
     
     
     
     # preparation is done, now start the measurement
     
     IVVI.set_dac1(bias)  
-    #IVVI.set_dac6(v_middle/v_middle_factor)
+    IVVI.set_dac6(v_middle/v_middle_factor)
     
     init_start = time()
     vec_count = 0
@@ -156,11 +156,11 @@ def do_meas_both(bias = 200.0, v2start = 100, v2stop = 100, v_middle = -500):
                 new_mat_phase = new_mat_phase[:,1:]
     
     
-            plot2d.update()
+            #plot2d.update()
             plot3d.update()
-            plot2d_mag.update()
+            #plot2d_mag.update()
             plot3d_mag.update()
-            plot2d_phase.update()
+            #plot2d_phase.update()
             plot3d_phase.update()
     
             # Saving the matrix to the matrix filedata.get_filepath
@@ -197,15 +197,12 @@ def do_meas_both(bias = 200.0, v2start = 100, v2stop = 100, v_middle = -500):
 
 
 # Run the measurement
-#v_middle_sweep = [-1000.0,0.0,1000.0]
+v_middle_sweep = [0.0,500.0,1000.0]
 
-#for ve in v_middle_sweep: 
-    #do_meas_both(v2start = -250.0, v2stop = -270.0, v_middle = ve)
+for ve in v_middle_sweep: 
+    do_meas_both(v2start = -1330.0, v2stop = -1240.0, v_middle = ve)
 
-do_meas_both(v2start = -2000.0, v2stop = -1800.0)
-do_meas_both(v2start = -1800.0, v2stop = -1600.0)
-do_meas_both(v2start = -1600.0, v2stop = -1400.0)
-do_meas_both(v2start = -1400.0, v2stop = -1200.0)
+
 
 
 
