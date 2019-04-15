@@ -3,6 +3,7 @@ from time import time,sleep
 import datetime
 import convert_for_diamond_plot as cnv
 import UHFLI_lib
+reload(UHFLI_lib)
 
 
 
