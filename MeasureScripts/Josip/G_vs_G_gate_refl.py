@@ -18,11 +18,11 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 
-def do_meas_both(bias = 200.0, v2start = 100, v2stop = 100, v_middle = 0.0):
+def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
 
     global name_counter 
     name_counter += 1
-    file_name = '3-10 IV %d GvsG_'%name_counter
+    file_name = '2-20 IV %d GvsG_'%name_counter
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -34,8 +34,8 @@ def do_meas_both(bias = 200.0, v2start = 100, v2stop = 100, v_middle = 0.0):
     
 
     
-    v1_vec = arange(1000.0,1400.0,0.3)           #outer
-    v2_vec = arange(v2start,v2stop,0.3)        #inner
+    v1_vec = arange(-531.0,-548.0,-0.06)           #outer
+    v2_vec = arange(v2start,v2stop,-0.06)        #inner
     
     
     
@@ -50,17 +50,17 @@ def do_meas_both(bias = 200.0, v2start = 100, v2stop = 100, v_middle = 0.0):
     
     
     ##CURRENT
-    data.add_coordinate('V_G 5 [mV]')   # inner
-    data.add_coordinate('V_G 9 [mV]')  #  outer
+    data.add_coordinate('V_G 17 [mV]')   # inner
+    data.add_coordinate('V_G 4 [mV]')  #  outer
     data.add_value('Current [pA]')
     
     ##REFL f1
-    data_mag.add_coordinate('V_G 5 [mV]')
-    data_mag.add_coordinate('V_G 9 [mV]')
+    data_mag.add_coordinate('V_G 17 [mV]')
+    data_mag.add_coordinate('V_G 4 [mV]')
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 5 [mV]')
-    data_phase.add_coordinate('V_G 9 [mV]')
+    data_phase.add_coordinate('V_G 17 [mV]')
+    data_phase.add_coordinate('V_G 4 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -198,13 +198,15 @@ def do_meas_both(bias = 200.0, v2start = 100, v2stop = 100, v_middle = 0.0):
 
 
 # Run the measurement
-#v_middle_sweep = [0.0,500.0,1000.0]
+v_middle_sweep = np.arange(10.0,65.0,5.0)
 
-#for ve in v_middle_sweep: 
-    #do_meas_both(v2start = -1330.0, v2stop = -1240.0, v_middle = ve)
+for ve in v_middle_sweep: 
+    do_meas_both(bias = 0.0, v2start = -638.0, v2stop = -658.0, v_middle = ve)
 
 
-do_meas_both(v2start = 1000.0, v2stop = 1050.0)
+
+
+
 
 
 
