@@ -34,7 +34,7 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
     
 
     
-    v1_vec = arange(-531.0,-548.0,-0.06)           #outer
+    v1_vec = arange(-531.0,-556.0,-0.06)           #outer
     v2_vec = arange(v2start,v2stop,-0.06)        #inner
     
     
@@ -198,10 +198,10 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
 
 
 # Run the measurement
-v_middle_sweep = np.arange(10.0,65.0,5.0)
+v_middle_sweep = np.arange(60.0,150.0,5.0)
 
 for ve in v_middle_sweep: 
-    do_meas_both(bias = 0.0, v2start = -638.0, v2stop = -658.0, v_middle = ve)
+    do_meas_both(bias = 100.0, v2start = -646.0, v2stop = -668.0, v_middle = ve)
 
 
 
