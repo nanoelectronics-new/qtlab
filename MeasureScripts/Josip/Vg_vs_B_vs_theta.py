@@ -15,8 +15,8 @@ reload(UHFLI_lib)
 
 
 
-magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.183')
-magnetY = qt.instruments.create('magnetY', 'AMI430_By', address='10.21.64.184')
+#magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.183')
+#magnetY = qt.instruments.create('magnetY', 'AMI430_By', address='10.21.64.184')
 daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
@@ -26,7 +26,7 @@ def do_Vg_vs_B():
 
     global name_counter
     
-    thetas = np.linspace(0,90,4) # Angle between the By and Bx axis
+    thetas = np.linspace(90,360,4) # Angle between the By and Bx axis
     
     TC = 10e-3 # Time constant of the UHFLI in seconds
     
@@ -37,32 +37,32 @@ def do_Vg_vs_B():
 
         start = time()
         name_counter += 1
-        file_name = '13_16 IV %d_theta=%d'%(name_counter,theta)
+        file_name = '2_20 IV %d_theta=%d'%(name_counter,theta)
          
         
             
             
         ramp_rate_Y = 0.0003 #T/s
         ramp_rate_Z = 0.0005 #T/s
-        step_size_BY = -1e-3 
-        step_size_BZ = -1e-3
+        step_size_BY = -2e-3 
+        step_size_BZ = -2e-3
 
         Bmin = 0.0  # Min total field in T
-        Bmax = 0.1e-3 # Max total field in T
+        Bmax = 1.0 # Max total field in T
         Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
         Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
         Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
         Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-        BY_vector = np.linspace(Bymin,Bymax,1000) # Defining the By vector in T  
+        BY_vector = np.linspace(Bymin,Bymax,200) # Defining the By vector in T  
         magnetY.set_rampRate_T_s(ramp_rate_Y)
 
-        BZ_vector = np.linspace(Bzmin,Bzmax,1000) # Defining the Bz vector in T  
+        BZ_vector = np.linspace(Bzmin,Bzmax,200) # Defining the Bz vector in T  
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        Vg = arange(87.0,94.0,0.06)  # gate voltage
+        Vg = arange(-645.2,-647.2,-0.06)  # gate voltage
         divgate = 1.0
         
         qt.mstart()
@@ -95,12 +95,9 @@ def do_Vg_vs_B():
         
             for i,v1 in enumerate(BY_vector):  
                 
-              			
-                
                 start_Vg_trace = time()  # Remebering the time when the ongoing freq trace started
                 
                 magnetY.set_field(BY_vector[i])   # Set the By field first
-                
                 while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
                     qt.msleep(0.050)
                 magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
@@ -112,7 +109,7 @@ def do_Vg_vs_B():
                 freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 140e6, stop = 180e6, num_samples = 500, do_plot= False)
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
                 f_res = freq[ind_res]
-                f_res += 200e3 # The readout frequency is shifted 200 kHz from the resonance
+                f_res += 0e3 # The readout frequency offset from the resonance
     
                 # Now set the readout frequency 
                 daq.setDouble('/dev2169/oscs/0/freq', f_res[0])
@@ -123,7 +120,7 @@ def do_Vg_vs_B():
                 qt.msleep(0.10)
         
                 for j,Vg_val in enumerate(Vg):  
-                    IVVI.set_dac6(Vg_val*divgate)
+                    IVVI.set_dac4(Vg_val*divgate)
     
         
                     # the next function is necessary to keep the gui responsive. It
@@ -149,7 +146,7 @@ def do_Vg_vs_B():
                 data.new_block()
                 
                 new_mat = np.column_stack((new_mat, data_temp))
-                if i == 0: #Kicking out the first column filled with zero
+                if i == 0: #Kicking out the first column filled with zeros
                     new_mat = new_mat[:,1:]
                 np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X = new_mat, fmt = '%1.4e', delimiter = '  ', newline = '\n')
                 
