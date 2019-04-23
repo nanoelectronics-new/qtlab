@@ -26,7 +26,7 @@ def do_Vg_vs_B():
 
     global name_counter
     
-    thetas = [0.0] #np.linspace(90,360,4) # Angle between the By and Bx axis
+    thetas = np.linspace(90,360,4) # Angle between the By and Bx axis
     
     TC = 10e-3 # Time constant of the UHFLI in seconds
     
@@ -55,14 +55,14 @@ def do_Vg_vs_B():
         Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-        BY_vector = np.linspace(Bymin,Bymax,400) # Defining the By vector in T  
+        BY_vector = np.linspace(Bymin,Bymax,300) # Defining the By vector in T  
         magnetY.set_rampRate_T_s(ramp_rate_Y)
 
-        BZ_vector = np.linspace(Bzmin,Bzmax,400) # Defining the Bz vector in T  
+        BZ_vector = np.linspace(Bzmin,Bzmax,300) # Defining the Bz vector in T  
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        Vg = arange(-645.2,-647.2,-0.06)  # gate voltage
+        Vg = arange(-645.0,-648.0,-0.06)  # gate voltage
         divgate = 1.0
         
         qt.mstart()
