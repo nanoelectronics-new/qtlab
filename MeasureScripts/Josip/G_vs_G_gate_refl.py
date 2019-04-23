@@ -202,6 +202,9 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
 
 #for ve in v_middle_sweep: 
 do_meas_both(bias = 0.0, v2start = -642.0, v2stop = -650.0, v_middle = 75.0)
+do_meas_both(bias = 0.0, v2start = -642.0, v2stop = -650.0, v_middle = 75.0)
+do_meas_both(bias = 0.0, v2start = -642.0, v2stop = -650.0, v_middle = 75.0)
+
 
 
 
