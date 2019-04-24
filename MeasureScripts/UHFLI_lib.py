@@ -1131,8 +1131,15 @@ def UHF_measure_demod_multiple(Num_of_TC = 3, Integration_time = None, Measure =
         sample_y = np.array(sample['y'])    # Converting samples to numpy arrays for faster calculation
         mean_x = np.mean(sample_x)
         mean_y = np.mean(sample_y)
-        mean_r = np.sqrt(mean_x**2 + mean_y**2)   # Calculating R value from X and y values
-        mean_fi = np.arctan2(mean_y,mean_x) * 180 / np.pi  # Calculating the angle value in degrees
+        mean_r = np.sqrt(mean_x**2 + mean_y**2)   # Calculating R value from X and Y values
+
+        # Unwrapping the phase
+        mean_fi = np.arctan2(y,x)*180/np.pi
+        if (mean_x,mean_y<0) or (mean_x>0 and mean_y<0): # If the angle is in the third or in the fourth quadrant
+                                                         # then correct it
+            mean_fi = angle + 360.0
+        # Else it is in the first or in the second quadrant and therefore does not need the correction
+
         if Measure == "Quadratures":
             result.append([mean_x,mean_y])
         else:
