@@ -431,7 +431,8 @@ def run_sweeper(device_id = 'dev2169', oscilator_num = 0, demod = 3, start = 100
     # Automatically control the demodulator bandwidth/time constants used.
     # 0=manual, 1=fixed, 2=auto
     # Note: to use manual and fixed, sweep/bandwidth has to be set to a value > 0.
-    sweeper.set('sweep/bandwidthcontrol', 2)
+    sweeper.set('sweep/bandwidthcontrol', 1)
+    sweeper.set('sweep/bandwidth', 1000.0) # Setting the BW to 1 kHz
     # Sets the bandwidth overlap mode (default 0). If enabled, the bandwidth of
     # a sweep point may overlap with the frequency of neighboring sweep
     # points. The effective bandwidth is only limited by the maximal bandwidth
@@ -1134,10 +1135,10 @@ def UHF_measure_demod_multiple(Num_of_TC = 3, Integration_time = None, Measure =
         mean_r = np.sqrt(mean_x**2 + mean_y**2)   # Calculating R value from X and Y values
 
         # Unwrapping the phase
-        mean_fi = np.arctan2(y,x)*180/np.pi
+        mean_fi = np.arctan2(mean_y,mean_x)*180/np.pi
         if (mean_x,mean_y<0) or (mean_x>0 and mean_y<0): # If the angle is in the third or in the fourth quadrant
                                                          # then correct it
-            mean_fi = angle + 360.0
+            mean_fi = mean_fi + 360.0
         # Else it is in the first or in the second quadrant and therefore does not need the correction
 
         if Measure == "Quadratures":

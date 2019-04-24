@@ -26,7 +26,7 @@ def do_Vg_vs_B():
 
     global name_counter
     
-    thetas = np.linspace(90,360,4) # Angle between the By and Bx axis
+    thetas = [0.0,180.0] # Angle between the By and Bx axis
     
     TC = 10e-3 # Time constant of the UHFLI in seconds
     
@@ -100,13 +100,13 @@ def do_Vg_vs_B():
                 magnetY.set_field(BY_vector[i])   # Set the By field first
                 while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
                     qt.msleep(0.050)
-                magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
-                while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
-                    qt.msleep(0.050)
+                #magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
+                #while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
+                    #qt.msleep(0.050)
                 
                 total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
                 # After the field is at the set point, we need to check where is the resonant freuqency and set it
-                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 140e6, stop = 180e6, num_samples = 500, do_plot= False)
+                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 125e6, stop = 170e6, num_samples = 800, do_plot= False)
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
                 f_res = freq[ind_res]
                 f_res += 0e3 # The readout frequency offset from the resonance
