@@ -26,7 +26,7 @@ def do_Vg_vs_B():
 
     global name_counter
     
-    thetas = [0.0,180.0] # Angle between the By and Bx axis
+    thetas = [0.0, 90.0, 180.0, 360.0] # Angle between the By and Bx axis
     
     TC = 10e-3 # Time constant of the UHFLI in seconds
     
@@ -62,7 +62,7 @@ def do_Vg_vs_B():
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        Vg = arange(-645.0,-648.0,-0.06)  # gate voltage
+        Vg = arange(-642.0,-645.0,-0.06)  # gate voltage
         divgate = 1.0
         
         qt.mstart()
@@ -100,9 +100,9 @@ def do_Vg_vs_B():
                 magnetY.set_field(BY_vector[i])   # Set the By field first
                 while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
                     qt.msleep(0.050)
-                #magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
-                #while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
-                    #qt.msleep(0.050)
+                magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
+                while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
+                    qt.msleep(0.050)
                 
                 total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
                 # After the field is at the set point, we need to check where is the resonant freuqency and set it
