@@ -1001,6 +1001,7 @@ def UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [0], out_c = 0):
 
     for dem in demod_c:
         daq.setInt('/%s/demods/%s/enable' % (device, dem) , 1)  # Enable all demodulators listed in the list demod_c
+        daq.setDouble('/%s/demods/%s/rate' % (device, dem), 1000000) # Set the sampling rate of the respective demodulator to 1M
     
     
     # Unsubscribe any streaming data
@@ -1055,9 +1056,15 @@ def UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [0], out_c = 0):
     TC_temp = []
     for dem in demod_c:
         TC_temp.append(daq.getDouble('/%s/demods/%s/timeconstant' % (device, dem)))  # reading time comnstants from all initialized demods
-    
+        # Also turn on the output channel
+        if dem == 3 or dem == 7: # Output can be turned ON only for demods 4 and 8
+            daq.setInt('/%s/sigouts/%s/enables/%s'%(device, out_c,dem), 1)
+
+        
     global TC
     TC = max(TC_temp)  # global TC is the maximum TC of all demods
+
+    
 
     return daq
 

@@ -3,6 +3,7 @@ from time import time,sleep
 import datetime
 import convert_for_diamond_plot as cnv
 import UHFLI_lib
+reload(UHFLI_lib)
 
 
 
@@ -16,7 +17,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 
-def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v_middle = 0.0):
+def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start = None, v1_stop = None,v_middle = 0.0):
 
     def V_G1(V_G2):
         '''In order to record paralelogram instead of the rectangle, in the gate space,
@@ -28,7 +29,7 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v_middle
     global name_counter
     name_counter += 1
 
-    file_name = '2-20 IV %d GvsG_'%(name_counter)
+    file_name = '2-20 IV %d GvsG_V_middle=%.2fmV_'%(name_counter, v_middle)
 
     
     gate1div = 1.0
@@ -38,7 +39,7 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v_middle
     bias = bias
     
 
-    v1_vec = arange(-543.0,-553.0,-0.06)      #outer
+    v1_vec = arange(v1_start,v1_stop,-0.06)      #outer
     v2_vec = arange(v2_start,v2_stop,-0.06)       #inner
 
     #v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
@@ -49,6 +50,8 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v_middle
     
     qt.mstart()
     
+    IVVI.set_dac1(bias)
+    IVVI.set_dac6(v_middle/v_middle_factor)  
     
     
     
@@ -86,17 +89,15 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v_middle
     
     
     plot3d_mag = qt.Plot3D(data_mag, name=file_name + "_2D_amplitude", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-    plot2d_mag = qt.Plot2D(data_mag, name=file_name + "_1D_amplitude",autoupdate=False)
+    #plot2d_mag = qt.Plot2D(data_mag, name=file_name + "_1D_amplitude",autoupdate=False)
     plot3d_phase = qt.Plot3D(data_phase, name=file_name + "_2D_phase", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-    plot2d_phase = qt.Plot2D(data_phase, name=file_name + "_1D_phase",autoupdate=False)
+    #plot2d_phase = qt.Plot2D(data_phase, name=file_name + "_1D_phase",autoupdate=False)
     
     
     
     # preparation is done, now start the measurement.
     
-    IVVI.set_dac1(bias)
-    IVVI.set_dac6(v_middle/v_middle_factor)  
-    
+   
     init_start = time()
     vec_count = 0
     
@@ -154,9 +155,9 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v_middle
             new_mat_phase = new_mat_phase[:,1:]
 
 
-        plot2d_mag.update()
+        #plot2d_mag.update()
         plot3d_mag.update()
-        plot2d_phase.update()
+        #plot2d_phase.update()
         plot3d_phase.update()
 
         # Saving the matrix to the matrix filedata.get_filepath
@@ -193,10 +194,10 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v_middle
 
 
 # Run the measurement
-v_middle_sweep = np.arange(0.0,25.0,5.0)
+#v_middle_sweep = np.arange(10.0,25.0,5.0)
 
-for ve in v_middle_sweep: 
-    do_meas_refl(bias = 0.0, v2_start = -638.0, v2_stop = -650.0, v_middle = ve)
+#for ve in v_middle_sweep: 
+do_meas_refl(bias = 0.0, v1_start = -545.5, v1_stop = -548.0, v2_start = -642.0, v2_stop = -650.0, v_middle = 20.0)
 # Do measurement for different biases:
 #biases = np.linspace(-300,300,13) # Bias voltages in mV *10
 
