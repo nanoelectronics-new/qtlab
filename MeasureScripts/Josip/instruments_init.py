@@ -2,5 +2,5 @@ IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', '
 VSG = qt.instruments.create('VSG','RS_SMW200A',address = 'TCPIP::10.21.64.122::hislip0::INSTR')
 magnetY = qt.instruments.create('magnetY', 'AMI430_By', address='10.21.64.184')
 magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.176')
-AWG = qt.instruments.create('AWG', 'Tektronix_AWG5014', address='10.21.64.138')
+AWG = qt.instruments.create('AWG', 'Tektronix_AWG5014', address='10.21.64.169')
 dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54505188::INSTR')
