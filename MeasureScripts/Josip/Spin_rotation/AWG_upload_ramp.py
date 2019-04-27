@@ -13,8 +13,8 @@ from Waveform_PresetAmp import Pulse as pul
 AWG_clock = 10e6        
 											
 						
-AWGMax_amp = 0.1         
-Seq_length = 24   
+AWGMax_amp = 0.5         
+Seq_length = 2   
 t_sync = 0              
 t_wait = 100  
 Automatic_sequence_generation = False   
@@ -35,23 +35,26 @@ if not(Automatic_sequence_generation):
     for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
         
         if i==0 or i == 8 or i == 16: 
-            p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 1)         
+            p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)         
         else:
             p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
                                                                                                              
             
 
-        if i < 8:
-            p.setValuesCH1([3.0, -5.0, 5.0], [3.0, -5.0, 5.0])
-            p.setMarkersCH1([1,0], [1,0])
+        #if i < 8:
+        #    p.setValuesCH1([3.0, -50.0, 50.0], [3.0, 0.0])
+        #    p.setMarkersCH1([1,0], [1,0])
+#
+        #if 8<=i<16:
+        #    p.setValuesCH1([3.0, -100.0, 100.0], [3.0, 0.0]) 
+        #    p.setMarkersCH1([1,0], [1,0])
+#
+        #if i>=16:
+            #p.setValuesCH1([3.0, -150.0, 150.0], [3.0, 0.0]) 
+            #p.setMarkersCH1([1,0], [1,0])
+        p.setValuesCH1([3.0, -100.0, 100.0], [3.0, -100.0, 100.0])
+        p.setMarkersCH1([1,0], [1,0])
 
-        if 8<=i<16:
-            p.setValuesCH1([3.0, -10.0, 10.0], [3.0, -10.0, 10.0]) 
-            p.setMarkersCH1([1,0], [1,0])
-
-        if i>=16:
-            p.setValuesCH1([3.0, -15.0, 15.0], [3.0, -15.0, 15.0]) 
-            p.setMarkersCH1([1,0], [1,0])
 
 
 
