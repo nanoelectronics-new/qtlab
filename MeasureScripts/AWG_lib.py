@@ -198,7 +198,7 @@ def set_waveform(seq,AWG_clock,AWGMax_amp, t_sync, sync):
     #AWG.run()
      
 
-def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync):
+def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = True):
 
     '''
     This function uploads and loads previously created sequence to the AWG. It puts trigger flag on every sequence element.
@@ -210,6 +210,7 @@ def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync):
             AWGMax_amp : # In Volts!!! Maximum needed amplitude on all channels for your particular experiment (noise reduction) 
             sync (Waveform object) : just for compatibility with set_waveform function - it is not used
             t_sync (float) = just for compatibility with set_waveform function - it is not used
+            do_plot (Boolean) : Flag determining to plot the sequence element or not
                       
             
         Output:
@@ -223,21 +224,26 @@ def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync):
     
     #Rescale and plot sequence
     for ch_num in xrange(len(seq)):
-        fig = plt.figure("CH%d"%(ch_num+1))
+        
         for i,seq_elem in enumerate(seq[ch_num]):
             seq_elem.rescaleAmplitude(AWGMax_amp, mean = 0)  # Argument "mean" added just from compatibility reasons  
-            #seq_elem.InverseHPfilter()
-            # Plot start and end element of sequence
-            if i == 0 or i == (len(seq[ch_num])-1):
-                seq_elem.plotWaveform(fig = fig, waveform = seq_elem.reverse_rescaleAmplitude(AWGMax_amp)) # Passing reverse rescaled wavefrom to plotWavefrom 
-                                                                                                           # function for getting the correct plot
-                blue_line = mlines.Line2D([], [], color='blue',
-                    markersize=15, label='Start')
-                green_line = mlines.Line2D([], [], color='green',
-                    markersize=15, label='End')
-                plt.legend(handles=[blue_line, green_line])
-        plt.show(block=False)
-
+            if do_plot == True:
+                if i == 0:
+                # If we wnat to plot then create a plot window, only once for each channel
+                    fig = plt.figure("CH%d"%(ch_num+1))
+                #seq_elem.InverseHPfilter()
+                # Plot start and end element of sequence
+                if i == 0 or i == (len(seq[ch_num])-1):
+                    seq_elem.plotWaveform(fig = fig, waveform = seq_elem.reverse_rescaleAmplitude(AWGMax_amp)) # Passing reverse rescaled wavefrom to plotWavefrom 
+                                                                                                               # function for getting the correct plot
+                    blue_line = mlines.Line2D([], [], color='blue',
+                        markersize=15, label='Start')
+                    green_line = mlines.Line2D([], [], color='green',
+                        markersize=15, label='End')
+                    plt.legend(handles=[blue_line, green_line])
+        if do_plot == True:
+            plt.show(block=False)
+    
                 
 
 

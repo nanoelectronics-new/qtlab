@@ -13,7 +13,7 @@ from Waveform_PresetAmp import Pulse as pul
 AWG_clock = 10e6        
 											
 						
-AWGMax_amp = 0.5         
+AWGMax_amp = 4.0         
 Seq_length = 3   
 t_sync = 0              
 t_wait = 100  
@@ -37,11 +37,8 @@ if not(Automatic_sequence_generation):
             
 
 
-        p.setValuesCH1([10.0, 10.0], [10.0, 0.0]) 
-        p.setMarkersCH1([1,0])  
-
- 
-
+        p.setValuesCH1([3.0, -1000.0, 1000.0], [3.0, -1000.0, 1000.0]) 
+        p.setMarkersCH1([1,0], [1,0])  
 
    
         seqCH1.append(p.CH1) 
@@ -49,8 +46,8 @@ if not(Automatic_sequence_generation):
 
     seq.append(seqCH1) 
 
-
-    AWG_lib.set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG
+    # Function for uploading and setting all sequence waveforms to AWG
+    AWG_lib.set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = False) 
 
 
     raw_input("Press Enter if uploading to AWG is finished")
