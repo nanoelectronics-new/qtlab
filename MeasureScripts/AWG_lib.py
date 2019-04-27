@@ -198,13 +198,15 @@ def set_waveform(seq,AWG_clock,AWGMax_amp, t_sync, sync):
     #AWG.run()
      
 
-def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = True):
+def set_waveform_trigger_all(seq_wav,seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = True):
 
     '''
-    This function uploads and loads previously created sequence to the AWG. It puts trigger flag on every sequence element.
+    This function uploads and loads previously created sequence to the AWG. It puts trigger flag only on the elements with
+    the TWAIT flag equal to 1.
        
         
         Input:
+            seq_wav (list): list of waveform instances - needed for compatibility
             seq (list) : list of sequences for every channel
             AWG_clock (int) : AWG clock
             AWGMax_amp : # In Volts!!! Maximum needed amplitude on all channels for your particular experiment (noise reduction) 
@@ -219,7 +221,7 @@ def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = T
     
            
 
- 
+    
     
     
     #Rescale and plot sequence
@@ -299,7 +301,7 @@ def set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = T
         for elem_num, seq_elem in enumerate(seq[ch]):   # Iterating trough sequence elements
             
              # Wait for trigger for every element of the sequence
-            AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = 0, count = seq_elem.repeat)
+            AWG.load_seq_elem(elem_num+1,channel, seq_elem.waveform_name, TWAIT = seq_wav[elem_num].TWAIT, count = seq_elem.repeat)
 
 
             

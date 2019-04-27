@@ -13,8 +13,8 @@ from Waveform_PresetAmp import Pulse as pul
 AWG_clock = 10e6        
 											
 						
-AWGMax_amp = 4.0         
-Seq_length = 3   
+AWGMax_amp = 0.1         
+Seq_length = 24   
 t_sync = 0              
 t_wait = 100  
 Automatic_sequence_generation = False   
@@ -27,27 +27,46 @@ if not(Automatic_sequence_generation):
 
     seqCH1 = list() 
     seq = list()
+    seq_wav = list()
 
 
     
 
     for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
-        p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV')  
-                                                                                                                         
+        
+        if i==0 or i == 8 or i == 16: 
+            p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 1)         
+        else:
+            p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
+                                                                                                             
             
 
+        if i < 8:
+            p.setValuesCH1([3.0, -5.0, 5.0], [3.0, -5.0, 5.0])
+            p.setMarkersCH1([1,0], [1,0])
 
-        p.setValuesCH1([3.0, -1000.0, 1000.0], [3.0, -1000.0, 1000.0]) 
-        p.setMarkersCH1([1,0], [1,0])  
+        if 8<=i<16:
+            p.setValuesCH1([3.0, -10.0, 10.0], [3.0, -10.0, 10.0]) 
+            p.setMarkersCH1([1,0], [1,0])
+
+        if i>=16:
+            p.setValuesCH1([3.0, -15.0, 15.0], [3.0, -15.0, 15.0]) 
+            p.setMarkersCH1([1,0], [1,0])
+
+
+
+
 
    
-        seqCH1.append(p.CH1) 
+        seqCH1.append(p.CH1)
+        seq_wav.append(p)  # Sequence of complete waveforms. Needed for compatibility reasons.
+                           # That the TWAIT flag can be passed on the Waveform and not Pulse hierarchy level. 
 
 
     seq.append(seqCH1) 
 
     # Function for uploading and setting all sequence waveforms to AWG
-    AWG_lib.set_waveform_trigger_all(seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = False) 
+    AWG_lib.set_waveform_trigger_all(seq_wav,seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = False) 
 
 
     raw_input("Press Enter if uploading to AWG is finished")

@@ -55,7 +55,7 @@ class Pulse():
             self.tau = self.R * self.C # Time constant of the bias tee, should be in seconds
         self.delta = 0.0
 
-        #self.TWAIT = TWAIT
+
         self.repeat = repeat  # defines how many times the pulse will be repeated in the sequence
         #self.INF = INF
 
@@ -297,7 +297,7 @@ class Waveform():
             
     '''
     
-    def __init__(self, waveform_name = 'WAV1', AWG_clock = None, TimeUnits = 'us' , AmpUnits = 'mV', R = None, C = None, repeat = 1):
+    def __init__(self, waveform_name = 'WAV1', AWG_clock = None, TimeUnits = 'us' , AmpUnits = 'mV', R = None, C = None, repeat = 1, TWAIT = 1):
         
         if AWG_clock is None:
             raise Exception('Error: AWG_clcok is not passed')
@@ -313,6 +313,7 @@ class Waveform():
 
         self.R = R
         self.C = C
+        self.TWAIT = TWAIT # The flag that indicates weather the AWG will wait for trigger or not, to output the waveform
         
         self.CH1=Pulse(waveform_name = self.waveform_name+'CH1', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C, repeat = repeat)   # Changed 09.03_13:00
         self.CH2=Pulse(waveform_name = self.waveform_name+'CH2', AWG_clock = self.AWG_clock, TimeUnits = self.TimeUnits , AmpUnits = self.AmpUnits, R = self.R, C = self.C, repeat = repeat)   # Changed 09.03_13:00
