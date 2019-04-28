@@ -63,12 +63,12 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start
     
     
 
-    data_mag.add_coordinate('V_G 17 [mV]')       # inner
-    data_mag.add_coordinate('V_G 4 [mV]')      # outer
+    data_mag.add_coordinate('V_G 4 [mV]')       # inner
+    data_mag.add_coordinate('V_G 17 [mV]')      # outer
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 17 [mV]')
     data_phase.add_coordinate('V_G 4 [mV]')
+    data_phase.add_coordinate('V_G 17 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -113,14 +113,14 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start
         start = time()
         # set the voltage
     
-        IVVI.set_dac3(v1*gate1div)
+        IVVI.set_dac4(v1*gate1div)
 
 
         
 
         for j,v2 in enumerate(v2_vec):
 
-            IVVI.set_dac4(v2*gate2div)
+            IVVI.set_dac3(v2*gate2div)
             
 
             # readout
@@ -197,7 +197,7 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start
 #v_middle_sweep = np.arange(10.0,25.0,5.0)
 
 #for ve in v_middle_sweep: 
-do_meas_refl(bias = 0.0, v1_start = -545.5, v1_stop = -548.0, v2_start = -642.0, v2_stop = -650.0, v_middle = 20.0)
+do_meas_refl(bias = 0.0, v1_start = -642.0, v1_stop = -650.0, v2_start = -545.5, v2_stop = -548.0, v_middle = 20.0)
 # Do measurement for different biases:
 #biases = np.linspace(-300,300,13) # Bias voltages in mV *10
 
