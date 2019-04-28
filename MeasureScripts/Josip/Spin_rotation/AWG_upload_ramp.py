@@ -13,11 +13,13 @@ from Waveform_PresetAmp import Pulse as pul
 AWG_clock = 10e6        
 											
 						
-AWGMax_amp = 0.5         
+AWGMax_amp = 2.0         
 Seq_length = 6   
 t_sync = 0              
 t_wait = 100  
-Automatic_sequence_generation = False   
+Automatic_sequence_generation = False
+ramp_amp = 4.0 # mV
+ramp_div = 200.0 # The line 3 attenuators attenuation
 
 
 sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV') # First element in sequence is synchronization element
@@ -36,7 +38,7 @@ if not(Automatic_sequence_generation):
         
         p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
                                                                                                              
-        p.setValuesCH1([3.0, -100.0, 100.0], [3.0, -100.0, 100.0])
+        p.setValuesCH1([3.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [3.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
         p.setMarkersCH1([1,0], [1,0])
 
         seqCH1.append(p.CH1)
