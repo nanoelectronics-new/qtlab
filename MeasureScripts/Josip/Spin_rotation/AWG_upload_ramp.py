@@ -36,31 +36,9 @@ if not(Automatic_sequence_generation):
         
         p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
                                                                                                              
-            
-
-        #if i < 8:
-        #    p.setValuesCH1([3.0, -50.0, 50.0], [3.0, 0.0])
-        #    p.setMarkersCH1([1,0], [1,0])
-#
-        #if 8<=i<16:
-        #    p.setValuesCH1([3.0, -100.0, 100.0], [3.0, 0.0]) 
-        #    p.setMarkersCH1([1,0], [1,0])
-#
-        #if i>=16:
-            #p.setValuesCH1([3.0, -150.0, 150.0], [3.0, 0.0]) 
-            #p.setMarkersCH1([1,0], [1,0])
         p.setValuesCH1([3.0, -100.0, 100.0], [3.0, -100.0, 100.0])
-        #if i%2 == 0:
         p.setMarkersCH1([1,0], [1,0])
-        #else:
-            #p.setMarkersCH1([0,0], [0,0])
 
-
-
-
-
-
-   
         seqCH1.append(p.CH1)
         seq_wav.append(p)  # Sequence of complete waveforms. Needed for compatibility reasons.
                            # That the TWAIT flag can be passed on the Waveform and not Pulse hierarchy level. 
