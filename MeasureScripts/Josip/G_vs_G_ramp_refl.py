@@ -216,9 +216,9 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     
     
             #plot2d_mag.update()
-            plot3d_mag.update()
+            #plot3d_mag.update()
             #plot2d_phase.update()
-            plot3d_phase.update()
+            #plot3d_phase.update()
     
             # Saving the matrix to the matrix filedata.get_filepath
             np.savetxt(fname = data.get_dir() + '/' + file_name + "_amp_matrix.dat", X=new_mat_mag, fmt='%1.4e', delimiter=' ', newline='\n')  
@@ -229,7 +229,9 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     finally:
         print 'Overall duration: %s sec' % (stop - init_start, )
     
-    
+        plot3d_mag.update()
+        plot3d_phase.update()
+
     
         #Saving plot images
         plot3d_phase.save_png(filepath = data.get_dir())
@@ -254,7 +256,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
 
 
-do_meas_refl(bias = 0.0, v2 = -546.75, v1_start = -642.0 , v1_stop = -650.0, v_middle = 20.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -548.00, v1_start = -642.0 , v1_stop = -650.0, v_middle = 20.0, num_aver_pts = 40)
 
 
 
