@@ -14,7 +14,7 @@ AWG_clock = 10e6
 											
 						
 AWGMax_amp = 0.5         
-Seq_length = 2   
+Seq_length = 6   
 t_sync = 0              
 t_wait = 100  
 Automatic_sequence_generation = False   
@@ -34,10 +34,7 @@ if not(Automatic_sequence_generation):
 
     for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
         
-        if i==0 or i == 8 or i == 16: 
-            p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)         
-        else:
-            p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
+        p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
                                                                                                              
             
 
@@ -53,7 +50,10 @@ if not(Automatic_sequence_generation):
             #p.setValuesCH1([3.0, -150.0, 150.0], [3.0, 0.0]) 
             #p.setMarkersCH1([1,0], [1,0])
         p.setValuesCH1([3.0, -100.0, 100.0], [3.0, -100.0, 100.0])
+        #if i%2 == 0:
         p.setMarkersCH1([1,0], [1,0])
+        #else:
+            #p.setMarkersCH1([0,0], [0,0])
 
 
 
