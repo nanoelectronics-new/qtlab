@@ -230,5 +230,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         daq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -550.048, Vg_static = -650.126, num_aver_pts = 40)
+do_Vg_vs_B(Vg_ramped = -550.048, Vg_static = -650.126, num_aver_pts = 100)
 
