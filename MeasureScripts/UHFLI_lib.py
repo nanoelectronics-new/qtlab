@@ -716,7 +716,7 @@ def get_scope_record(device = 'dev2169', daq = None, scopeModule = None):
     records = 0
     # Wait until one scope recording (of the configured number of segments) is complete, with timeout.
     while scopeModule.progress() < 1.0:
-        time.sleep(0.05)
+        time.sleep(0.1)
         progress = scopeModule.progress()
         records = scopeModule.get("scopeModule/records")["records"][0]
         #print("Scope module progress: {:.2%}, records: {}.".format(progress[0], records), end="\r")
