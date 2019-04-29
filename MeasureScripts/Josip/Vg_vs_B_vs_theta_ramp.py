@@ -225,5 +225,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         AWG.set_ch1_output(0)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -549.903, Vg_static = -648.47, num_aver_pts = 40)
+do_Vg_vs_B(Vg_ramped = -550.048, Vg_static = -650.126, num_aver_pts = 40)
 
