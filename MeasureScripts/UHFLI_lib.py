@@ -436,6 +436,8 @@ def run_sweeper(device_id = 'dev2169', oscilator_num = 0, demod = 3, start = 100
 
     """
     daq = UHF_get_daq(device_id = device_id)
+
+    daq.setInt('/%s/demods/%d/enable'%(device_id, demod), 1) # Turn on demod sampling
     
     # Perform a global synchronisation between the device and the data server:
     daq.sync()
@@ -578,6 +580,8 @@ def run_sweeper(device_id = 'dev2169', oscilator_num = 0, demod = 3, start = 100
 
         plt.draw()
         plt.show()
+
+    daq.setInt('/%s/demods/%d/enable'%(device_id, demod), 0) # Turn OFF demod sampling
 
     return frequency, R
 

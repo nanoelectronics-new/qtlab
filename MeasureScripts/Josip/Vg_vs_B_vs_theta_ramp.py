@@ -142,6 +142,9 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
                     #qt.msleep(0.050)
                 
                 total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
+
+
+                daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn ON the UHFLI out 1
                 # After the field is at the set point, we need to check where is the resonant frequency and set it
                 freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 135e6, stop = 170e6, num_samples = 500, do_plot= False)
 
@@ -154,7 +157,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
                 # Set the TC back to the previous one
                 daq.setDouble('/dev2169/demods/3/timeconstant', TC)
         
-
+                
                 daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
                 qt.msleep(0.10)
 
@@ -224,6 +227,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         #Turn OFF the AWG 
         AWG.stop()
         AWG.set_ch1_output(0)
+        daq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
 
 # Do measurement
 do_Vg_vs_B(Vg_ramped = -550.048, Vg_static = -650.126, num_aver_pts = 40)
