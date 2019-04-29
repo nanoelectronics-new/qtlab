@@ -435,7 +435,7 @@ def run_sweeper(device_id = 'dev2169', oscilator_num = 0, demod = 3, start = 100
         sub-folder.
 
     """
-
+    daq = UHF_get_daq(device_id = device_id)
     
     # Perform a global synchronisation between the device and the data server:
     daq.sync()

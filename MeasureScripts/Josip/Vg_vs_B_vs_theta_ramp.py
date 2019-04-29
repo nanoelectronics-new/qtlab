@@ -29,6 +29,7 @@ daq, scopeModule = UHFLI_lib.UHF_init_scope_module()
 
 
 
+
 def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = daq):
 
     if (Vg_ramped == None) or (Vg_static == None) or (num_aver_pts == None): 
@@ -133,25 +134,25 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
                 
                 start_Vg_trace = time()  # Remebering the time when the ongoing freq trace started
                 
-                #magnetY.set_field(BY_vector[i])   # Set the By field first
-                #while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
-                    #qt.msleep(0.050)
-                #magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
-                #while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
-                    #qt.msleep(0.050)
+                magnetY.set_field(BY_vector[i])   # Set the By field first
+                while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
+                    qt.msleep(0.050)
+                magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
+                while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
+                    qt.msleep(0.050)
                 
                 total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
                 # After the field is at the set point, we need to check where is the resonant frequency and set it
-                #freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 135e6, stop = 170e6, num_samples = 500, do_plot= False)
+                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 135e6, stop = 170e6, num_samples = 500, do_plot= False)
 
-                #ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
-                #f_res = freq[ind_res]
-                #f_res += 0e3 # The readout frequency offset from the resonance
+                ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
+                f_res = freq[ind_res]
+                f_res += 0e3 # The readout frequency offset from the resonance
     
                 # Now set the readout frequency 
-                #daq.setDouble('/dev2169/oscs/0/freq', f_res[0])
+                daq.setDouble('/dev2169/oscs/0/freq', f_res[0])
                 # Set the TC back to the previous one
-                #daq.setDouble('/dev2169/demods/3/timeconstant', TC)
+                daq.setDouble('/dev2169/demods/3/timeconstant', TC)
         
 
                 daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
