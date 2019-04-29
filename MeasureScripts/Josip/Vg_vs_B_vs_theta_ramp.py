@@ -134,12 +134,12 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
                 
                 start_Vg_trace = time()  # Remebering the time when the ongoing freq trace started
                 
-                #magnetY.set_field(BY_vector[i])   # Set the By field first
-                #while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
-                    #qt.msleep(0.050)
-                #magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
-                #while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
-                    #qt.msleep(0.050)
+                magnetY.set_field(BY_vector[i])   # Set the By field first
+                while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
+                    qt.msleep(0.050)
+                magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
+                while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
+                    qt.msleep(0.050)
                 
                 total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
 
