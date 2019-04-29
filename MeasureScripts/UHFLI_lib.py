@@ -14,6 +14,37 @@ import zhinst
 
 
 
+def UHF_get_daq(device_id = 'dev2169'):
+
+    """Creates and returns UHF daq object for using elsewhere"""
+
+    global daq  # Creating global variable for accesing the UHFLI from other functions
+    global device # Creating global variable for accesing the UHFLI from other functions 
+
+    # Create an instance of the ziDiscovery class.
+    d = ziPython.ziDiscovery()
+
+    # Determine the device identifier from it's ID.
+    device = d.find(device_id).lower()
+
+    # Get the device's default connectivity properties.
+    props = d.get(device)
+
+    # The maximum API level supported by this example.
+    apilevel_example = 5
+    # The maximum API level supported by the device class, e.g., MF.
+    apilevel_device = props['apilevel']
+    # Ensure we run the example using a supported API level.
+    apilevel = min(apilevel_device, apilevel_example)
+    # See the LabOne Programming Manual for an explanation of API levels.
+
+    # Create a connection to a Zurich Instruments Data Server (an API session)
+    # using the device's default connectivity properties.
+    daq = ziPython.ziDAQServer(props['serveraddress'], props['serverport'], apilevel)
+
+    return daq
+
+
 
 def UHF_init_scope(device_id = 'dev2169'):
     
@@ -615,7 +646,7 @@ def UHF_init_scope_module(device_id = 'dev2169', mode = 1, PSD = 0):
     daq.sync()
 
 
-    #raw_input("Set the UHF LI Scope parameters in the user interface dialog and then close the Scope tab!  Press enter to continue...")  # Wait for user to set the device parametrs from user interface
+    raw_input("Set the UHF LI Scope parameters in the user interface dialog and then close the Scope tab!  Press enter to continue...")  # Wait for user to set the device parametrs from user interface
 
     # Perform a global synchronisation between the device and the data server: Ensure that the settings have taken
     # effect on the device before continuing. This also clears the API's data buffers to remove any old data.

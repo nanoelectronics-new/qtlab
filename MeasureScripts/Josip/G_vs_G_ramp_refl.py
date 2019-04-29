@@ -68,7 +68,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 ramp_amp = 1.25  # Amplitude of the ramp in mV
-#upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
+upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
 daq, scopeModule = UHFLI_lib.UHF_init_scope_module()
