@@ -157,17 +157,17 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
                     # Then scan a bigger area and find the resonant frequency roughly
                     freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 135e6, stop = 170e6, num_samples = 500, do_plot= False)
                     ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
-                    f_res = freq[ind_res]
+                    f_res = freq[ind_res][0]
 
                 # Finding the resonant frequency with a better resolution
-                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = f_res-2e6, stop = f_res+2e6, num_samples = 500, do_plot= False)
+                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-2e6), stop = (f_res+2e6), num_samples = 500, do_plot= False)
 
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
-                f_res = freq[ind_res]
+                f_res = freq[ind_res][0]
                 f_res += 0e3 # The readout frequency offset from the resonance
             
                 # Now set the readout frequency 
-                daq.setDouble('/dev2169/oscs/0/freq', f_res[0])
+                daq.setDouble('/dev2169/oscs/0/freq', f_res)
                 # Set the UHFLI ou1 amplitude to the previous one
                 daq.setDouble('/dev2169/sigouts/0/amplitudes/3', ou1_ampl)
                 # Set the TC back to the previous one
