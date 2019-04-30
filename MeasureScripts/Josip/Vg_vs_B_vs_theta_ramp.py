@@ -37,7 +37,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
     global name_counter
     
-    thetas = [90.0,180.0,270.0] # Angle between the By and Bx axis
+    thetas = [0.0, 90.0, 180.0, 270.0] # Angle between the By and Bx axis
     TC = 5e-6 # Time constant of the UHFLI in seconds
 
     scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
@@ -95,10 +95,10 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-        BY_vector = np.linspace(Bymin,Bymax,300) # Defining the By vector in T  
+        BY_vector = np.linspace(Bymin,Bymax,200) # Defining the By vector in T  
         magnetY.set_rampRate_T_s(ramp_rate_Y)
 
-        BZ_vector = np.linspace(Bzmin,Bzmax,300) # Defining the Bz vector in T  
+        BZ_vector = np.linspace(Bzmin,Bzmax,200) # Defining the Bz vector in T  
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
     
@@ -224,11 +224,20 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         settings_path = data.get_dir()
         UHFLI_lib.UHF_save_settings(daq, path = settings_path)
     
-    #Turn OFF the AWG 
+    # Turn OFF the AWG 
     AWG.stop()
     AWG.set_ch1_output(0)
     daq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
 
+    # At the end set the magnetic field to zero as well, one by one
+    magnetY.set_field(0.0)   # Set the By field first
+    while math.fabs(0.0 - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
+        sleep(0.050)
+    sleep(900.0) # Wait for 15 min in between
+    magnetZ.set_field(0.0)   # Set the Bz field second
+    while math.fabs(0.0 - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
+        sleep(0.050)
+
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -550.048, Vg_static = -650.126, num_aver_pts = 100)
+do_Vg_vs_B(Vg_ramped = -548.391, Vg_static = -646.824, num_aver_pts = 100)
 
