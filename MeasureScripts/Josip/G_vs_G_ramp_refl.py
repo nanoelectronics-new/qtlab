@@ -256,7 +256,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
 
 
-do_meas_refl(bias = 0.0, v2 = -549.90, v1_start = -648.5 , v1_stop = -651.8, v_middle = 20.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -548.00, v1_start = -642.0 , v1_stop = -650.0, v_middle = 20.0, num_aver_pts = 40)
 
 
 
