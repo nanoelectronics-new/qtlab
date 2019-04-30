@@ -465,7 +465,7 @@ def run_sweeper(device_id = 'dev2169', oscilator_num = 0, demod = 3, start = 100
     # 0=manual, 1=fixed, 2=auto
     # Note: to use manual and fixed, sweep/bandwidth has to be set to a value > 0.
     sweeper.set('sweep/bandwidthcontrol', 1)
-    sweeper.set('sweep/bandwidth', 1000.0) # Setting the BW to 1 kHz
+    sweeper.set('sweep/bandwidth', 100.0) # Setting the BW to 1 kHz
     # Sets the bandwidth overlap mode (default 0). If enabled, the bandwidth of
     # a sweep point may overlap with the frequency of neighboring sweep
     # points. The effective bandwidth is only limited by the maximal bandwidth

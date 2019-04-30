@@ -143,19 +143,36 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
                 
                 total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
 
-
+                #### After the field is at the set point, we need to check where is the resonant frequency and set it
+                ## In order to make it more precise lets increase the amplitude to -35 dBm
+                
+                ou1_ampl = daq.getDouble('/dev2169/sigouts/0/amplitudes/3') # Remember what was the UHFLI out1 amplitude
+                daq.setDouble('/dev2169/sigouts/0/amplitudes/3', 0.00561694278) # Set the amplitude to -35 dBm
                 daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn ON the UHFLI out 1
-                # After the field is at the set point, we need to check where is the resonant frequency and set it
-                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 135e6, stop = 170e6, num_samples = 500, do_plot= False)
+                qt.msleep(0.10)
+                daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+
+                
+                if i==0: # If determining the resonant freq for the first time    
+                    # Then scan a bigger area and find the resonant frequency roughly
+                    freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 135e6, stop = 170e6, num_samples = 500, do_plot= False)
+                    ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
+                    f_res = freq[ind_res]
+
+                # Finding the resonant frequency with a better resolution
+                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = f_res-2e6, stop = f_res+2e6, num_samples = 500, do_plot= False)
 
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
                 f_res = freq[ind_res]
                 f_res += 0e3 # The readout frequency offset from the resonance
-    
+            
                 # Now set the readout frequency 
                 daq.setDouble('/dev2169/oscs/0/freq', f_res[0])
+                # Set the UHFLI ou1 amplitude to the previous one
+                daq.setDouble('/dev2169/sigouts/0/amplitudes/3', ou1_ampl)
                 # Set the TC back to the previous one
                 daq.setDouble('/dev2169/demods/3/timeconstant', TC)
+
         
                 
                 daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
@@ -239,5 +256,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -548.391, Vg_static = -646.824, num_aver_pts = 100)
+do_Vg_vs_B(Vg_ramped = -546.162, Vg_static = -643.179, num_aver_pts = 100)
 
