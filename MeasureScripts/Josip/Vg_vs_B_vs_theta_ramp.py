@@ -37,7 +37,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
     global name_counter
     
-    thetas = [0.0,90.0,180.0,270.0] # Angle between the By and Bx axis
+    thetas = [90.0,180.0,270.0] # Angle between the By and Bx axis
     TC = 5e-6 # Time constant of the UHFLI in seconds
 
     scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
@@ -224,10 +224,10 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         settings_path = data.get_dir()
         UHFLI_lib.UHF_save_settings(daq, path = settings_path)
     
-        #Turn OFF the AWG 
-        AWG.stop()
-        AWG.set_ch1_output(0)
-        daq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
+    #Turn OFF the AWG 
+    AWG.stop()
+    AWG.set_ch1_output(0)
+    daq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
 
 # Do measurement
 do_Vg_vs_B(Vg_ramped = -550.048, Vg_static = -650.126, num_aver_pts = 100)

@@ -67,7 +67,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 0.9  # Amplitude of the ramp in mV
+ramp_amp = 1.25  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -255,8 +255,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
         qt.mend()
 
 
-lower_freq = 157.900e6 # Hz
-higher_freq = 158.4 # Hz
+
 do_meas_refl(bias = 0.0, v2 = -549.90, v1_start = -648.5 , v1_stop = -651.8, v_middle = 20.0, num_aver_pts = 40)
 
 
