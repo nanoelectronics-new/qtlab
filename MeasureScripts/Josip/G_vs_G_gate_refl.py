@@ -34,8 +34,8 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
     
 
     
-    v1_vec = arange(-539.0,-553.0,-0.06)           #outer
-    v2_vec = arange(v2start,v2stop,-0.06)        #inner
+    v1_vec = arange(0.0,-500.0,-0.3)           #outer
+    v2_vec = arange(v2start,v2stop,-0.3)        #inner
     
     
     
@@ -110,14 +110,14 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
             start = time()
             # set the voltage
        
-            IVVI.set_dac3(v1*gatediv)
+            IVVI.set_dac8(v1*gatediv)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac4(v2*gatediv)
+                IVVI.set_dac9(v2*gatediv)
                 
     
                 # readout
@@ -197,16 +197,10 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
         qt.mend()   
 
 
-# Run the measurement
-v_middle_sweep = np.arange(0.0,25.0,5.0)
 
-for ve in v_middle_sweep: 
-    do_meas_both(bias = 0.0, v2start = -638.0, v2stop = -650.0, v_middle = ve)
-
-
-
-
-
+do_meas_both(bias = 200.0, v2start = 0.0, v2stop = -50.0)
+do_meas_both(bias = 200.0, v2start = -300.0, v2stop = -350.0)
+do_meas_both(bias = 200.0, v2start = -600.0, v2stop = -650.0)
 
 
 
