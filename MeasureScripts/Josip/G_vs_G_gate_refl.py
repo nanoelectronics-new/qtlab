@@ -34,8 +34,8 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
     
 
     
-    v1_vec = arange(0.0,-500.0,-0.3)           #outer
-    v2_vec = arange(v2start,v2stop,-0.3)        #inner
+    v1_vec = arange(-300.0,-600.0,-0.2)           #outer
+    v2_vec = arange(v2start,v2stop,-0.2)        #inner
     
     
     
@@ -198,9 +198,7 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
 
 
 
-do_meas_both(bias = 200.0, v2start = 0.0, v2stop = -50.0)
-do_meas_both(bias = 200.0, v2start = -300.0, v2stop = -350.0)
-do_meas_both(bias = 200.0, v2start = -600.0, v2stop = -650.0)
+do_meas_both(bias = 500.0, v2start = -600.0, v2stop = -650.0)
 
 
 
