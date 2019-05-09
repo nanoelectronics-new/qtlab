@@ -67,7 +67,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 10.0  # Amplitude of the ramp in mV
+ramp_amp = 4.0  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -98,7 +98,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
 
 
-    v1_vec = arange(v1_start,v1_stop,-0.12)      # outer
+    v1_vec = arange(v1_start,v1_stop,-0.06)      # outer
     v2 = v2       #inner - the middle DC point of the ramp
  
 
@@ -255,10 +255,10 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
         # lastly tell the secondary processes (if any) that they are allowed to start again.
         qt.mend()
 
-v2s = np.arange(-600.0,-400.0,20.0)
+#v2s = np.arange(-600.0,-400.0,20.0)
 
-for v2 in v2s:
-    do_meas_refl(bias = 0.0, v2 = v2, v1_start = -400 , v1_stop = -600.0, v_middle = 0.0, num_aver_pts = 40)
+#for v2 in v2s:
+do_meas_refl(bias = 0.0, v2 = -467.0, v1_start = -557.0, v1_stop = -580.0, v_middle = 0.0, num_aver_pts = 40)
 
 
 
