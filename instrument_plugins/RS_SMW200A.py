@@ -60,6 +60,11 @@ class RS_SMW200A(Instrument):
             minval=100e3, maxval=20e9,
             units='Hz', format='%.04e',
             tags=['sweep'])
+        self.add_parameter('phase', type=types.FloatType,
+            flags=Instrument.FLAG_GETSET | Instrument.FLAG_GET_AFTER_SET,
+            minval=-360.0, maxval=360.0,
+            units='deg', format='%.04e',
+            tags=['sweep'])
         self.add_parameter('power', type=types.FloatType,
             flags=Instrument.FLAG_GETSET | Instrument.FLAG_GET_AFTER_SET,
             minval=-60, maxval=30,
@@ -70,6 +75,7 @@ class RS_SMW200A(Instrument):
             flags=Instrument.FLAG_GETSET | Instrument.FLAG_GET_AFTER_SET)
         self.add_parameter('IQ_status', type=types.StringType,
             flags=Instrument.FLAG_GETSET | Instrument.FLAG_GET_AFTER_SET)
+			
 
         self.add_function('reset')
         self.add_function('get_all')
@@ -152,6 +158,32 @@ class RS_SMW200A(Instrument):
         '''
         logging.debug(__name__ + ' : setting frequency to %s GHz' % frequency)
         self._visainstrument.write('SOUR:FREQ %e' % frequency)
+		
+    def do_get_phase(self):
+        '''
+        Get phase from device
+
+        Input:
+            None
+
+        Output:
+            Phase (float) : Phase in deg
+        '''
+        logging.debug(__name__ + ' : reading phase from instrument')
+        return float(self._visainstrument.ask('SOUR:PHAS?'))
+
+    def do_set_phase(self, phase):
+        '''
+        Set phase of device
+
+        Input:
+            Phase (float) : phase in deg
+
+        Output:
+            None
+        '''
+        logging.debug(__name__ + ' : setting phase to %s GHz' % phase)
+        self._visainstrument.write('SOUR:PHAS %e' % phase)
 
     def do_get_power(self):
         '''
