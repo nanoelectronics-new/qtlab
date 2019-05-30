@@ -1178,8 +1178,8 @@ def UHF_measure_demod_multiple(Num_of_TC = 3, Integration_time = None, Measure =
 
         # Unwrapping the phase
         mean_fi = np.arctan2(mean_y,mean_x)*180/np.pi
-        if (mean_x<=0 and mean_y<0) or (mean_x>0 and mean_y<0): # If the angle is in the third or in the fourth quadrant
-            mean_fi = mean_fi + 360.0                           # then correct it
+        #if (mean_x<=0 and mean_y<0) or (mean_x>0 and mean_y<0): # If the angle is in the third or in the fourth quadrant
+            #mean_fi = mean_fi + 360.0                           # then correct it
 
 
         # Else it is in the first or in the second quadrant and therefore does not need the correction

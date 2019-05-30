@@ -17,7 +17,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 
-def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start = None, v1_stop = None,v_middle = 0.0):
+def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start = None, v1_stop = None,v_middle = 0.0):
 
     def V_G1(V_G2):
         '''In order to record paralelogram instead of the rectangle, in the gate space,
@@ -29,7 +29,7 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start
     global name_counter
     name_counter += 1
 
-    file_name = '2-20 IV %d GvsG_V_middle=%.2fmV_'%(name_counter, v_middle)
+    file_name = '23-10 IV %d GvsG_V_middle=%.2fmV_'%(name_counter, v_middle)
 
     
     gate1div = 1.0
@@ -39,8 +39,8 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start
     bias = bias
     
 
-    v1_vec = arange(v1_start,v1_stop,-0.06)      #outer
-    v2_vec = arange(v2_start,v2_stop,-0.06)       #inner
+    v1_vec = arange(v1_start,v1_stop,0.6)      #outer
+    v2_vec = arange(v2_start,v2_stop,0.6)       #inner
 
     #v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
 
@@ -51,7 +51,7 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start
     qt.mstart()
     
     IVVI.set_dac1(bias)
-    IVVI.set_dac6(v_middle/v_middle_factor)  
+    IVVI.set_dac7(v_middle/v_middle_factor)  
     
     
     
@@ -63,12 +63,12 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start
     
     
 
-    data_mag.add_coordinate('V_G 4 [mV]')       # inner
-    data_mag.add_coordinate('V_G 17 [mV]')      # outer
+    data_mag.add_coordinate('V_G 24 [mV]')       # inner
+    data_mag.add_coordinate('V_G 2 [mV]')      # outer
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 4 [mV]')
-    data_phase.add_coordinate('V_G 17 [mV]')
+    data_phase.add_coordinate('V_G 24 [mV]')
+    data_phase.add_coordinate('V_G 2 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -113,14 +113,14 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start
         start = time()
         # set the voltage
     
-        IVVI.set_dac4(v1*gate1div)
+        IVVI.set_dac5(v1*gate1div)
 
 
         
 
         for j,v2 in enumerate(v2_vec):
 
-            IVVI.set_dac3(v2*gate2div)
+            IVVI.set_dac6(v2*gate2div)
             
 
             # readout
@@ -194,10 +194,13 @@ def do_meas_refl(bias = 0.0, fmw = None, v2_start = 200, v2_stop = 300, v1_start
 
 
 # Run the measurement
+do_meas_refl(bias = 200.0, v1_start = -600.0, v1_stop = 0.0, v2_start = -600.0, v2_stop = -500.0, v_middle = -500.0)
+do_meas_refl(bias = 200.0, v1_start = -600.0, v1_stop = 0.0, v2_start = -500.0, v2_stop = -400.0, v_middle = -500.0)
+
 #v_middle_sweep = np.arange(10.0,25.0,5.0)
 
 #for ve in v_middle_sweep: 
-do_meas_refl(bias = 0.0, v1_start = -642.0, v1_stop = -650.0, v2_start = -545.5, v2_stop = -548.0, v_middle = 20.0)
+
 # Do measurement for different biases:
 #biases = np.linspace(-300,300,13) # Bias voltages in mV *10
 
