@@ -18,24 +18,24 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 
-def do_meas_both(bias = 0.0, v2_start = 200, v2_stop = 300, v1_start = None, v1_stop = None, v_middle = 0.0):
+def do_meas_both(bias = 100.0, v2_start = 200, v2_stop = 300, v1_start = None, v1_stop = None, v_middle = 0.0):
 
     global name_counter 
     name_counter += 1
-    file_name = '23-10 IV %d GvsG_V_middle=%.2fmV_'%(name_counter, v_middle)
+    file_name = '11-16 IV %d GvsG_V_middle=%.2fmV_'%(name_counter, v_middle)
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     bias = bias
     
    
-    gatediv = 1.0
+    gatediv = 10.0
     v_middle_factor = 1.0 
     
 
     
-    v1_vec = arange(v1_start, v1_stop,0.6)           #outer
-    v2_vec = arange(v2_start,v2_stop,0.6)        #inner
+    v1_vec = arange(v1_start, v1_stop,0.03)           #outer
+    v2_vec = arange(v2_start,v2_stop,0.03)        #inner
     
     
     
@@ -50,17 +50,17 @@ def do_meas_both(bias = 0.0, v2_start = 200, v2_stop = 300, v1_start = None, v1_
     
     
     ##CURRENT
-    data.add_coordinate('V_G 24 [mV]')   # inner
-    data.add_coordinate('V_G 2 [mV]')  #  outer
+    data.add_coordinate('V_G 14 [mV]')   # inner
+    data.add_coordinate('V_G 12 [mV]')  #  outer
     data.add_value('Current [pA]')
     
     ##REFL f1
-    data_mag.add_coordinate('V_G 24 [mV]')
-    data_mag.add_coordinate('V_G 2 [mV]')
+    data_mag.add_coordinate('V_G 14 [mV]')
+    data_mag.add_coordinate('V_G 12 [mV]')
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 24 [mV]')
-    data_phase.add_coordinate('V_G 2 [mV]')
+    data_phase.add_coordinate('V_G 14 [mV]')
+    data_phase.add_coordinate('V_G 12 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -110,19 +110,19 @@ def do_meas_both(bias = 0.0, v2_start = 200, v2_stop = 300, v1_start = None, v1_
             start = time()
             # set the voltage
        
-            IVVI.set_dac5(v1*gatediv)
+            IVVI.set_dac2(v1*gatediv)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac6(v2*gatediv)
+                IVVI.set_dac3(v2*gatediv)
                 
     
                 # readout
                 result = dmm.get_readval()/gain*1e12
-                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2.0)  # Reading the lockin
+                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5)  # Reading the lockin
                 result_refl = array(result_refl)
                 result_phase = result_refl[0,1]  # Getting phase values 
                 result_mag = result_refl[0,0] # Getting amplitude values 
@@ -199,11 +199,11 @@ def do_meas_both(bias = 0.0, v2_start = 200, v2_stop = 300, v1_start = None, v1_
 
 
 
-v_middle_sweep = [-500.0, 0.0, 500.0]
+#v_middle_sweep = [-500.0, 0.0, 500.0]
 
-for ve in v_middle_sweep: 
-    do_meas_both(bias = 200.0, v1_start = -600.0, v1_stop = -300.0, v2_start = -600.0, v2_stop = -400.0, v_middle = ve)
-    do_meas_both(bias = 200.0, v1_start = -150.0, v1_stop = 150.0, v2_start = -100.0, v2_stop = 100.0, v_middle = ve)
+#for ve in v_middle_sweep: 
+do_meas_both(bias = 100.0, v1_start = -15.0, v1_stop = 15.0, v2_start = -30.0, v2_stop = 0.0, v_middle = -800.0)
+do_meas_both(bias = 100.0, v1_start = -15.0, v1_stop = 15.0, v2_start = 0.0, v2_stop = 30.0, v_middle = -800.0)
 
 
 

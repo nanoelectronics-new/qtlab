@@ -23,7 +23,7 @@ def run_IV():
     
     
     qt.mstart()
-    name = 'Leak_check_22_to_10&2&23&24%d'%name_counter
+    name = 'Leak_test_17_to_12&14_%d'%name_counter
     data = qt.Data(name=name)
     
     
@@ -50,7 +50,7 @@ def run_IV():
 
     
             result = dmm._ins.get_readval()/(gain)*1e12 
-            if abs(result) > 30.0:
+            if abs(result) > 50.0:
                 raise Exception("LEAK")
         
             data.add_data_point(v, result)
