@@ -18,11 +18,11 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 
-def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
+def do_meas_both(bias = 0.0, v2_start = 200, v2_stop = 300, v1_start = None, v1_stop = None, v_middle = 0.0):
 
     global name_counter 
     name_counter += 1
-    file_name = '3-10 IV %d GvsG_'%name_counter
+    file_name = '23-10 IV %d GvsG_V_middle=%.2fmV_'%(name_counter, v_middle)
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -34,8 +34,8 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
     
 
     
-    v1_vec = arange(-300.0,-700.0,-0.6)           #outer
-    v2_vec = arange(v2start,v2stop,-0.6)        #inner
+    v1_vec = arange(v1_start, v1_stop,0.6)           #outer
+    v2_vec = arange(v2_start,v2_stop,0.6)        #inner
     
     
     
@@ -50,17 +50,17 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
     
     
     ##CURRENT
-    data.add_coordinate('V_G 5 [mV]')   # inner
-    data.add_coordinate('V_G 9 [mV]')  #  outer
+    data.add_coordinate('V_G 24 [mV]')   # inner
+    data.add_coordinate('V_G 2 [mV]')  #  outer
     data.add_value('Current [pA]')
     
     ##REFL f1
-    data_mag.add_coordinate('V_G 5 [mV]')
-    data_mag.add_coordinate('V_G 9 [mV]')
+    data_mag.add_coordinate('V_G 24 [mV]')
+    data_mag.add_coordinate('V_G 2 [mV]')
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 5 [mV]')
-    data_phase.add_coordinate('V_G 9 [mV]')
+    data_phase.add_coordinate('V_G 24 [mV]')
+    data_phase.add_coordinate('V_G 2 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -94,7 +94,7 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
     # preparation is done, now start the measurement
     
     IVVI.set_dac1(bias)  
-    IVVI.set_dac6(v_middle/v_middle_factor)
+    IVVI.set_dac7(v_middle/v_middle_factor)
     
     init_start = time()
     vec_count = 0
@@ -110,14 +110,14 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
             start = time()
             # set the voltage
        
-            IVVI.set_dac8(v1*gatediv)
+            IVVI.set_dac5(v1*gatediv)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac9(v2*gatediv)
+                IVVI.set_dac6(v2*gatediv)
                 
     
                 # readout
@@ -198,11 +198,12 @@ def do_meas_both(bias = 0.0, v2start = 100, v2stop = 100, v_middle = 0.0):
 
 
 
-do_meas_both(bias = -200.0, v2start = -1200.0, v2stop = -1300.0)
-do_meas_both(bias = -200.0, v2start = -1400.0, v2stop = -1500.0)
 
+v_middle_sweep = [-500.0, 0.0, 500.0]
 
-
+for ve in v_middle_sweep: 
+    do_meas_both(bias = 200.0, v1_start = -600.0, v1_stop = -300.0, v2_start = -600.0, v2_stop = -400.0, v_middle = ve)
+    do_meas_both(bias = 200.0, v1_start = -150.0, v1_stop = 150.0, v2_start = -100.0, v2_stop = 100.0, v_middle = ve)
 
 
 

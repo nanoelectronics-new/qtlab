@@ -194,12 +194,13 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300, v1_sta
 
 
 # Run the measurement
-do_meas_refl(bias = 200.0, v1_start = -600.0, v1_stop = 0.0, v2_start = -600.0, v2_stop = -500.0, v_middle = -500.0)
-do_meas_refl(bias = 200.0, v1_start = -600.0, v1_stop = 0.0, v2_start = -500.0, v2_stop = -400.0, v_middle = -500.0)
 
-#v_middle_sweep = np.arange(10.0,25.0,5.0)
 
-#for ve in v_middle_sweep: 
+v_middle_sweep = [-500.0, 0.0, 500.0]
+
+for ve in v_middle_sweep: 
+    do_meas_refl(bias = 200.0, v1_start = -600.0, v1_stop = 0.0, v2_start = -600.0, v2_stop = -500.0, v_middle = -500.0)
+    do_meas_refl(bias = 200.0, v1_start = -600.0, v1_stop = 0.0, v2_start = -500.0, v2_stop = -400.0, v_middle = -500.0)
 
 # Do measurement for different biases:
 #biases = np.linspace(-300,300,13) # Bias voltages in mV *10
