@@ -202,8 +202,8 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
 #v_middle_sweep = [-500.0, 0.0, 500.0]
 
 #for ve in v_middle_sweep: 
-do_meas_both(bias = 200.0, v1_start = -700.0, v1_stop = -500.0, v2_start = -700.0, v2_stop = -600.0, v_middle = -600.0)
-do_meas_both(bias = 500.0, v1_start = -700.0, v1_stop = -500.0, v2_start = -600.0, v2_stop = -500.0, v_middle = -600.0)
+do_meas_both(bias = 0.0, v1_start = -100.0, v1_stop = 100.0, v2_start = -50.0, v2_stop = 50.0, v_middle = 0.0)
+do_meas_both(bias = 0.0, v1_start =  900.0, v1_stop = 1100.0, v2_start = 900.0, v2_stop = 1000.0, v_middle = 0.0)
 
 
 
