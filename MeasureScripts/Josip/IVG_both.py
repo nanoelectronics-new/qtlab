@@ -22,13 +22,13 @@ def run_IVG_both():
     bias = 200.0
     
 
-    v_vec = arange(-800,-2000.0,-0.5)   #V_G 4
+    v_vec = arange(0.0,-1500.0,-0.1)   #V_G 4
     
 
     qt.mstart()
 
     
-    name = ' 11-16 IVG %d'%name_counter
+    name = ' 17-3 IVG %d'%name_counter
     data = qt.Data(name=name)  # Put one space before name
     
     
@@ -54,15 +54,15 @@ def run_IVG_both():
     
     # Preparation is done, now start the measurement.
     IVVI.set_dac1(bias)
-    IVVI.set_dac5(-600.0)
-    IVVI.set_dac7(-800.0)
+    IVVI.set_dac7(-600.0)
+    IVVI.set_dac6(-600.0)
     # It is actually a simple loop.
     start = time()
     for v in v_vec:
         # set the voltage
         
+        IVVI.set_dac5(v)
 
-        IVVI.set_dac6(v)
     
         # readout_dmm
         result_dmm = dmm.get_readval()/gain*1e12
