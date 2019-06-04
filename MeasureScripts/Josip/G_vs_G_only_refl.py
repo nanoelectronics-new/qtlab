@@ -39,8 +39,8 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300, v1_sta
     bias = bias
     
 
-    v1_vec = arange(v1_start,v1_stop,0.1)      #outer
-    v2_vec = arange(v2_start,v2_stop,0.1)       #inner
+    v1_vec = arange(v1_start,v1_stop,0.2)      #outer
+    v2_vec = arange(v2_start,v2_stop,0.2)       #inner
 
     #v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
 
@@ -199,7 +199,10 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300, v1_sta
 #v_middle_sweep = [-500.0, 0.0, 500.0]
 
 #for ve in v_middle_sweep: 
-do_meas_refl(bias = 0.0, v1_start = 1015.0, v1_stop = 1040.0, v2_start = 890.0, v2_stop = 920.0, v_middle = 0.0)
+do_meas_refl(bias = 0.0, v1_start = 500.0, v1_stop = 600.0, v2_start = 500.0, v2_stop = 600.0, v_middle = 0.0)
+do_meas_refl(bias = 0.0, v1_start = 500.0, v1_stop = 600.0, v2_start = 500.0, v2_stop = 600.0, v_middle = 500.0)
+
+
 
 
 # Do measurement for different biases:
