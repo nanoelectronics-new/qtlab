@@ -18,7 +18,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 
-def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v1_stop = None, v_middle = 0.0):
+def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v1_stop = None, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0):
 
     global name_counter 
     name_counter += 1
@@ -28,14 +28,22 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
     
     bias = bias
     
-   
-    gatediv = 1.0
+    # These are the values of the voltages which are superimposed to gates via S3b cards
+    static_gate1 = static_gate1
+    static_gate2 = static_gate2
+
+    gatediv = 100.0
     v_middle_factor = 1.0 
     
 
+
     
-    v1_vec = arange(v1_start, v1_stop,-0.1)       #outer
-    v2_vec = arange(v2_start,v2_stop,-0.1)        #inner
+    v1_vec = arange(v1_start, v1_stop,-0.02)       #outer
+    v2_vec = arange(v2_start,v2_stop,-0.02)        #inner
+
+    # Substracting the value of the static gate voltages to get the voltages to be swept through
+    v1_vec = v1_vec - static_gate1
+    v2_vec = v2_vec - static_gate2
     
     
     
@@ -92,10 +100,14 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
     
     
     # preparation is done, now start the measurement
-    
+    # Set bias
     IVVI.set_dac1(bias)  
+
+    # Set gates
     IVVI.set_dac4(v_middle/v_middle_factor)
-    
+    IVVI.set_dac5(static_gate1)
+    IVVI.set_dac6(static_gate2)
+
     init_start = time()
     vec_count = 0
     
@@ -110,14 +122,14 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
         start = time()
         # set the voltage
     
-        IVVI.set_dac5(v1*gatediv)
+        IVVI.set_dac3(v1*gatediv)
 
 
         
 
         for j,v2 in enumerate(v2_vec):
 
-            IVVI.set_dac6(v2*gatediv)
+            IVVI.set_dac4(v2*gatediv)
             
 
             # readout
@@ -202,7 +214,7 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
 #v_middle_sweep = [-500.0, 0.0, 500.0]
 
 #for ve in v_middle_sweep: 
-do_meas_both(bias = 0.0, v1_start = -285.0, v1_stop = -310.0, v2_start = -155.0, v2_stop = -170.0, v_middle = 0.0)
+do_meas_both(bias = 0.0, v1_start = -304.0, v1_stop = -308.0, v2_start = -164.0, v2_stop = -168.0, static_gate1 = -306.10, static_gate2 = -166.60, v_middle = 0.0)
 
 
 
