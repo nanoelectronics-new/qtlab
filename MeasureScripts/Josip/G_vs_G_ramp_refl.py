@@ -67,7 +67,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 2.5  # Amplitude of the ramp in mV
+ramp_amp = 10.0  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -88,7 +88,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     file_name = '13-17 IV %d GvsG_V_middle=%.2fmV'%(name_counter, v_middle)
 
     
-    gate1div = 100.0
+    gate1div = 1.0
     gate2div = 1.0
     v_middle_factor = 1.0 
     
@@ -98,9 +98,9 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
     v2 = v2       #inner - the middle DC point of the ramp
 
-    v1_vec = arange(v1_start,v1_stop,-0.01)      # outer
-    v1_mean = (v1_start + v1_stop)/2.0 # The value of non-divided DAC which is superimposed to the gate via an S3b card
-    v1_vec = v1_vec - v1_mean
+    v1_vec = arange(v1_start,v1_stop,-0.06)      # outer
+    #v1_mean = (v1_start + v1_stop)/2.0 # The value of non-divided DAC which is superimposed to the gate via an S3b card
+    #v1_vec = v1_mean - v1_vec 
 
  
 
@@ -119,7 +119,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     IVVI.set_dac1(bias)
     IVVI.set_dac4(v_middle/v_middle_factor)  
     IVVI.set_dac5(v2)
-    IVVI.set_dac6(v1_mean)
+    #IVVI.set_dac6(v1_mean)
 
     #Run the AWG sequence - ramp
     AWG.run()
@@ -176,7 +176,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
         
             # set the voltage
         
-            IVVI.set_dac4(v1*gate1div)
+            IVVI.set_dac6(v1*gate1div)
     
     
             
@@ -261,7 +261,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 #v2s = np.arange(-600.0,-400.0,20.0)
 
 #for v2 in v2s:
-do_meas_refl(bias = 0.0, v2 = -22.0, v1_start = -109.3, v1_stop = -110.4, v_middle = 0.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -20.0, v1_start = -105.0, v1_stop = -113.0, v_middle = 0.0, num_aver_pts = 40)
 
 
 
