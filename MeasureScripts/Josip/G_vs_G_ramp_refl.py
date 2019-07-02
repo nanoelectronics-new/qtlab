@@ -67,7 +67,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 4.0  # Amplitude of the ramp in mV
+ramp_amp = 2.5  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -85,7 +85,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     global name_counter
     name_counter += 1
 
-    file_name = '2-20 IV %d GvsG_V_middle=%.2fmV'%(name_counter, v_middle)
+    file_name = '13-17 IV %d GvsG_V_middle=%.2fmV'%(name_counter, v_middle)
 
     
     gate1div = 1.0
@@ -115,8 +115,8 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     
     # Set the bias and static gates
     IVVI.set_dac1(bias)
-    IVVI.set_dac6(v_middle/v_middle_factor)  
-    IVVI.set_dac8(v2*gate2div)
+    IVVI.set_dac4(v_middle/v_middle_factor)  
+    IVVI.set_dac5(v2*gate2div)
 
     #Run the AWG sequence - ramp
     AWG.run()
@@ -129,8 +129,8 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
     
     
-    data.add_coordinate('V_G 4 [mV]')       # inner
-    data.add_coordinate('V_G 17 [mV]')      # outer
+    data.add_coordinate('V_G 16 [mV]')       # inner
+    data.add_coordinate('V_G 18 [mV]')      # outer
     data.add_value('Refl_mag [V]')
     data.add_value('Refl_phase [deg]')
     
@@ -173,7 +173,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
         
             # set the voltage
         
-            IVVI.set_dac9(v1*gate1div)
+            IVVI.set_dac6(v1*gate1div)
     
     
             
@@ -258,7 +258,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 #v2s = np.arange(-600.0,-400.0,20.0)
 
 #for v2 in v2s:
-do_meas_refl(bias = 0.0, v2 = -467.0, v1_start = -557.0, v1_stop = -580.0, v_middle = 0.0, num_aver_pts = 40)
+do_meas_refl(bias = 100.0, v2 = -372.5, v1_start = -101.2, v1_stop = -103.0, v_middle = 0.0, num_aver_pts = 40)
 
 
 
