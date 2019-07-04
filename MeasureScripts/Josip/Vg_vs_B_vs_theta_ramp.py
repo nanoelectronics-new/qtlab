@@ -38,7 +38,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
     global name_counter
     
     thetas = [0.0, 90.0, 180.0, 270.0] # Angle between the By and Bx axis
-    TC = 5e-6 # Time constant of the UHFLI in seconds
+    TC = 10e-6 # Time constant of the UHFLI in seconds
 
     scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
     scope_num_segments = daq.getDouble('/dev2169/scopes/0/segments/count')
@@ -61,8 +61,8 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
     ramp = np.linspace(-ramp_amp, ramp_amp, num_points_vertical)  # Defining the ramp segment
 
     # Set the ramping and the static gates
-    IVVI.set_dac3(Vg_ramped*divgate)
-    IVVI.set_dac4(Vg_static*divgate)
+    IVVI.set_dac5(Vg_ramped*divgate)
+    IVVI.set_dac6(Vg_static*divgate)
 
 
     #Run the AWG sequence - ramp
@@ -79,7 +79,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
         start = time()
         name_counter += 1
-        file_name = '2_20 IV %d_theta=%d'%(name_counter,theta)
+        file_name = '13_17 IV %d_theta=%d'%(name_counter,theta)
          
         
             
@@ -113,7 +113,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         data_temp = np.zeros(num_points_vertical)  # Temporary vector for storing the data
         
         
-        data.add_coordinate('Vg 4 [mV]')  #v2
+        data.add_coordinate('Vg 16 [mV]')  #v2
         data.add_coordinate('B [T]')   #v1
         data.add_value('Refl_phase [deg]')
         data.add_value('Refl_amplitude [arb.u.]')
@@ -164,7 +164,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
                 f_res = freq[ind_res][0]
-                f_res += 0e3 # The readout frequency offset from the resonance
+                f_res += 660e3 # The readout frequency offset from the resonance
             
                 # Now set the readout frequency 
                 daq.setDouble('/dev2169/oscs/0/freq', f_res)
@@ -256,5 +256,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -546.162, Vg_static = -643.179, num_aver_pts = 100)
+do_Vg_vs_B(Vg_ramped = -111.60, Vg_static = -311.20, num_aver_pts = 100)
 
