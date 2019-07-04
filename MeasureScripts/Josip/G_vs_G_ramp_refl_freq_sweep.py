@@ -92,8 +92,8 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
     gate2div = 1.0
     v_middle_factor = 1.0 
     center_frequency = 153.880e6 # in Hz
-    df = 400e3   # Freq offset range in Hz
-    numpts = 50  # Number of points in the freq sweep
+    df = 1e6   # Freq offset range in Hz
+    numpts = 100  # Number of points in the freq sweep
     frequency_offset = np.linspace(-df,df, numpts)  # Frequency offset from the center frequency of the resonant dip
     bias = bias
     
@@ -176,7 +176,7 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
             # set the frequency
             daq.setDouble('/dev2169/oscs/0/freq', (center_frequency + freq)) # Set the frequency of the UHFLI carrier signal 
             daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
-            sleep(0.2) # Wait for the parameters to be properly set
+            sleep(0.5) # Wait for the parameters to be properly set
 
     
     
