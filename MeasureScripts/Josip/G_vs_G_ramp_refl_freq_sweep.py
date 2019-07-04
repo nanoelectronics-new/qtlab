@@ -77,32 +77,30 @@ daq, scopeModule = UHFLI_lib.UHF_init_scope_module()
 
 
 
-def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_middle = None, num_aver_pts = 20):
+def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pts = 20):
 
-    if (bias == None) or (v2 == None) or (v1_start == None) or (v1_stop == None) or (v_middle == None): 
+    if (bias == None) or (v2 == None) or (v1 == None) or (v_middle == None): 
         raise Exception('Define the values first: bias, v2...')
 
     global name_counter
     name_counter += 1
 
-    file_name = '13-17 IV %d GvsG_V_middle=%.2fmV'%(name_counter, v_middle)
+    file_name = '13-17 IV %d V_G 18=%.2fmV'%(name_counter, v1)
 
     
-    gate1div = 10.0
+    gate1div = 1.0
     gate2div = 1.0
     v_middle_factor = 1.0 
-    
+    center_frequency = 153.880e6 # in Hz
+    df = 400e3   # Freq offset range in Hz
+    numpts = 50  # Number of points in the freq sweep
+    frequency_offset = np.linspace(-df,df, numpts)  # Frequency offset from the center frequency of the resonant dip
     bias = bias
     
 
 
     v2 = v2       #inner - the middle DC point of the ramp
-
-    v1_vec = arange(v1_start,v1_stop,-0.02)      # Outer
-    v1_vec_for_graph = v1_vec                   # Defining the v1_vec which is going to be used for the graph axis
-    v1_mean = (v1_start + v1_stop)/2.0          # The value of non-divided DAC which is superimposed to the gate via an S3b card
-    v1_vec = v1_vec - v1_mean
-
+    v1 = v1       #DC point of the other gate
  
 
     scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
@@ -119,8 +117,8 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     # Set the bias and static gates
     IVVI.set_dac1(bias)
     IVVI.set_dac7(v_middle/v_middle_factor)  
-    IVVI.set_dac5(v2*gate2div)
-    IVVI.set_dac6(v1_mean)
+    IVVI.set_dac5(v2)
+    IVVI.set_dac6(v1)
 
     #Run the AWG sequence - ramp
     AWG.run()
@@ -134,7 +132,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     
     
     data.add_coordinate('V_G 16 [mV]')       # inner
-    data.add_coordinate('V_G 18 [mV]')      # outer
+    data.add_coordinate('Frequency %.3f MHz + offset [Hz]'%(center_frequency*1e-6))      # outer
     data.add_value('Refl_mag [V]')
     data.add_value('Refl_phase [deg]')
     
@@ -172,12 +170,14 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
     daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn on the UHFLI out 1
     try:
-        for i,v1 in enumerate(v1_vec):
+        for i,freq in enumerate(frequency_offset):
             
         
-            # set the voltage
-        
-            IVVI.set_dac4(v1*gate1div)
+            # set the frequency
+            daq.setDouble('/dev2169/oscs/0/freq', (center_frequency + freq)) # Set the frequency of the UHFLI carrier signal 
+            daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+            sleep(0.2) # Wait for the parameters to be properly set
+
     
     
             
@@ -198,14 +198,17 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
             # Reduce the number of samples - average amongst adjacent samples
             refl_mag = np.mean(refl_mag[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
             refl_phase = np.mean(refl_phase[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
+
+            # Different readout frequancies cause different offsets. Substractiong the offsets
+            refl_mag = refl_mag - np.mean(refl_mag)
+            refl_phase = refl_phase - np.mean(refl_phase)
             # the next function is necessary to keep the gui responsive. It
             # checks for instance if the 'stop' button is pushed. It also checks
             # if the plots need updating.
             qt.msleep(0.003)
     
             # save the data to the file
-            v1_real = v1_vec_for_graph[i]
-            data.add_data_point(v2 + ramp, np.linspace(v1_real,v1_real, num_points_vertical), refl_mag, refl_phase)
+            data.add_data_point(v2 + ramp, np.linspace(freq,freq, num_points_vertical), refl_mag, refl_phase)
     
     
             data.new_block()
@@ -263,7 +266,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 #v2s = np.arange(-600.0,-400.0,20.0)
 
 #for v2 in v2s:
-do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -310.8, v1_stop = -312.2, v_middle = 0.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -111.5, v1 = -311.3, v_middle = 0.0, num_aver_pts = 40)
 
 
 
