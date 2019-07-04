@@ -234,8 +234,8 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     finally:
         print 'Overall duration: %s sec' % (stop - init_start, )
     
-        plot3d_mag.update()
-        plot3d_phase.update()
+        #plot3d_mag.update()
+        #plot3d_phase.update()
 
     
         #Saving plot images
