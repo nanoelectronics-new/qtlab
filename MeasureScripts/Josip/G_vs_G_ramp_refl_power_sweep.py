@@ -14,6 +14,16 @@ import matplotlib.pyplot as plt
 from Waveform_PresetAmp import Pulse as pul
 
 
+def dBm_to_volts_50ohm(P_dBm):
+    '''
+    Function for converting the power in dBm to a corresponding voltage on the 50 ohm resistor.
+    Since UHFLI wants volts peak-peak through the API
+    '''
+    P_mW = 10**(P_dBm/10.0)
+    P_volts = np.sqrt(0.05*P_mW)*np.sqrt(2)
+    return P_volts
+
+
 
 def upload_ramp_to_AWG(ramp_amp = 4):
     ### SETTING AWG
@@ -91,10 +101,8 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
     gate1div = 1.0
     gate2div = 1.0
     v_middle_factor = 1.0 
-    center_frequency = 153.880e6 # in Hz
-    df = 1e6   # Freq offset range in Hz
-    numpts = 100  # Number of points in the freq sweep
-    frequency_offset = np.linspace(-df,df, numpts)  # Frequency offset from the center frequency of the resonant dip
+    numpts = 50  # Number of points in the power sweep
+    Amplitudes = np.linspace(-46,-25, numpts) # Amplitude of the UHFLI carrier signal in dBm
     bias = bias
     
 
@@ -132,7 +140,7 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
     
     
     data.add_coordinate('V_G 16 [mV]')       # inner
-    data.add_coordinate('Frequency %.3f MHz + offset [Hz]'%(center_frequency*1e-6))      # outer
+    data.add_coordinate('Amplitude [dBm]')      # outer
     data.add_value('Refl_mag [V]')
     data.add_value('Refl_phase [deg]')
     
@@ -170,11 +178,11 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
     daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
     daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn on the UHFLI out 1
     try:
-        for i,freq in enumerate(frequency_offset):
+        for i,ampl in enumerate(Amplitudes):
             
         
-            # set the frequency
-            daq.setDouble('/dev2169/oscs/0/freq', (center_frequency + freq)) # Set the frequency of the UHFLI carrier signal 
+            # set the amplitude
+            daq.setDouble('/dev2169/sigouts/0/amplitudes/3', dBm_to_volts_50ohm(ampl))  # Set the UHFLI carrier signal amplitude in volts
             daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
             sleep(0.2) # Wait for the parameters to be properly set
 
@@ -199,7 +207,7 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
             refl_mag = np.mean(refl_mag[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
             refl_phase = np.mean(refl_phase[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
 
-            # Different readout frequancies cause different offsets. Substractiong the offsets
+            # Different output amplitudes cause different offsets. Substractiong the offsets
             refl_mag = refl_mag - np.mean(refl_mag)
             refl_phase = refl_phase - np.mean(refl_phase)
             # the next function is necessary to keep the gui responsive. It
@@ -208,7 +216,7 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
             qt.msleep(0.003)
     
             # save the data to the file
-            data.add_data_point(v2 + ramp, np.linspace(freq,freq, num_points_vertical), refl_mag, refl_phase)
+            data.add_data_point(v2 + ramp, np.linspace(ampl,ampl, num_points_vertical), refl_mag, refl_phase)
     
     
             data.new_block()
@@ -266,7 +274,7 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
 #v2s = np.arange(-600.0,-400.0,20.0)
 
 #for v2 in v2s:
-do_meas_refl(bias = 0.0, v2 = -111.5, v1 = -311.3, v_middle = 0.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -111.6, v1 = -311.2, v_middle = 0.0, num_aver_pts = 40)
 
 
 
