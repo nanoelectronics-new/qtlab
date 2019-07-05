@@ -190,6 +190,9 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
                 # Reduce the number of samples - average amongst adjacent samples
                 refl_mag = np.mean(refl_mag[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
                 refl_phase = np.mean(refl_phase[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
+                # Since sweeping of magnetic field causes different offset -> substracting the offsets
+                refl_mag = refl_mag - np.mean(refl_mag)
+                refl_phase = refl_phase - np.mean(refl_phase)
                 # the next function is necessary to keep the gui responsive. It
                 # checks for instance if the 'stop' button is pushed. It also checks
                 # if the plots need updating.
@@ -256,5 +259,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -111.60, Vg_static = -311.20, num_aver_pts = 100)
+do_Vg_vs_B(Vg_ramped = -108.50, Vg_static = -311.80, num_aver_pts = 100)
 

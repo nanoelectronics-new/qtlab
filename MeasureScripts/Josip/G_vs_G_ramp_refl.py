@@ -8,7 +8,7 @@ reload(UHFLI_lib)
 import AWG_lib
 reload(AWG_lib)
 import Waveform_PresetAmp as Wav
-reload(Wav)
+#reload(Wav)
 #import qt
 import matplotlib.pyplot as plt
 from Waveform_PresetAmp import Pulse as pul
@@ -67,7 +67,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 1.0  # Amplitude of the ramp in mV
+ramp_amp = 10.0  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -98,7 +98,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
     v2 = v2       #inner - the middle DC point of the ramp
 
-    v1_vec = arange(v1_start,v1_stop,-0.02)      # Outer
+    v1_vec = arange(v1_start,v1_stop,-0.05)      # Outer
     v1_vec_for_graph = v1_vec                   # Defining the v1_vec which is going to be used for the graph axis
     v1_mean = (v1_start + v1_stop)/2.0          # The value of non-divided DAC which is superimposed to the gate via an S3b card
     v1_vec = v1_vec - v1_mean
@@ -263,7 +263,12 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 #v2s = np.arange(-600.0,-400.0,20.0)
 
 #for v2 in v2s:
-do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -310.8, v1_stop = -312.2, v_middle = 0.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 0.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 5.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 10.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 30.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 50.0, num_aver_pts = 40)
+
 
 
 

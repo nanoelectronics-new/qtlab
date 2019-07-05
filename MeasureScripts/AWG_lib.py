@@ -4,7 +4,7 @@
 #import Tektronix_AWG5014 as ArbWG
 #import InverseHPfilterSeq as INV   # ADDED
 import Waveform_PresetAmp as Wav
-reload(Wav)
+#reload(Wav)
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import qt
