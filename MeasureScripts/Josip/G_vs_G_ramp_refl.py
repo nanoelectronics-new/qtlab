@@ -67,7 +67,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 10.0  # Amplitude of the ramp in mV
+ramp_amp = 5.0  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -77,7 +77,11 @@ daq, scopeModule = UHFLI_lib.UHF_init_scope_module()
 
 
 
-def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_middle = None, num_aver_pts = 20):
+def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_middle = None, num_aver_pts = 20, num_ramps = 10):
+    '''Function for running gate vs gate scans. Gate 1 is stepped from v1_start to v1_stop and for it's each value the gate 2 is ramped by AWG
+       around the middle value v2. Since the vertical line scan can be huge, and the ramp amplitude is limited to approx +-10mV on the sample end, 
+       it is splitted in num_ramps segments. v2 voltages are then adjsuted to be in the middle of every ramp segment such that whole vertical line 
+       trace is covered.''' 
 
     if (bias == None) or (v2 == None) or (v1_start == None) or (v1_stop == None) or (v_middle == None): 
         raise Exception('Define the values first: bias, v2...')
@@ -88,20 +92,21 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     file_name = '13-17 IV %d GvsG_V_middle=%.2fmV'%(name_counter, v_middle)
 
     
-    gate1div = 10.0
+    gate1div = 1.0
     gate2div = 1.0
-    v_middle_factor = 1.0 
+    v_middle_factor = 5.0 
     
     bias = bias
     
 
 
     v2 = v2       #inner - the middle DC point of the ramp
-
-    v1_vec = arange(v1_start,v1_stop,-0.05)      # Outer
+    v2_initial = v2 - (num_ramps-1)*ramp_amp    # Complete vertical sweep ic segmented into n_ramps so v2 needs to be positioned properly for each segment
+                                                # Initial one is given by this formula
+    v1_vec = arange(v1_start,v1_stop,-0.2)      # Outer
     v1_vec_for_graph = v1_vec                   # Defining the v1_vec which is going to be used for the graph axis
-    v1_mean = (v1_start + v1_stop)/2.0          # The value of non-divided DAC which is superimposed to the gate via an S3b card
-    v1_vec = v1_vec - v1_mean
+    #v1_mean = (v1_start + v1_stop)/2.0          # The value of non-divided DAC which is superimposed to the gate via an S3b card
+    #v1_vec = v1_vec - v1_mean
 
  
 
@@ -111,16 +116,16 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     # Number of adjacent points to average in the read data
     num_aver_pts = num_aver_pts 
 
-    num_points_vertical = scope_segment_length//num_aver_pts 
-    ramp = np.linspace(-ramp_amp, ramp_amp, num_points_vertical)  # Defining the ramp segment
+    num_points_vertical = scope_segment_length//num_aver_pts
+    ramp = np.linspace(-num_ramps*ramp_amp, num_ramps*ramp_amp, num_ramps*num_points_vertical)  # Defining the ramp segment
     
     qt.mstart()
     
     # Set the bias and static gates
     IVVI.set_dac1(bias)
     IVVI.set_dac7(v_middle/v_middle_factor)  
-    IVVI.set_dac5(v2*gate2div)
-    IVVI.set_dac6(v1_mean)
+    #IVVI.set_dac5(v2*gate2div)
+    #IVVI.set_dac6(v1_mean)
 
     #Run the AWG sequence - ramp
     AWG.run()
@@ -147,9 +152,10 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
     
     
+
     #saving directly in matrix format 
-    new_mat_mag = np.zeros(num_points_vertical) # Creating empty matrix for storing all data 
-    new_mat_phase = np.zeros(num_points_vertical) # Creating empty matrix for storing all data 
+    new_mat_mag = np.zeros(num_ramps*num_points_vertical) # Creating empty matrix for storing all data 
+    new_mat_phase = np.zeros(num_ramps*num_points_vertical) # Creating empty matrix for storing all data 
     
     
     
@@ -177,42 +183,51 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
         
             # set the voltage
         
-            IVVI.set_dac4(v1*gate1div)
+            IVVI.set_dac6(v1*gate1div)
     
-    
+            # UHFLI data containers
+            refl_mag_full = np.array([])
+            refl_phase_full = np.array([])
             
-    
-    
-    
-            # readout
-            num_samples, wave = UHFLI_lib.get_scope_record(daq = daq, scopeModule= scopeModule)           
-            
-        
-            
-            # Organizing each scope shot into individual rows 
-            refl_mag = wave[0].reshape(-1, scope_segment_length)   
-            refl_phase = wave[1].reshape(-1, scope_segment_length) 
-            # Average the read scope segments (rows) to one segment (one row)
-            refl_mag = np.mean(refl_mag, axis = 0)
-            refl_phase = np.mean(refl_phase, axis = 0)
-            # Reduce the number of samples - average amongst adjacent samples
-            refl_mag = np.mean(refl_mag[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
-            refl_phase = np.mean(refl_phase[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
-            # the next function is necessary to keep the gui responsive. It
-            # checks for instance if the 'stop' button is pushed. It also checks
-            # if the plots need updating.
-            qt.msleep(0.003)
+            for n in xrange(num_ramps):
+                
+                IVVI.set_dac5(v2_initial + (n*2*ramp_amp)) # Setting the v2 properly in the middle of each vertical segment
+                # the next function is necessary to keep the gui responsive. It
+                # checks for instance if the 'stop' button is pushed. It also checks
+                # if the plots need updating.
+                qt.msleep(0.05)
+
+
+                # readout - getting the recording corresponding to one ramp
+                num_samples, wave = UHFLI_lib.get_scope_record(daq = daq, scopeModule= scopeModule)           
+                
+                
+                # Organizing each scope shot into individual rows 
+                refl_mag = wave[0].reshape(-1, scope_segment_length)   
+                refl_phase = wave[1].reshape(-1, scope_segment_length) 
+                # Average the read scope segments (rows) to one segment (one row)
+                refl_mag = np.mean(refl_mag, axis = 0)
+                refl_phase = np.mean(refl_phase, axis = 0)
+                # Reduce the number of samples - average amongst adjacent samples
+                refl_mag = np.mean(refl_mag[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
+                refl_phase = np.mean(refl_phase[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
+
+                refl_mag_full = np.concatenate((refl_mag_full, refl_mag))
+                refl_phase_full = np.concatenate((refl_phase_full, refl_phase))
+                
+
+
     
             # save the data to the file
             v1_real = v1_vec_for_graph[i]
-            data.add_data_point(v2 + ramp, np.linspace(v1_real,v1_real, num_points_vertical), refl_mag, refl_phase)
+            data.add_data_point(v2 + ramp, np.linspace(v1_real,v1_real,num_ramps*num_points_vertical), refl_mag_full, refl_phase_full)
     
     
             data.new_block()
             stop = time()
     
-            new_mat_mag = np.column_stack((new_mat_mag, refl_mag))
-            new_mat_phase = np.column_stack((new_mat_phase, refl_phase))
+            new_mat_mag = np.column_stack((new_mat_mag, refl_mag_full))
+            new_mat_phase = np.column_stack((new_mat_phase, refl_phase_full))
     
             # Kicking out the first column with zeros
             if not(i):
@@ -263,8 +278,8 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 #v2s = np.arange(-600.0,-400.0,20.0)
 
 #for v2 in v2s:
-do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 100.0, num_aver_pts = 40)
-do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 200.0, num_aver_pts = 40)
+do_meas_refl(bias = 200.0, v2 = -400.0, v1_start = -450.0, v1_stop = -475.0, v_middle = 2000.0, num_aver_pts = 40, num_ramps = 10)
+
 
 
 
