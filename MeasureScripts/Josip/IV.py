@@ -14,17 +14,17 @@ def run_IV():
 
     global name_counter
     name_counter +=1
-    gain = 1e7 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+    gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    v_vec = arange(-10.0,10.0,0.2)   
+    v_vec = arange(0.0,-10000.0,-5.0)   
     
 
-    div = 100.0
+    div = 0.2
     
     
     qt.mstart()
-    name = 'Leak_test_13_to_10_%d'%name_counter
+    name = 'Leak_test_14_to_16&18_%d'%name_counter
     data = qt.Data(name=name)
     
     
@@ -47,12 +47,12 @@ def run_IV():
         for v in v_vec:
     
         
-            IVVI.set_dac1(v*div)
+            IVVI.set_dac7(v*div)
 
     
             result = dmm._ins.get_readval()/(gain)*1e12 
-            #if abs(result) > 50.0:
-             #   raise Exception("LEAK")
+            if abs(result) > 50.0:
+                raise Exception("LEAK")
         
             data.add_data_point(v, result)
         
@@ -67,7 +67,7 @@ def run_IV():
     
     
     finally:
-        IVVI.set_dac1(0.0)
+        IVVI.set_dac7(0.0)
         #Saving plot images
         plot2d.save_png(filepath = data.get_dir())
         plot2d.save_eps(filepath = data.get_dir())

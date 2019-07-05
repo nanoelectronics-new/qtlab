@@ -263,11 +263,8 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 #v2s = np.arange(-600.0,-400.0,20.0)
 
 #for v2 in v2s:
-do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 0.0, num_aver_pts = 40)
-do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 5.0, num_aver_pts = 40)
-do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 10.0, num_aver_pts = 40)
-do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 30.0, num_aver_pts = 40)
-do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 50.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 100.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -111.5, v1_start = -290.0, v1_stop = -330.0, v_middle = 200.0, num_aver_pts = 40)
 
 
 
