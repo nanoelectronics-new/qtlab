@@ -104,7 +104,7 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
     IVVI.set_dac1(bias)  
 
     # Set gates
-    IVVI.set_dac4(v_middle/v_middle_factor)
+    IVVI.set_dac7(v_middle/v_middle_factor)
     #IVVI.set_dac5(static_gate1)
     #IVVI.set_dac6(static_gate2)
 
@@ -134,7 +134,7 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
 
             # readout
             result = dmm.get_readval()/gain*1e12
-            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.2)  # Reading the lockin
+            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5)  # Reading the lockin
             result_refl = array(result_refl)
             result_phase = result_refl[0,1]  # Getting phase values 
             result_mag = result_refl[0,0] # Getting amplitude values 
@@ -214,11 +214,17 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
 #v_middle_sweep = [-500.0, 0.0, 500.0]
 
 #for ve in v_middle_sweep: 
-do_meas_both(bias = 200.0, v1_start = -100.0, v1_stop = -200.0, v2_start = -100.0, v2_stop = -170.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 2000.0)
-do_meas_both(bias = 200.0, v1_start = -100.0, v1_stop = -200.0, v2_start = -400.0, v2_stop = -470.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 2000.0)
-do_meas_both(bias = 200.0, v1_start = -400.0, v1_stop = -500.0, v2_start = -100.0, v2_stop = -170.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 2000.0)
-do_meas_both(bias = 200.0, v1_start = -400.0, v1_stop = -500.0, v2_start = -400.0, v2_stop = -470.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 2000.0)
-do_meas_both(bias = 200.0, v1_start = -200.0, v1_stop = -300.0, v2_start = -200.0, v2_stop = -370.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 2000.0)
+
+do_meas_both(bias = 500.0, v1_start = -200.0, v1_stop = -300.0, v2_start = -200.0, v2_stop = -270.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 1000.0)
+do_meas_both(bias = 500.0, v1_start = -400.0, v1_stop = -500.0, v2_start = -400.0, v2_stop = -470.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 1000.0)
+
+do_meas_both(bias = 500.0, v1_start = -100.0, v1_stop = -200.0, v2_start = -100.0, v2_stop = -170.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
+do_meas_both(bias = 500.0, v1_start = -200.0, v1_stop = -300.0, v2_start = -200.0, v2_stop = -270.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
+do_meas_both(bias = 500.0, v1_start = -400.0, v1_stop = -500.0, v2_start = -400.0, v2_stop = -470.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
+
+do_meas_both(bias = 500.0, v1_start = -200.0, v1_stop = -300.0, v2_start = -200.0, v2_stop = -270.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = -1000.0)
+do_meas_both(bias = 500.0, v1_start = -400.0, v1_stop = -500.0, v2_start = -400.0, v2_stop = -470.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = -1000.0)
+
 
 
 

@@ -47,10 +47,10 @@ def run_IVG():
 	leak_test = True
 	
 	
-	v_vec = arange(-500.0,0.0,1.0)
+	v_vec = arange(0.0,2000.0,1.0)
 	
 	divgate = 1.0
-	v_middle = 2000.0
+	v_middle = -1000.0
 	
 	
 	
