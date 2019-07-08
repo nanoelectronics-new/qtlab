@@ -134,7 +134,7 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
 
             # readout
             result = dmm.get_readval()/gain*1e12
-            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5)  # Reading the lockin
+            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5, Integration_time = 0.002)  # Reading the lockin
             result_refl = array(result_refl)
             result_phase = result_refl[0,1]  # Getting phase values 
             result_mag = result_refl[0,0] # Getting amplitude values 
@@ -222,7 +222,11 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
 #do_meas_both(bias = 500.0, v1_start = -200.0, v1_stop = -300.0, v2_start = -200.0, v2_stop = -270.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
 
 
-do_meas_both(bias = 500.0, v1_start = -200.0, v1_stop = -300.0, v2_start = -200.0, v2_stop = -270.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = -1000.0)
+do_meas_both(bias = 500.0, v1_start = -230.0, v1_stop = -270.0, v2_start = -220.0, v2_stop = -260.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = -500.0)
+do_meas_both(bias = 500.0, v1_start = -230.0, v1_stop = -270.0, v2_start = -220.0, v2_stop = -260.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = -250.0)
+do_meas_both(bias = 500.0, v1_start = -230.0, v1_stop = -270.0, v2_start = -220.0, v2_stop = -260.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
+do_meas_both(bias = 500.0, v1_start = -230.0, v1_stop = -270.0, v2_start = -220.0, v2_stop = -260.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 250.0)
+do_meas_both(bias = 500.0, v1_start = -230.0, v1_stop = -270.0, v2_start = -220.0, v2_stop = -260.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 500.0)
 
 
 

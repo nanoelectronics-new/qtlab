@@ -1036,7 +1036,7 @@ def UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [0], out_c = 0):
 
     for dem in demod_c:
         daq.setInt('/%s/demods/%s/enable' % (device, dem) , 1)  # Enable all demodulators listed in the list demod_c
-        daq.setDouble('/%s/demods/%s/rate' % (device, dem), 1000000) # Set the sampling rate of the respective demodulator to 1M
+        daq.setDouble('/%s/demods/%s/rate' % (device, dem), 100000) # Set the sampling rate of the respective demodulator to 1M
     
     
     # Unsubscribe any streaming data
