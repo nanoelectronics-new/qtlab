@@ -222,7 +222,7 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
 #do_meas_both(bias = 500.0, v1_start = -200.0, v1_stop = -300.0, v2_start = -200.0, v2_stop = -270.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
 
 
-do_meas_both(bias = 500.0, v1_start = -230.0, v1_stop = -270.0, v2_start = -220.0, v2_stop = -260.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 250.0)
+# do_meas_both(bias = 500.0, v1_start = -230.0, v1_stop = -270.0, v2_start = -220.0, v2_stop = -260.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 250.0)
 do_meas_both(bias = 500.0, v1_start = -230.0, v1_stop = -270.0, v2_start = -220.0, v2_stop = -260.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 500.0)
 
 
