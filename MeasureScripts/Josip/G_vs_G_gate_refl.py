@@ -38,8 +38,8 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
 
 
     
-    v1_vec = arange(v1_start, v1_stop,-0.1)       #outer
-    v2_vec = arange(v2_start,v2_stop,-0.1)        #inner
+    v1_vec = arange(v1_start, v1_stop,-0.3)       #outer
+    v2_vec = arange(v2_start,v2_stop,-0.3)        #inner
 
     # Substracting the value of the static gate voltages to get the voltages to be swept through
     v1_vec = v1_vec - static_gate1
@@ -114,7 +114,7 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
      
     
     
-    daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+    #daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
     
     for i,v1 in enumerate(v1_vec):
         
@@ -204,7 +204,7 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
 
     settings_path = data_mag.get_dir()
 
-    UHFLI_lib.UHF_save_settings(daq, path = settings_path)
+    #UHFLI_lib.UHF_save_settings(daq, path = settings_path)
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()   
 
@@ -214,19 +214,10 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
 #v_middle_sweep = [-500.0, 0.0, 500.0]
 
 #for ve in v_middle_sweep: 
-
-#do_meas_both(bias = 500.0, v1_start = -200.0, v1_stop = -300.0, v2_start = -200.0, v2_stop = -270.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 1000.0)
-#do_meas_both(bias = 500.0, v1_start = -400.0, v1_stop = -500.0, v2_start = -400.0, v2_stop = -470.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 1000.0)
-#
-#do_meas_both(bias = 500.0, v1_start = -100.0, v1_stop = -200.0, v2_start = -100.0, v2_stop = -170.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
-#do_meas_both(bias = 500.0, v1_start = -200.0, v1_stop = -300.0, v2_start = -200.0, v2_stop = -270.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
-
-
-# do_meas_both(bias = 500.0, v1_start = -230.0, v1_stop = -270.0, v2_start = -220.0, v2_stop = -260.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 250.0)
-do_meas_both(bias = 500.0, v1_start = -230.0, v1_stop = -270.0, v2_start = -220.0, v2_stop = -260.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 500.0)
-
-
-
+do_meas_both(bias = 500.0, v1_start = 0.0, v1_stop = -300.0, v2_start = -100.0, v2_stop = -150.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
+do_meas_both(bias = 500.0, v1_start = 0.0, v1_stop = -300.0, v2_start = -150.0, v2_stop = -200.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
+do_meas_both(bias = 500.0, v1_start = 0.0, v1_stop = -300.0, v2_start = -200.0, v2_stop = -250.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
+do_meas_both(bias = 500.0, v1_start = 0.0, v1_stop = -300.0, v2_start = -250.0, v2_stop = -300.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
 
 
 
