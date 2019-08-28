@@ -85,7 +85,7 @@ class IVVI(Instrument):
             type=types.FloatType,
             flags=Instrument.FLAG_GETSET,
             channels=(1, self._numdacs),
-            maxstep=10, stepdelay=400,     # CHANGE: Old_first: stepdelay=50, New: stepdelay=0,  Old_second: maxstep=10, New: maxstep=2000
+            maxstep=10, stepdelay=200,     # CHANGE: Old_first: stepdelay=50, New: stepdelay=0,  Old_second: maxstep=10, New: maxstep=2000
             units='mV', format='%.02f',
             tags=['sweep'])
         

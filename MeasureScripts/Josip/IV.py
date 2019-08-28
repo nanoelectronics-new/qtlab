@@ -17,14 +17,14 @@ def run_IV():
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    v_vec = arange(0.0,-10000.0,-5.0)   
+    v_vec = arange(0.0,-2000.0,-2.0)   
     
 
-    div = 0.2
+    div = 1.0
     
     
     qt.mstart()
-    name = 'Leak_test_14_to_16&18_%d'%name_counter
+    name = 'Leak_test_15to14_%d'%name_counter
     data = qt.Data(name=name)
     
     
@@ -51,8 +51,8 @@ def run_IV():
 
     
             result = dmm._ins.get_readval()/(gain)*1e12 
-            if abs(result) > 50.0:
-                raise Exception("LEAK")
+            #if abs(result) > 50.0:
+                #raise Exception("LEAK")
         
             data.add_data_point(v, result)
         

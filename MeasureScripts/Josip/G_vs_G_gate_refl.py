@@ -22,9 +22,9 @@ def do_meas_both(bias = 200.0, v2_start = 200, v2_stop = 300, v1_start = None, v
 
     global name_counter 
     name_counter += 1
-    file_name = '13-17 IV %d GvsG_V_middle=%.2fmV_'%(name_counter, v_middle)
+    file_name = '20-7 IV %d GvsG_V_middle=%.2fmV_'%(name_counter, v_middle)
     
-    gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+    gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     bias = bias
     
