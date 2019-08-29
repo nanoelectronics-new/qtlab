@@ -17,14 +17,14 @@ def run_IV():
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    v_vec = arange(0.0,-2000.0,-2.0)   
+    v_vec = arange(0.0,-1000.0,-4.0)   
     
 
     div = 1.0
     
     
     qt.mstart()
-    name = 'Leak_test_15to14_%d'%name_counter
+    name = 'Leak_test_3to24_%d'%name_counter
     data = qt.Data(name=name)
     
     
@@ -47,12 +47,12 @@ def run_IV():
         for v in v_vec:
     
         
-            IVVI.set_dac7(v*div)
+            IVVI.set_dac5(v*div)
 
     
             result = dmm._ins.get_readval()/(gain)*1e12 
-            #if abs(result) > 50.0:
-                #raise Exception("LEAK")
+            if abs(result) > 50.0:
+                raise Exception("LEAK")
         
             data.add_data_point(v, result)
         
@@ -67,7 +67,7 @@ def run_IV():
     
     
     finally:
-        IVVI.set_dac7(0.0)
+        IVVI.set_dac5(0.0)
         #Saving plot images
         plot2d.save_png(filepath = data.get_dir())
         plot2d.save_eps(filepath = data.get_dir())
@@ -81,4 +81,4 @@ def run_IV():
 
 #Run the measurement
 run_IV()
-    
+   

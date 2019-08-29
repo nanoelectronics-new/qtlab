@@ -13,10 +13,11 @@ import UHFLI_lib
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'POS', 'POS', 'BIP'], numdacs=16)
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
-name_counter +=1
-def do_meas_current(bias = 200.0, v2start = 100, v2stop = 100):
 
-    file_name = '23-10_GvsG_%d'%name_counter
+def do_meas_current(bias = -200.0, v2start = 100.0, v2stop = 100.0, v_middle = 100.0):
+    global name_counter
+    name_counter += 1
+    file_name = '1-10_GvsG_%d'%name_counter
     
     gain = 1e8  #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -25,8 +26,8 @@ def do_meas_current(bias = 200.0, v2start = 100, v2stop = 100):
     gatediv = 1.0
     
     
-    v1_vec = arange(-600.0,0.0,1.0)         #outer
-    v2_vec = arange(v2start,v2stop,1.0)      #inner
+    v1_vec = arange(400.0,800.0,0.5)       # outer
+    v2_vec = arange(v2start,v2stop,1.0)    # inner
     
     
     qt.mstart()
@@ -38,9 +39,9 @@ def do_meas_current(bias = 200.0, v2start = 100, v2stop = 100):
     
     
     
-    ##CURRENT
-    data.add_coordinate('V_G 24 [mV]')    # inner
-    data.add_coordinate('V_G 2 [mV]')      #  outer
+    ## CURRENT
+    data.add_coordinate('V_G 12 [mV]')    # inner
+    data.add_coordinate('V_G 9 [mV]')     # outer
     data.add_value('Current [pA]')
     
     
@@ -57,14 +58,14 @@ def do_meas_current(bias = 200.0, v2start = 100, v2stop = 100):
     
     
     
-    plot3d = qt.Plot3D(data, name='measure3D_current', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-    plot2d = qt.Plot2D(data, name='measure2D_current',autoupdate=False)
+    plot3d = qt.Plot3D(data, name=file_name + " 2D", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    plot2d = qt.Plot2D(data, name=file_name + " 1D",autoupdate=False)
     
     
     
     
     # preparation is done, now start the measurement.
-    
+    IVVI.set_dac6(v_middle)
     IVVI.set_dac1(bias)  
     
     init_start = time()
@@ -87,7 +88,7 @@ def do_meas_current(bias = 200.0, v2start = 100, v2stop = 100):
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac6(v2*gatediv)
+                IVVI.set_dac7(v2*gatediv)
                 
     
                 # readout
@@ -142,9 +143,12 @@ def do_meas_current(bias = 200.0, v2start = 100, v2stop = 100):
         qt.mend()
 
 
-#for bias in [-1000,-500]:
+# For bias in [-1000,-500]:
     #do_meas_current(bias)
 
-#Do measurement
-do_meas_current(v2start = -600.0, v2stop = -500.0)
-do_meas_current(v2start = -500.0, v2stop = -400.0)
+# Do measurement
+do_meas_current(v2start = 400.0, v2stop = 600.0, v_middle = 0.0)
+do_meas_current(v2start = 600.0, v2stop = 800.0, v_middle = 0.0)
+
+do_meas_current(v2start = 400.0, v2stop = 600.0, v_middle = 500.0)
+do_meas_current(v2start = 600.0, v2stop = 800.0, v_middle = 500.0)

@@ -42,12 +42,12 @@ def run_IVG():
 
 	gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 	
-	bias = -100.0
+	bias = -200.0
 	
 	leak_test = True
 	
 	
-	v_vec = arange(0.0,2000.0,2.0)
+	v_vec = arange(-100.0,2000.0,1.0)
 	
 	divgate = 1.0
 	v_middle = 0.0
@@ -55,7 +55,7 @@ def run_IVG():
 	
 	
 	qt.mstart()
-	name = ' 15-19 IVG %d'%name_counter 
+	name = ' 1-10 IVG %d'%name_counter 
 	data = qt.Data(name=name)
 	
 	
@@ -88,8 +88,8 @@ def run_IVG():
 		
 	
 
-		    IVVI.set_dac5(v*divgate)
-		    IVVI.set_dac6(v*divgate)
+		    #IVVI.set_dac5(v*divgate)
+		    #IVVI.set_dac6(v*divgate)
 		    IVVI.set_dac7(v*divgate)
 	
 		    result = dmm._ins.get_readval()/(gain)*1e12 
