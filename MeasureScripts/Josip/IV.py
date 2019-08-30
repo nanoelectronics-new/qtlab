@@ -17,7 +17,7 @@ def run_IV():
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    v_vec = arange(10000.0,5000.0,-50.0)   
+    v_vec = arange(5000.0,2000.0,-50.0)   
     
 
     div = 15.0
