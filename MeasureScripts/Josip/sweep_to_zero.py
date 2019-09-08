@@ -29,4 +29,29 @@ def sweep_to_zero():
 		raise Exception("DACs are not at the same voltage value")
 
 #Run the function
-sweep_to_zero()
+#sweep_to_zero()
+
+
+
+def sweep_to_zero_single():
+
+	dac5 = IVVI.get_dac2()
+	v_step = 10 # Voltage step in mV
+	stepdelay = 0.2 # Delay between steps in s
+	
+	# Checking if the current value is pos or neg and creating the corresponding sweeping vector 
+	if dac5 > 0:  # If it is positive
+		v_array = np.arange(dac5, 0.0, -v_step)
+	elif dac5 < 0: # If it is negative
+		v_array = np.arange(dac5, 0.0, v_step)
+	else:
+		raise Excpetion("Already at zero")
+	
+	for v in v_array:
+		IVVI.set_dac2(v)
+		sleep(stepdelay)
+
+sweep_to_zero_single()
+
+
+
