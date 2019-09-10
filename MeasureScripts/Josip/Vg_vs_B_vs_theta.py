@@ -37,7 +37,7 @@ def do_Vg_vs_B():
 
         start = time()
         name_counter += 1
-        file_name = '2_20 IV %d_theta=%d'%(name_counter,theta)
+        file_name = '1-3 IV %d_theta=%d'%(name_counter,theta)
          
         
             
@@ -62,7 +62,7 @@ def do_Vg_vs_B():
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
         
-        Vg = arange(-644.0,-647.0,-0.06)  # gate voltage
+        Vg = arange(-486.0,-483.5,0.06)  # gate voltage
         divgate = 1.0
         
         qt.mstart()
@@ -106,10 +106,18 @@ def do_Vg_vs_B():
                 
                 total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
                 # After the field is at the set point, we need to check where is the resonant freuqency and set it
-                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 135e6, stop = 170e6, num_samples = 500, do_plot= False)
+                if i==0: # If determining the resonant freq for the first time    
+                    # Then scan a bigger area and find the resonant frequency roughly
+                    freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 205e6, stop = 230e6, num_samples = 500, do_plot= False)
+                    ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
+                    f_res = freq[ind_res][0]
+
+                # Finding the resonant frequency with a better resolution
+                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-2e6), stop = (f_res+2e6), num_samples = 500, do_plot= False)
+
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
-                f_res = freq[ind_res]
-                f_res += 0e3 # The readout frequency offset from the resonance
+                f_res = freq[ind_res][0]
+                f_res -= 500e3 # The readout frequency offset from the resonance
     
                 # Now set the readout frequency 
                 daq.setDouble('/dev2169/oscs/0/freq', f_res[0])
@@ -120,7 +128,7 @@ def do_Vg_vs_B():
                 qt.msleep(0.10)
         
                 for j,Vg_val in enumerate(Vg):  
-                    IVVI.set_dac4(Vg_val*divgate)
+                    IVVI.set_dac6(Vg_val*divgate)
                     
         
                     # the next function is necessary to keep the gui responsive. It
