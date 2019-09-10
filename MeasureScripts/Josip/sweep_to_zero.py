@@ -29,7 +29,7 @@ def sweep_to_zero():
 		raise Exception("DACs are not at the same voltage value")
 
 #Run the function
-#sweep_to_zero()
+sweep_to_zero()
 
 
 
@@ -51,7 +51,7 @@ def sweep_to_zero_single():
 		IVVI.set_dac2(v)
 		sleep(stepdelay)
 
-sweep_to_zero_single()
+#sweep_to_zero_single()
 
 
 
