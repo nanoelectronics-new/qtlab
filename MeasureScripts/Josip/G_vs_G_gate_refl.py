@@ -215,8 +215,8 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 
 # For ve in v_middle_sweep: 
 
-do_meas_both(bias = 500.0, v1_start = -368.0, v1_stop = -362.0, v2_start = -486.0, v2_stop = -476.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = -600.0)
-
+do_meas_both(bias = 500.0, v1_start = -371.0, v1_stop = -364.0, v2_start = -495.0, v2_stop = -482.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = -600.0)
+do_meas_both(bias = -500.0, v1_start = -371.0, v1_stop = -364.0, v2_start = -495.0, v2_stop = -482.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = -600.0)
 
 
 
