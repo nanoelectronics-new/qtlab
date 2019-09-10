@@ -26,7 +26,7 @@ def do_Vg_vs_B():
 
     global name_counter
     
-    thetas = [90,270.0] # Angle between the By and Bx axis
+    thetas = [90,360.0] # Angle between the By and Bx axis
     
     TC = 10e-3 # Time constant of the UHFLI in seconds
     
