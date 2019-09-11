@@ -20,7 +20,7 @@ reload(UHFLI_lib)
 #magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.183')
 #magnetY = qt.instruments.create('magnetY', 'AMI430_By', address='10.21.64.184')
 
-ramp_amp = 1.0  # Amplitude of the ramp in mV
+ramp_amp = 0.8  # Amplitude of the ramp in mV
 u2AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -79,7 +79,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
         start = time()
         name_counter += 1
-        file_name = '13_17 IV %d_theta=%d'%(name_counter,theta)
+        file_name = '1-3 IV %d_theta=%d'%(name_counter,theta)
          
         
             
@@ -113,7 +113,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         data_temp = np.zeros(num_points_vertical)  # Temporary vector for storing the data
         
         
-        data.add_coordinate('Vg 16 [mV]')  #v2
+        data.add_coordinate('Vg 14 [mV]')  #v2
         data.add_coordinate('B [T]')   #v1
         data.add_value('Refl_phase [deg]')
         data.add_value('Refl_amplitude [arb.u.]')
@@ -155,7 +155,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
                 
                 if i==0: # If determining the resonant freq for the first time    
                     # Then scan a bigger area and find the resonant frequency roughly
-                    freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 135e6, stop = 170e6, num_samples = 500, do_plot= False)
+                    freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 205e6, stop = 230e6, num_samples = 500, do_plot= False)
                     ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
                     f_res = freq[ind_res][0]
 
@@ -164,7 +164,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
                 f_res = freq[ind_res][0]
-                f_res += 660e3 # The readout frequency offset from the resonance
+                f_res -= 500e3 # The readout frequency offset from the resonance
             
                 # Now set the readout frequency 
                 daq.setDouble('/dev2169/oscs/0/freq', f_res)
@@ -259,5 +259,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -108.50, Vg_static = -311.80, num_aver_pts = 100)
+do_Vg_vs_B(Vg_ramped = -367.10, Vg_static = -484.70, num_aver_pts = 100)
 

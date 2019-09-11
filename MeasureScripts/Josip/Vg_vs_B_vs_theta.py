@@ -75,7 +75,7 @@ def do_Vg_vs_B():
         data_temp = np.zeros(len(Vg))  # Temporary vector for storing the data
         
         
-        data.add_coordinate('Vg 17 [mV]')  #v2
+        data.add_coordinate('Vg 24 [mV]')  #v2
         data.add_coordinate('B [T]')   #v1
         data.add_value('Refl_phase [deg]')
         data.add_value('Refl_amplitude [arb.u.]')
@@ -116,13 +116,15 @@ def do_Vg_vs_B():
                 freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-2e6), stop = (f_res+2e6), num_samples = 500, do_plot= False)
 
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
-                f_res = freq[ind_res][0]
+                f_res = freq[ind_res]
                 f_res -= 500e3 # The readout frequency offset from the resonance
     
                 # Now set the readout frequency 
                 daq.setDouble('/dev2169/oscs/0/freq', f_res[0])
                 # Set the TC back to the previous one
                 daq.setDouble('/dev2169/demods/3/timeconstant', TC)
+                # Enable data readout
+                daq.setInt('/dev2169/demods/3/enable', 1)
         
                 daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
                 qt.msleep(0.10)
