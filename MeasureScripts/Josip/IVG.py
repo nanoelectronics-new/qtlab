@@ -42,12 +42,12 @@ def run_IVG():
 
 	gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
 	
-	bias = 1000.0
+	bias = 200.0
 	
 	leak_test = True
 	
 	
-	v_vec = arange(0.0,-2000.0,-2.0)
+	v_vec = arange(-150.0,-2000.0,-2.0)
 	
 	divgate = 1.0
 	v_middle_factor = 15.0
@@ -57,7 +57,7 @@ def run_IVG():
 	
 	
 	qt.mstart()
-	name = ' 17-22 IVG %d'%name_counter 
+	name = ' 3-5 IVG %d'%name_counter 
 	data = qt.Data(name=name)
 	
 	
