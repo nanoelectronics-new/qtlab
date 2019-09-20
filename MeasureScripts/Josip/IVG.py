@@ -47,7 +47,7 @@ def run_IVG():
 	leak_test = True
 	
 	
-	v_vec = arange(-150.0,-2000.0,-2.0)
+	v_vec = arange(0.0,-500.0,-5.0)
 	
 	divgate = 1.0
 	v_middle_factor = 15.0
@@ -57,7 +57,7 @@ def run_IVG():
 	
 	
 	qt.mstart()
-	name = ' 3-5 IVG %d'%name_counter 
+	name = ' 15-17 IVG %d'%name_counter 
 	data = qt.Data(name=name)
 	
 	

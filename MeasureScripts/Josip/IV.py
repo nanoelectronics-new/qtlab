@@ -14,10 +14,10 @@ def run_IV():
 
     global name_counter
     name_counter +=1
-    gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+    gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    v_vec = arange(10000.0,2000.0,-10.0)   
+    v_vec = arange(-500.0,0.0,10.0)   
     
 
     div = 15.0
