@@ -45,7 +45,7 @@ def sweep_to_zero_single():
 	elif dac5 < 0: # If it is negative
 		v_array = np.arange(dac5, 0.0, v_step)
 	else:
-		raise Excpetion("Already at zero")
+		raise Exception("Already at zero")
 	
 	for v in v_array:
 		IVVI.set_dac2(v)

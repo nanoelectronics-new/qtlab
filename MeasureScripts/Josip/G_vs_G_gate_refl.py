@@ -22,7 +22,7 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 
     global name_counter 
     name_counter += 1
-    file_name = '3-5 IV %d GvsG_V_middle=%.2fmV_bias=%.2fmV'%(name_counter, v_middle, (bias/100.0))
+    file_name = '11-19 IV %d GvsG_V_middle=%.2fmV_bias=%.2fmV'%(name_counter, v_middle, (bias/100.0))
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -33,13 +33,13 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     static_gate2 = static_gate2
 
     gatediv = 1.0
-    v_middle_factor = 15.0 
+    v_middle_factor = 1.0 
     
 
 
     
-    v1_vec = arange(v1_start, v1_stop,0.2)       #outer
-    v2_vec = arange(v2_start,v2_stop,0.2)        #inner
+    v1_vec = arange(v1_start, v1_stop,0.5)       #outer
+    v2_vec = arange(v2_start,v2_stop,0.5)        #inner
 
     # Substracting the value of the static gate voltages to get the voltages to be swept through
     #v1_vec = v1_vec - static_gate1
@@ -58,17 +58,17 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     
     
     ##CURRENT
-    data.add_coordinate('V_G 6 [mV]')   # inner
-    data.add_coordinate('V_G 9 [mV]')  #  outer
+    data.add_coordinate('V_G 18 [mV]')   # inner
+    data.add_coordinate('V_G 21 [mV]')  #  outer
     data.add_value('Current [pA]')
     
     ##REFL f1
-    data_mag.add_coordinate('V_G 6 [mV]')
-    data_mag.add_coordinate('V_G 9 [mV]')
+    data_mag.add_coordinate('V_G 18 [mV]')
+    data_mag.add_coordinate('V_G 21 [mV]')
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 6 [mV]')
-    data_phase.add_coordinate('V_G 9 [mV]')
+    data_phase.add_coordinate('V_G 18 [mV]')
+    data_phase.add_coordinate('V_G 21 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -104,7 +104,7 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     IVVI.set_dac1(bias)  
 
     # Set gates
-    IVVI.set_dac2(v_middle/v_middle_factor)
+    IVVI.set_dac7(v_middle/v_middle_factor)
     #IVVI.set_dac5(static_gate1)
     #IVVI.set_dac6(static_gate2)
 
@@ -215,8 +215,9 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 
 # For ve in v_middle_sweep: 
 
-do_meas_both(bias = 200.0, v1_start = -510.0, v1_stop = -460.0, v2_start = -436.0, v2_stop = -420.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3000.0)
-
+do_meas_both(bias = 200.0, v1_start = -450.0, v1_stop = -250.0, v2_start = -450.0, v2_stop = -250.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = -2000.0)
+do_meas_both(bias = 200.0, v1_start = -450.0, v1_stop = -250.0, v2_start = -450.0, v2_stop = -250.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
+do_meas_both(bias = 200.0, v1_start = -450.0, v1_stop = -250.0, v2_start = -450.0, v2_stop = -250.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 2000.0)
 
 
 
