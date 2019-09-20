@@ -37,7 +37,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
     global name_counter
     
-    thetas = [0.0, 90.0, 180.0, 270.0] # Angle between the By and Bx axis
+    thetas = [0.0, 90.0] # Angle between the By and Bx axis
     TC = 10e-6 # Time constant of the UHFLI in seconds
 
     scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
@@ -83,7 +83,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
          
         
             
-        Bmin = 0.0  # Min total field in T
+        Bmin = 30e-3  # Min total field in T
         Bmax = 2.0 # Max total field in T   
         ramp_rate_Y = 0.0003 #T/s
         ramp_rate_Z = 0.0005 #T/s
@@ -160,11 +160,11 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
                     f_res = freq[ind_res][0]
 
                 # Finding the resonant frequency with a better resolution
-                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-2e6), stop = (f_res+2e6), num_samples = 500, do_plot= False)
+                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-7e6), stop = (f_res+7e6), num_samples = 500, do_plot= False)
 
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
                 f_res = freq[ind_res][0]
-                f_res -= 0.0 # The readout frequency offset from the resonance
+                f_res -= -150e3 # The readout frequency offset from the resonance
             
                 # Now set the readout frequency 
                 daq.setDouble('/dev2169/oscs/0/freq', f_res)
@@ -259,5 +259,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -483.850, Vg_static = -429.611, num_aver_pts = 20)
+do_Vg_vs_B(Vg_ramped = -496.550, Vg_static = -426.800, num_aver_pts = 80)
 
