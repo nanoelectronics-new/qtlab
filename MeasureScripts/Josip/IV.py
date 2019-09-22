@@ -17,10 +17,10 @@ def run_IV():
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    v_vec = arange(-500.0,-2000.0,10.0)   
+    v_vec = arange(0.0,-495.0,-5.0)   
     
 
-    div = 15.0
+    div = 1.0
     
     
     qt.mstart()
@@ -47,7 +47,7 @@ def run_IV():
         for v in v_vec:
     
         
-            IVVI.set_dac2(v/div)
+            IVVI.set_dac10(v/div)
 
     
             result = dmm._ins.get_readval()/(gain)*1e12 
