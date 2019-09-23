@@ -67,7 +67,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 1.0  # Amplitude of the ramp in mV
+ramp_amp = 5.0  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -94,7 +94,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     
     gate1div = 1.0
     gate2div = 1.0
-    v_middle_factor = 15.0 
+    v_middle_factor = 5.0 
     
     bias = bias
     
@@ -123,7 +123,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     
     # Set the bias and static gates
     IVVI.set_dac1(bias)
-    IVVI.set_dac2(v_middle/v_middle_factor)  
+    IVVI.set_dac5(v_middle/v_middle_factor)  
     #IVVI.set_dac5(v2*gate2div)
     #IVVI.set_dac6(v1_mean)
 
@@ -183,7 +183,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     
         # set the voltage
     
-        IVVI.set_dac9(v1*gate1div)
+        IVVI.set_dac1(v1*gate1div)
 
         # UHFLI data containers
         refl_mag_full = np.array([])
@@ -191,7 +191,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
         
         for n in xrange(num_ramps):
             
-            IVVI.set_dac10(v2_initial + (n*2*ramp_amp)) # Setting the v2 properly in the middle of each vertical segment
+            IVVI.set_dac2(v2_initial + (n*2*ramp_amp)) # Setting the v2 properly in the middle of each vertical segment
             # the next function is necessary to keep the gui responsive. It
             # checks for instance if the 'stop' button is pushed. It also checks
             # if the plots need updating.
@@ -270,7 +270,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 # v2s = np.arange(-600.0,-400.0,20.0)
 
 # For v2 in v2s:
-do_meas_refl(bias = 0.0, v2 = -482.5, v1_start = -426.7, v1_stop = -423.5, v_middle = 3000.0, num_aver_pts = 20, num_ramps = 1)
+do_meas_refl(bias = 0.0, v2 = -490.0, v1_start = -435.0, v1_stop = -405.0, v_middle = 3000.0, num_aver_pts = 20, num_ramps = 3)
 
 
 
