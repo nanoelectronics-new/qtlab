@@ -1030,7 +1030,7 @@ def UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [0], out_c = 0):
     daq.set(general_setting)
     
     
-    raw_input("Set the UHF LI parameters in user interface dialog!  Press enter to continue...")  # Wait for user to set the device parametrs from user interface
+    #raw_input("Set the UHF LI parameters in user interface dialog!  Press enter to continue...")  # Wait for user to set the device parametrs from user interface
 
     #daq.setInt('/%s/demods/*/rate' % device, 100000)  # Set all demodulators rate to 100k
 

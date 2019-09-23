@@ -17,8 +17,8 @@ reload(UHFLI_lib)
 # here is where the actual measurement program starts
 #####################################################
 
-daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
+daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #VSG = qt.instruments.create('VSG','RS_SMW200A',address = 'TCPIP::10.21.64.105::hislip0::INSTR')
 
 
@@ -112,17 +112,21 @@ def f_vs_B(vg = None):
         start = time()
     
         
-        magnetY.set_field(BY_vector[i])   # Set the By field first
-        while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
-            qt.msleep(0.050)
-
-        magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
-        while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
-            qt.msleep(0.050)
+        #magnetY.set_field(BY_vector[i])   # Set the By field first
+        #while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
+        #    qt.msleep(0.050)
+#
+        #magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
+        #while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
+        #    qt.msleep(0.050)
             
         total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
 
-        
+        daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn ON the UHFLI out 1
+        qt.msleep(0.10)
+        daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+
+
         # After the field is at the set point, we need to check where is the resonant freuqency and set it
         if i==0: # If determining the resonant freq for the first time    
             # Then scan a bigger area and find the resonant frequency roughly
@@ -134,12 +138,16 @@ def f_vs_B(vg = None):
         ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
         f_res = freq[ind_res][0]
         f_res += -150e3 # The readout frequency offset from the resonance
+        
+
         # Now set the readout frequency to be the new resonance frequency
         daq.setDouble('/dev2169/oscs/0/freq', f_res)
         # Set the TC back to previous
         daq.setDouble('/dev2169/demods/3/timeconstant', TC)
+        # Initialize the demodulators again, since it got messed up by running the sweeper just before
+        UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
+        
         daq.setInt('/dev2169/demods/3/enable', 1) # Turn on the demod 3 data acquisition
-
         daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
         qt.msleep(0.10)
 
@@ -233,15 +241,15 @@ def f_vs_B(vg = None):
     qt.mend()
 
 
-V_G9 = [-482.20,-482.44,-482.60,-482.80,-482.94]
-V_G6 = [-426.28,-426.00,-425.77,-425.51,-425.30]
+V_G9 = [-484.57]
+V_G6 = [-389.41]
 
 gatediv = 1.0
 
 
 for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
-    IVVI.set_dac10(gatediv*V_G9[nj])
-    IVVI.set_dac9(gatediv*V_G6[nj])
+    IVVI.set_dac2(gatediv*V_G9[nj])
+    IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
     f_vs_B(vg = [V_G9[nj], V_G6[nj]])
 
