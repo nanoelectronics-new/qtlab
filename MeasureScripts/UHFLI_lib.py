@@ -695,8 +695,8 @@ def get_scope_record(device = 'dev2169', daq = None, scopeModule = None, AWG_ins
     via the Scope Module.
 
     """
-    if AWG_instance == None:
-        raise Exception('AWG instance needed for the sync purpose')
+    #if AWG_instance == None:
+        #raise Exception('AWG instance needed for the sync purpose')
 
 
     wave_nodepath = '/{}/scopes/0/wave'.format(device)
@@ -717,9 +717,9 @@ def get_scope_record(device = 'dev2169', daq = None, scopeModule = None, AWG_ins
     records = 0
 
     #Run the AWG sequence - ramp
-    AWG.run()
+    #AWG.run()
     #Turn ON necessary AWG channels
-    AWG.set_ch1_output(1)
+    #AWG.set_ch1_output(1)
     # Wait until one scope recording (of the configured number of segments) is complete, with timeout.
 
     while scopeModule.progress() < 1.0:
@@ -746,8 +746,8 @@ def get_scope_record(device = 'dev2169', daq = None, scopeModule = None, AWG_ins
     scopeModule.finish()
 
     #Turn OFF the AWG 
-    AWG.stop()
-    AWG.set_ch1_output(0)
+    #AWG.stop()
+    #AWG.set_ch1_output(0)
 
 
 
