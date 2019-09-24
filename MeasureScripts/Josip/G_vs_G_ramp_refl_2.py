@@ -1,6 +1,6 @@
 scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
 scope_num_segments = daq.getDouble('/dev2169/scopes/0/segments/count')
-num_ramps  =1
+num_ramps  = 1
 # Number of adjacent points to average in the read data
 num_aver_pts = 20
 num_points_vertical = scope_segment_length//num_aver_pts
