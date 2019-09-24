@@ -688,14 +688,15 @@ def UHF_init_scope_module(device_id = 'dev2169', mode = 1, PSD = 0):
 
 
 
-def get_scope_record(device = 'dev2169', daq = None, scopeModule = None):
+def get_scope_record(device = 'dev2169', daq = None, scopeModule = None, AWG_instance = None):
 
     """
     Obtain one scope record (consisting of multiple segments) from the device
     via the Scope Module.
 
     """
-
+    if AWG_instance == None:
+        raise Exception('AWG instance needed for the sync purpose')
 
 
     wave_nodepath = '/{}/scopes/0/wave'.format(device)
@@ -714,7 +715,13 @@ def get_scope_record(device = 'dev2169', daq = None, scopeModule = None):
     start = time.time()
     timeout = 90  # [s]
     records = 0
+
+    #Run the AWG sequence - ramp
+    AWG.run()
+    #Turn ON necessary AWG channels
+    AWG.set_ch1_output(1)
     # Wait until one scope recording (of the configured number of segments) is complete, with timeout.
+
     while scopeModule.progress() < 1.0:
         time.sleep(0.1)
         progress = scopeModule.progress()
@@ -737,6 +744,10 @@ def get_scope_record(device = 'dev2169', daq = None, scopeModule = None):
 
     # Stop the module; to use it again we need to call execute().
     scopeModule.finish()
+
+    #Turn OFF the AWG 
+    AWG.stop()
+    AWG.set_ch1_output(0)
 
 
 
