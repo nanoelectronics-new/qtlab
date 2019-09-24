@@ -67,7 +67,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 4.0  # Amplitude of the ramp in mV
+ramp_amp = 5.0  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -119,7 +119,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     num_points_vertical = scope_segment_length//num_aver_pts
     ramp = np.linspace(-num_ramps*ramp_amp, num_ramps*ramp_amp, num_ramps*num_points_vertical)  # Defining the ramp segment
     
-    #qt.mstart()
+    qt.mstart()
     
     # Set the bias and static gates
     IVVI.set_dac1(bias)
@@ -265,16 +265,17 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     AWG.set_ch1_output(0)
     daq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
     # lastly tell the secondary processes (if any) that they are allowed to start again.
-    #qt.mend()
+    qt.mend()
 
 # v2s = np.arange(-600.0,-400.0,20.0)
 
 
-qt.mstart()
+
 # For v2 in v2s:
-for g in xrange(20):
-    do_meas_refl(bias = 0.0, v2 = -485.0, v1_start = -391.0, v1_stop = -383.0, v_middle = 3000.0, num_aver_pts = 20, num_ramps = 1)
-    qt.msleep(300.0) # Wait for
+
+do_meas_refl(bias = 0.0, v2 = -430.0, v1_start = -450.0, v1_stop = -375.0, v_middle = 3000.0, num_aver_pts = 20, num_ramps = 3)
+do_meas_refl(bias = 0.0, v2 = -430.0, v1_start = -450.0, v1_stop = -375.0, v_middle = 2500.0, num_aver_pts = 20, num_ramps = 3)
+do_meas_refl(bias = 0.0, v2 = -430.0, v1_start = -450.0, v1_stop = -375.0, v_middle = 2000.0, num_aver_pts = 20, num_ramps = 3)
 
 
 
