@@ -67,7 +67,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 5.0  # Amplitude of the ramp in mV
+ramp_amp = 3.0  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -103,7 +103,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     v2 = v2       #inner - the middle DC point of the ramp
     v2_initial = v2 - (num_ramps-1)*ramp_amp    # Complete vertical sweep ic segmented into n_ramps so v2 needs to be positioned properly for each segment
                                                 # Initial one is given by this formula
-    v1_vec = arange(v1_start,v1_stop,0.2)      # Outer
+    v1_vec = arange(v1_start,v1_stop,0.06)      # Outer
     v1_vec_for_graph = v1_vec                   # Defining the v1_vec which is going to be used for the graph axis
     #v1_mean = (v1_start + v1_stop)/2.0          # The value of non-divided DAC which is superimposed to the gate via an S3b card
     #v1_vec = v1_vec - v1_mean
@@ -119,7 +119,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     num_points_vertical = scope_segment_length//num_aver_pts
     ramp = np.linspace(-num_ramps*ramp_amp, num_ramps*ramp_amp, num_ramps*num_points_vertical)  # Defining the ramp segment
     
-    qt.mstart()
+    #qt.mstart()
     
     # Set the bias and static gates
     IVVI.set_dac1(bias)
@@ -265,15 +265,18 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     AWG.set_ch1_output(0)
     daq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
     # lastly tell the secondary processes (if any) that they are allowed to start again.
-    qt.mend()
+    #qt.mend()
 
 # v2s = np.arange(-600.0,-400.0,20.0)
 
 
-
+qt.mstart()
 # For v2 in v2s:
+for z in xrange(20):
+    do_meas_refl(bias = 0.0, v2 = -437.0, v1_start = -446.0, v1_stop = -438.0, v_middle = 3000.0, num_aver_pts = 20, num_ramps = 1)
+    qt.msleep(300)
 
-do_meas_refl(bias = 0.0, v2 = -430.0, v1_start = -500.0, v1_stop = -400.0, v_middle = 3000.0, num_aver_pts = 20, num_ramps = 3)
+
     
 
 
