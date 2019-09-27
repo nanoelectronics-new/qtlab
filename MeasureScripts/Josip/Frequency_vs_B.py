@@ -32,7 +32,7 @@ def f_vs_B(vg = None):
     file_name = '5-3 IV %d_Vg9=%.2fmV_Vg6=%.2fmV'%(name_counter, vg[0], vg[1])
     #file_name = '3-5 IV %d_'%(name_counter)
     
-    TC = 50e-3 # Time constant of the UHFLI in seconds
+    TC = 20e-3 # Time constant of the UHFLI in seconds
     
     power = -10.0
     theta = 0.0 
@@ -41,7 +41,7 @@ def f_vs_B(vg = None):
     ramp_rate_Z = 0.0005 #T/s
     step_size_BY = 1e-3 
     step_size_BZ = 1e-3
-    Bmin = 50e-3  # Min total field in T
+    Bmin = 100e-3  # Min total field in T
     Bmax = 200e-3 # Max total field in T
     Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
     Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
@@ -49,13 +49,13 @@ def f_vs_B(vg = None):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-    BY_vector = np.linspace(Bymin,Bymax,75.0) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,50.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,75.0) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,50.0) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(5e9,10e9,5e6)  # frequency 
+    freq_vec = arange(1.5e9,10e9,5e6)  # frequency 
     
     qt.mstart()
     
@@ -136,7 +136,7 @@ def f_vs_B(vg = None):
         freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-7e6), stop = (f_res+7e6), num_samples = 500, do_plot= False)
         ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
         f_res = freq[ind_res][0]
-        f_res += -150e3 # The readout frequency offset from the resonance
+        f_res += 150e3 # The readout frequency offset from the resonance
         
 
         # Now set the readout frequency to be the new resonance frequency
@@ -171,7 +171,7 @@ def f_vs_B(vg = None):
             # the next function is necessary to keep the gui responsive. It
             # checks for instance if the 'stop' button is pushed. It also checks
             # if the plots need updating.
-            qt.msleep(0.010)
+            qt.msleep(0.005)
 
             # readout
             # readout
@@ -240,8 +240,8 @@ def f_vs_B(vg = None):
     qt.mend()
 
 
-V_G9 = [-484.13,-484.53,-484.77,-485.07,-485.29]
-V_G6 = [-388.77,-388.53,-388.37,-388.24,-388.12]
+V_G9 = [-436.33, -436.55, -436.91]
+V_G6 = [-442.77, -442.65, -442.52]
 
 gatediv = 1.0
 
