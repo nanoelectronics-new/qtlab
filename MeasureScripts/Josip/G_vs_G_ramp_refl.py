@@ -273,7 +273,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
 # For v2 in v2s:
 #for z in xrange(20):
-do_meas_refl(bias = 0.0, v2 = -437.0, v1_start = -446.0, v1_stop = -442.0, v_middle = 3000.0, num_aver_pts = 20, num_ramps = 1)
+do_meas_refl(bias = 0.0, v2 = -436.0, v1_start = -444.0, v1_stop = -441.0, v_middle = 3000.0, num_aver_pts = 20, num_ramps = 1)
 #qt.msleep(300)
 
 
