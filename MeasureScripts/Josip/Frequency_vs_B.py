@@ -34,7 +34,7 @@ def f_vs_B(vg = None):
     
     TC = 20e-3 # Time constant of the UHFLI in seconds
     
-    power = -10.0
+    power = -5.0
     theta = 0.0 
     
     ramp_rate_Y = 0.0003 #T/s
@@ -136,7 +136,7 @@ def f_vs_B(vg = None):
         freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-7e6), stop = (f_res+7e6), num_samples = 500, do_plot= False)
         ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
         f_res = freq[ind_res][0]
-        f_res += 150e3 # The readout frequency offset from the resonance
+        f_res -= 200e3 # The readout frequency offset from the resonance
         
 
         # Now set the readout frequency to be the new resonance frequency
@@ -240,8 +240,8 @@ def f_vs_B(vg = None):
     qt.mend()
 
 
-V_G9 = [-435.63, -435.90, -436.10, -436.24, -436.17, -436.47, -436.76] 
-V_G6 = [-442.97, -442.87, -442.78, -442.72, -443.43, -443.34, -443.25]
+V_G9 = [-436.08,-435.87,-435.61,-435.21,-436.52,-436.19,-435.84,-435.49] 
+V_G6 = [-442.93,-442.77,-442.55,-442.28,-442.76,-442.51,-442.28,-442.03]
 
 gatediv = 1.0
 
