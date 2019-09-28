@@ -67,7 +67,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 1.0  # Amplitude of the ramp in mV
+ramp_amp = 1.5  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -85,15 +85,15 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
     global name_counter
     name_counter += 1
 
-    file_name = '13-17 IV %d V_G 18=%.2fmV'%(name_counter, v1)
+    file_name = '3-5 IV %d V_G 4=%.2fmV'%(name_counter, v1)
 
     
     gate1div = 1.0
     gate2div = 1.0
-    v_middle_factor = 1.0 
-    center_frequency = 153.880e6 # in Hz
-    df = 1e6   # Freq offset range in Hz
-    numpts = 100  # Number of points in the freq sweep
+    v_middle_factor = 5.0 
+    center_frequency = 121.435e6 # in Hz
+    df = 2e6   # Freq offset range in Hz
+    numpts = 50  # Number of points in the freq sweep
     frequency_offset = np.linspace(-df,df, numpts)  # Frequency offset from the center frequency of the resonant dip
     bias = bias
     
@@ -116,9 +116,9 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
     
     # Set the bias and static gates
     IVVI.set_dac1(bias)
-    IVVI.set_dac7(v_middle/v_middle_factor)  
-    IVVI.set_dac5(v2)
-    IVVI.set_dac6(v1)
+    IVVI.set_dac5(v_middle/v_middle_factor)  
+    IVVI.set_dac2(v2)
+    IVVI.set_dac1(v1)
 
     #Run the AWG sequence - ramp
     AWG.run()
@@ -131,7 +131,7 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
 
     
     
-    data.add_coordinate('V_G 16 [mV]')       # inner
+    data.add_coordinate('V_G 9 [mV]')       # inner
     data.add_coordinate('Frequency %.3f MHz + offset [Hz]'%(center_frequency*1e-6))      # outer
     data.add_value('Refl_mag [V]')
     data.add_value('Refl_phase [deg]')
@@ -266,7 +266,7 @@ def do_meas_refl(bias = None, v2 = None, v1 = None, v_middle = None, num_aver_pt
 #v2s = np.arange(-600.0,-400.0,20.0)
 
 #for v2 in v2s:
-do_meas_refl(bias = 0.0, v2 = -111.5, v1 = -311.3, v_middle = 0.0, num_aver_pts = 40)
+do_meas_refl(bias = 0.0, v2 = -436.00, v1 = -442.40, v_middle = 3000.0, num_aver_pts = 40)
 
 
 
