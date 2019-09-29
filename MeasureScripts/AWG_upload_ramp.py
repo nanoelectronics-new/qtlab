@@ -9,7 +9,7 @@ from Waveform_PresetAmp import Pulse as pul
 
 
 num_aver_ramps = 5 # Number of averaged ramps
-v_stepping_dac = arange(-400.0,-350.0,5.0)  # Values of the stepping DAC
+v_stepping_dac = np.arange(-400.0,-350.0,5.0)  # Values of the stepping DAC
 v_stepping_dac_mean = np.mean(v_stepping_dac)
 v_stepping_dac_ramp = v_stepping_dac - v_stepping_dac_mean
 print v_stepping_dac_mean, v_stepping_dac_ramp[0], v_stepping_dac_ramp[-1]

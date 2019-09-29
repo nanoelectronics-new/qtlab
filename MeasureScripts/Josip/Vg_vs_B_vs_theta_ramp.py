@@ -4,7 +4,7 @@ import datetime
 import convert_for_diamond_plot as cnv
 import numpy as np
 from Background_correction import Back_corr as bc
-from AWG_upload_ramp import upload_ramp_to_AWG as u2AWG
+#from AWG_upload_ramp import upload_ramp_to_AWG as u2AWG
 import UHFLI_lib
 reload(UHFLI_lib)
 
@@ -20,8 +20,61 @@ reload(UHFLI_lib)
 #magnetZ = qt.instruments.create('magnetZ', 'AMI430_Bz', address='10.21.64.183')
 #magnetY = qt.instruments.create('magnetY', 'AMI430_By', address='10.21.64.184')
 
-ramp_amp = 2.0  # Amplitude of the ramp in mV
-u2AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
+
+
+def upload_ramp_to_AWG(ramp_amp = 4):
+    ### SETTING AWG
+    ##
+    AWG_clock = 10e6        
+                                                
+    ramp_div = 200.0 # The line 4 attenuators attenuation     
+    ramp_amp = ramp_amp # mV                 
+    AWGMax_amp = (ramp_amp/1000.0)*ramp_div*1.5 # Maximum amplitude is the maximum amplitude that ocurs
+                                                # in the output waveform increased 1.5 time for safety         
+    Seq_length = 6   
+    t_sync = 0              
+    t_wait = 100  
+    Automatic_sequence_generation = False
+    
+    
+    
+    sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV') # First element in sequence is synchronization element
+    
+    
+    if not(Automatic_sequence_generation):  
+    
+        seqCH1 = list() 
+        seq = list()
+        seq_wav = list()
+    
+    
+        
+    
+        for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
+            
+            p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
+                                                                                                                 
+            p.setValuesCH1([3.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [3.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
+            p.setMarkersCH1([1,0], [1,0])
+    
+            seqCH1.append(p.CH1)
+            seq_wav.append(p)  # Sequence of complete waveforms. Needed for compatibility reasons.
+                               # That the TWAIT flag can be passed on the Waveform and not Pulse hierarchy level. 
+    
+    
+        seq.append(seqCH1) 
+    
+        # Function for uploading and setting all sequence waveforms to AWG
+        AWG_lib.set_waveform_trigger_all(seq_wav,seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = False) 
+    
+    
+        raw_input("Press Enter if uploading to AWG is finished")
+
+
+
+
+ramp_amp = 1.0  # Amplitude of the ramp in mV
+upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
 daq, scopeModule = UHFLI_lib.UHF_init_scope_module()
@@ -37,7 +90,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
     global name_counter
     
-    thetas = [0.0, 90.0] # Angle between the By and Bx axis
+    thetas = [0.0, 90.0, 180, 270.0] # Angle between the By and Bx axis
     TC = 10e-6 # Time constant of the UHFLI in seconds
 
     scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
@@ -61,8 +114,8 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
     ramp = np.linspace(-ramp_amp, ramp_amp, num_points_vertical)  # Defining the ramp segment
 
     # Set the ramping and the static gates
-    IVVI.set_dac6(Vg_ramped*divgate)
-    IVVI.set_dac5(Vg_static*divgate)
+    IVVI.set_dac2(Vg_ramped*divgate)
+    IVVI.set_dac1(Vg_static*divgate)
 
 
     #Run the AWG sequence - ramp
@@ -83,7 +136,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
          
         
             
-        Bmin = 30e-3  # Min total field in T
+        Bmin = 100.0e-3  # Min total field in T
         Bmax = 2.0 # Max total field in T   
         ramp_rate_Y = 0.0003 #T/s
         ramp_rate_Z = 0.0005 #T/s
@@ -95,10 +148,10 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-        BY_vector = np.linspace(Bymin,Bymax,200) # Defining the By vector in T  
+        BY_vector = np.linspace(Bymin,Bymax,300) # Defining the By vector in T  
         magnetY.set_rampRate_T_s(ramp_rate_Y)
 
-        BZ_vector = np.linspace(Bzmin,Bzmax,200) # Defining the Bz vector in T  
+        BZ_vector = np.linspace(Bzmin,Bzmax,300) # Defining the Bz vector in T  
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
     
@@ -164,7 +217,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
                 f_res = freq[ind_res][0]
-                f_res -= -150e3 # The readout frequency offset from the resonance
+                f_res -= -200e3 # The readout frequency offset from the resonance
             
                 # Now set the readout frequency 
                 daq.setDouble('/dev2169/oscs/0/freq', f_res)
@@ -259,5 +312,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -496.550, Vg_static = -426.800, num_aver_pts = 80)
+do_Vg_vs_B(Vg_ramped = -436.0, Vg_static = -441.10, num_aver_pts = 40)
 
