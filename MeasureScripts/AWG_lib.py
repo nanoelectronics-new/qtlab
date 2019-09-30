@@ -761,4 +761,4 @@ def set_waveform_no_mean(seq,AWG_clock,AWGMax_amp, t_sync, sync, t_wait=1):
     
     #Run
     #AWG.run()
-    return aver_list[2] # return the average value of the pulse on the channel 3
+    #return aver_list[2] # return the average value of the pulse on the channel 3

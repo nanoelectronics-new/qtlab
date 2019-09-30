@@ -58,9 +58,9 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
             #p.setMarkersCH1([0],[0])   # Starting element in sequence with zero marker amp for synchronization reasons
         #else:
 
-        p.setValuesCH1([0.1, A1[0]],[0.1, A1[1]], [0.2,A1[2]], [0.2,A1[3]],[0.1,A1[4]]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
-        p.setMarkersCH1([0,1,0,0,0],[0,1,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
-        A1[2] = A1[2] - delta_A1 # Defining amplitude change between wavefroms in sequence
+        #p.setValuesCH1([0.1, A1[0]],[0.1, A1[1]], [0.2,A1[2]], [0.2,A1[3]],[0.1,A1[4]]) # Setting waveform shape for one wavefrom object p in sequence seq for AWG channel 1 - [Time1,Amp1],[Time2,Amp2]...  Time in TimeUnits and Amp in AmpUnits
+        #p.setMarkersCH1([0,1,0,0,0],[0,1,0,0,0])  # Setting marker just in the first wavefrom of the sequence (further is zero)
+        #A1[2] = A1[2] - delta_A1 # Defining amplitude change between wavefroms in sequence
 
 
         
