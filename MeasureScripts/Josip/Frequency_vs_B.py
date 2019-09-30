@@ -17,13 +17,18 @@ reload(UHFLI_lib)
 # here is where the actual measurement program starts
 #####################################################
 
+## Upload the chirp signal to the AWG
+execfile('C:/QTLab/qtlab/MeasureScripts/AWG_upload_chirp.py')
 
 daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #VSG = qt.instruments.create('VSG','RS_SMW200A',address = 'TCPIP::10.21.64.105::hislip0::INSTR')
 
 
-def f_vs_B(vg = None):
+def f_vs_B(vg = None, Bmin = None, Bmax = None):
     """Function for running frequency vs magnetic field sweep."""
+
+    if (Bmin == None) or (Bmax==None):
+        raise Exception("Define B field borders")
 
     global name_counter
 
@@ -34,15 +39,15 @@ def f_vs_B(vg = None):
     
     TC = 20e-3 # Time constant of the UHFLI in seconds
     
-    power = -5.0
+    power = 5.0
     theta = 0.0 
     
     ramp_rate_Y = 0.0003 #T/s
     ramp_rate_Z = 0.0005 #T/s
     step_size_BY = 1e-3 
     step_size_BZ = 1e-3
-    Bmin = 100e-3  # Min total field in T
-    Bmax = 200e-3 # Max total field in T
+    Bmin = Bmin  # Min total field in T
+    Bmax = Bmax # Max total field in T
     Bymin = Bmin*np.cos(np.deg2rad(theta))  # Min By field in T
     Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
     Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
@@ -55,7 +60,7 @@ def f_vs_B(vg = None):
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(1.5e9,10e9,5e6)  # frequency 
+    freq_vec = arange(1.5e9,10e9,50e6)  # frequency 
     
     qt.mstart()
     
@@ -94,11 +99,13 @@ def f_vs_B(vg = None):
     VSG.set_power(power)
     # Turn the RF on
     VSG.set_status("on") 
+    # Turn on IQ modulation
+    VSG.set_IQ_status("on")
     ## Run the AWG sequence 
-    #AWG.run()
+    AWG.run()
     ## Turn ON all necessary AWG channels
     #AWG.set_ch1_output(1)
-    #AWG.set_ch2_output(1)
+    AWG.set_ch2_output(1)
     #AWG.set_ch3_output(1)
     #AWG.set_ch4_output(1)
     
@@ -125,18 +132,18 @@ def f_vs_B(vg = None):
         qt.msleep(0.10)
         daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
 
-
-        # After the field is at the set point, we need to check where is the resonant freuqency and set it
-        if i==0: # If determining the resonant freq for the first time    
-            # Then scan a bigger area and find the resonant frequency roughly
-            freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 115e6, stop = 130e6, num_samples = 500, do_plot= False)
+        if (i%5) == 0: # Adjust the frequency every tenth magnetic field setpoint
+            # After the field is at the set point, we need to check where is the resonant freuqency and set it
+            if i==0: # If determining the resonant freq for the first time    
+                # Then scan a bigger area and find the resonant frequency roughly
+                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 115e6, stop = 130e6, num_samples = 500, do_plot= False)
+                ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
+                f_res = freq[ind_res][0]
+            # Finding the resonant frequency with a better resolution
+            freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-7e6), stop = (f_res+7e6), num_samples = 500, do_plot= False)
             ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
             f_res = freq[ind_res][0]
-        # Finding the resonant frequency with a better resolution
-        freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-7e6), stop = (f_res+7e6), num_samples = 500, do_plot= False)
-        ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
-        f_res = freq[ind_res][0]
-        f_res -= 200e3 # The readout frequency offset from the resonance
+            f_res -= 200e3 # The readout frequency offset from the resonance
         
 
         # Now set the readout frequency to be the new resonance frequency
@@ -175,7 +182,7 @@ def f_vs_B(vg = None):
 
             # readout
             # readout
-            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2.0, Integration_time = 0.010)  # Reading the lockin
+            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2.0, Integration_time = 0.040)  # Reading the lockin
             result_refl = array(result_refl)
             result_phase = result_refl[0,1]  # Getting phase values 
             result_amp = result_refl[0,0] # Getting amplitude values 
@@ -223,10 +230,10 @@ def f_vs_B(vg = None):
     VSG.set_status("off") 
 
     #Stop the AWG sequence 
-    #AWG.stop()
+    AWG.stop()
     #Turn OFF all necessary AWG channels
     #AWG.set_ch1_output(0)
-    #AWG.set_ch2_output(0)
+    AWG.set_ch2_output(0)
     #AWG.set_ch3_output(0)
     #AWG.set_ch4_output(0)
 
@@ -240,8 +247,8 @@ def f_vs_B(vg = None):
     qt.mend()
 
 
-V_G9 = [-436.08,-435.87,-435.61,-435.21,-436.52,-436.19,-435.84,-435.49] 
-V_G6 = [-442.93,-442.77,-442.55,-442.28,-442.76,-442.51,-442.28,-442.03]
+V_G9 = [-435.61,-436.01,-435.22,-435.64,-434.87,-435.24,-435.76]
+V_G6 = [-441.66,-441.27,-441.35,-441.04,-441.13,-441.05,-441.42]
 
 gatediv = 1.0
 
@@ -250,6 +257,14 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]])
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.1, Bmax = 0.2)
+
+
+
+for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
+    IVVI.set_dac2(gatediv*V_G9[nj])
+    IVVI.set_dac1(gatediv*V_G6[nj])
+    # Do_measurement
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.5, Bmax = 0.6)
 
 
