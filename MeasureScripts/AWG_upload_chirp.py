@@ -15,8 +15,8 @@ AWG_clock = 100e6        # Wanted AWG clock. Info https://www.google.at/url?sa=t
 											# In pdf on link read section "AWG: Simple Concept, Maximum Flexibility"
 											
 						# Take care about waveform and sequence length and clock rate  - AWG has limited capability
-AWGMax_amp = 0.5          # In Volts!!! Maximum needed amplitude on all channels for your particular experiment (noise reduction) - need to be set at the beginning
-Seq_length = 2      # Sequence length (number of periods - waveforms)
+AWGMax_amp = 1.0          # In Volts!!! Maximum needed amplitude on all channels for your particular experiment (noise reduction) - need to be set at the beginning
+Seq_length = 1      # Sequence length (number of periods - waveforms)
 t_sync = 1              # Duration of synchronization element in sequence in "TimeUnits"
 Automatic_sequence_generation = False   # Flag for determining type of sequence generation: Automatic - True,  Manual - False 
 
@@ -30,11 +30,11 @@ sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeU
 # By feeding the IQ of the SMW with appropriate waveforms
 
 sampling_rate = AWG_clock
-Chirp_amp = 500 # in mV
-T = 0.001 # In s
+Chirp_amp = 1000.0 # in mV
+T = 10e-3 # In s
 t = np.linspace(0.0,T,T*sampling_rate)
-f0 = 100e3 # In Hz
-f1 = 5e6 # In Hz
+f0 = 25e3 # In Hz
+f1 = 2.5e6 # In Hz
 t1 = T 
 cr = Chirp_amp*chirp(t,f0, t1, f1, method='linear', phi=0, vertex_zero=True)  # Creating a chirp with the 
                                                                     # starting freq = fq, end freq = f2 and the number of samples = T*sampling rate
@@ -51,8 +51,8 @@ for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
     p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV')  # Generating next object wavefrom in sequnce
                                                                                                              # Starting from second element (WAV1elem%d'%(i+1)) 
                                                                                                              # because sync element is first 
-    p.setValuesCH2([1.0,0.0]) 
-    p.setMarkersCH2([0],[0])
+    p.setValuesCH2([5.0,0.0],[5.0,0.0]) 
+    p.setMarkersCH2([0,1],[0,0])
     p.CH2.waveform = cr
     #p.CH2.rescaleAmplitude(AWGMaxAmp = AWGMax_amp, mean = 0.0)
     seqCH2.append(p.CH2) # Filing sequence list for channel 2 (seqCH2) with next waveform (period)
@@ -62,3 +62,5 @@ seq.append(seqCH2) # Putting sequence list for channel 2 in list that contain al
 AWG_lib.set_waveform_no_mean(seq,AWG_clock,AWGMax_amp, t_sync, sync) # Function for uploading and setting all sequence waveforms to AWG 
 
 raw_input("Press Enter if uploading to AWG is finished")
+
+AWG.set_clock(1e9)
