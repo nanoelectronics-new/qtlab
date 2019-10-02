@@ -149,7 +149,7 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     #do_meas_current(bias)
 
 # Do measurement
-do_meas_current(bias = 200.0, v2start = -438.0, v2stop = -434.0, v_middle = 3000.0)
+do_meas_current(bias = 1000.0, v2start = -438.0, v2stop = -434.0, v_middle = 3000.0)
 
 
 

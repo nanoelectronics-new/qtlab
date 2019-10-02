@@ -47,7 +47,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
             
             p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
                                                                                                                  
-            p.setValuesCH1([1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
+            p.setValuesCH1([3.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [3.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
             p.setMarkersCH1([1,0], [1,0])
     
             seqCH1.append(p.CH1)
@@ -273,7 +273,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
 # For v2 in v2s:
 #for z in xrange(20):
-do_meas_refl(bias = 0.0, v2 = -436.0, v1_start = -442.5, v1_stop = -439.5, v_middle = 3000.0, num_aver_pts = 20, num_ramps = 1)
+do_meas_refl(bias = 1000.0, v2 = -436.0, v1_start = -442.5, v1_stop = -439.5, v_middle = 3000.0, num_aver_pts = 20, num_ramps = 1)
 #qt.msleep(300)
 
 
