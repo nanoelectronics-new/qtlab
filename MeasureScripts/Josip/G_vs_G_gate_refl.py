@@ -33,13 +33,13 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     static_gate2 = static_gate2
 
     gatediv = 1.0
-    v_middle_factor = 1.0 
+    v_middle_factor = 5.0 
     
 
 
     
-    v1_vec = arange(v1_start, v1_stop,0.2)       #outer
-    v2_vec = arange(v2_start,v2_stop,0.2)        #inner
+    v1_vec = arange(v1_start, v1_stop,0.3)       #outer
+    v2_vec = arange(v2_start,v2_stop,0.3)        #inner
 
     # Substracting the value of the static gate voltages to get the voltages to be swept through
     #v1_vec = v1_vec - static_gate1
@@ -58,17 +58,17 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     
     
     ##CURRENT
-    data.add_coordinate('V_G 18 [mV]')   # inner
-    data.add_coordinate('V_G 21 [mV]')  #  outer
+    data.add_coordinate('V_G 6 [mV]')   # inner
+    data.add_coordinate('V_G 9 [mV]')  #  outer
     data.add_value('Current [pA]')
     
     ##REFL f1
-    data_mag.add_coordinate('V_G 18 [mV]')
-    data_mag.add_coordinate('V_G 21 [mV]')
+    data_mag.add_coordinate('V_G 6 [mV]')
+    data_mag.add_coordinate('V_G 9 [mV]')
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 18 [mV]')
-    data_phase.add_coordinate('V_G 21 [mV]')
+    data_phase.add_coordinate('V_G 6 [mV]')
+    data_phase.add_coordinate('V_G 9 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -101,10 +101,10 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     
     # preparation is done, now start the measurement
     # Set bias
-    IVVI.set_dac1(bias)  
+    IVVI.set_dac3(bias)  
 
     # Set gates
-    IVVI.set_dac7(v_middle/v_middle_factor)
+    IVVI.set_dac5(v_middle/v_middle_factor)
     #IVVI.set_dac5(static_gate1)
     #IVVI.set_dac6(static_gate2)
 
@@ -122,19 +122,19 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
             start = time()
             # set the voltage
         
-            IVVI.set_dac6(v1*gatediv)
+            IVVI.set_dac2(v1*gatediv)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac5(v2*gatediv)
+                IVVI.set_dac1(v2*gatediv)
                 
     
                 # readout
                 result = dmm.get_readval()/gain*1e12
-                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5, Integration_time = 0.004)  # Reading the lockin
+                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5, Integration_time = 0.005)  # Reading the lockin
                 result_refl = array(result_refl)
                 result_phase = result_refl[0,1]  # Getting phase values 
                 result_mag = result_refl[0,0] # Getting amplitude values 
@@ -214,7 +214,13 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 # v_middle_sweep = [-500.0, 0.0, 500.0]
 
 # For ve in v_middle_sweep: 
-do_meas_both(bias = 200.0, v1_start = -338.0, v1_stop = -324.0, v2_start = -340.0, v2_stop = -326.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0)
+do_meas_both(bias = 200.0, v1_start = -500.0, v1_stop = -400.0, v2_start = -500.0, v2_stop = -400.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 2000.0)
+do_meas_both(bias = 200.0, v1_start = -600.0, v1_stop = -500.0, v2_start = -600.0, v2_stop = -500.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 4000.0)
+do_meas_both(bias = 200.0, v1_start = -600.0, v1_stop = -500.0, v2_start = -600.0, v2_stop = -500.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 5000.0)
+do_meas_both(bias = 200.0, v1_start = -600.0, v1_stop = -500.0, v2_start = -600.0, v2_stop = -500.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 7000.0)
+
+
+
 
 
 
