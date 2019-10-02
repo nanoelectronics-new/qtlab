@@ -17,7 +17,7 @@ import UHFLI_lib
 def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 100.0):
     global name_counter
     name_counter += 1
-    file_name = '15-17_GvsG_%d_V_middle=%.2f'%(name_counter, v_middle)
+    file_name = '3-5_GvsG_%d_V_middle=%.2f'%(name_counter, v_middle)
     
     gain = 1e8  #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -26,10 +26,10 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     gatediv = 1.0
     
     
-    v1_vec = arange(-500.0,-300.0,1.0)       # outer
-    v2_vec = arange(v2start,v2stop,1.0)    # inner
+    v1_vec = arange(-442.5,-439.5,0.06)       # outer
+    v2_vec = arange(v2start,v2stop,0.06)    # inner
 
-    v_middle_div = 15.0
+    v_middle_div = 5.0
     
     
     qt.mstart()
@@ -42,8 +42,8 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     
     
     ## CURRENT
-    data.add_coordinate('V_G 12 [mV]')    # inner
-    data.add_coordinate('V_G 14 [mV]')     # outer
+    data.add_coordinate('V_G 9 [mV]')    # inner
+    data.add_coordinate('V_G 6 [mV]')     # outer
     data.add_value('Current [pA]')
     
     
@@ -67,8 +67,8 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     
     
     # preparation is done, now start the measurement.
-    IVVI.set_dac2(v_middle/v_middle_div)
-    IVVI.set_dac1(bias)  
+    IVVI.set_dac5(v_middle/v_middle_div)
+    IVVI.set_dac3(bias)  
     
     init_start = time()
     vec_count = 0
@@ -83,14 +83,14 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
             start = time()
             # set the voltage
        
-            IVVI.set_dac6(v1*gatediv)
+            IVVI.set_dac1(v1*gatediv)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac5(v2*gatediv)
+                IVVI.set_dac2(v2*gatediv)
                 
     
                 # readout
@@ -108,7 +108,7 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
                 # the next function is necessary to keep the gui responsive. It
                 # checks for instance if the 'stop' button is pushed. It also checks
                 # if the plots need updating.
-                qt.msleep(0.001)
+                qt.msleep(0.002)
             data.new_block()
     
             stop = time()
@@ -149,10 +149,7 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     #do_meas_current(bias)
 
 # Do measurement
-do_meas_current(bias = 200.0, v2start = -500.0, v2stop = -400.0, v_middle = 0.0)
-do_meas_current(bias = 200.0, v2start = -400.0, v2stop = -300.0, v_middle = 0.0)
+do_meas_current(bias = 200.0, v2start = -438.0, v2stop = -434.0, v_middle = 3000.0)
 
-do_meas_current(bias = 200.0, v2start = -500.0, v2stop = -400.0, v_middle = 1000.0)
-do_meas_current(bias = 200.0, v2start = -400.0, v2stop = -300.0, v_middle = 1000.0)
 
 

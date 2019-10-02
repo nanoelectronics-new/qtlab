@@ -47,7 +47,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
             
             p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
                                                                                                                  
-            p.setValuesCH1([0.1, -ramp_amp*ramp_div, ramp_amp*ramp_div], [0.1, -ramp_amp*ramp_div, ramp_amp*ramp_div])
+            p.setValuesCH1([1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
             p.setMarkersCH1([1,0], [1,0])
     
             seqCH1.append(p.CH1)
