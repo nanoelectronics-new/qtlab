@@ -14,7 +14,7 @@ import UHFLI_lib
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_current(bias = -200.0, v2start = 100.0, v2stop = 100.0, v_middle = 100.0):
+def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 100.0):
     global name_counter
     name_counter += 1
     file_name = '15-17_GvsG_%d_V_middle=%.2f'%(name_counter, v_middle)
