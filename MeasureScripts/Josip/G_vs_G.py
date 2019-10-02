@@ -19,15 +19,15 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     name_counter += 1
     file_name = '3-5_GvsG_%d_V_middle=%.2f'%(name_counter, v_middle)
     
-    gain = 1e8  #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+    gain = 1e9  #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     bias = bias
     
     gatediv = 1.0
     
     
-    v1_vec = arange(-442.5,-439.5,0.06)       # outer
-    v2_vec = arange(v2start,v2stop,0.06)    # inner
+    v1_vec = arange(-500.0,-300.0,0.5)       # outer
+    v2_vec = arange(v2start,v2stop,0.5)    # inner
 
     v_middle_div = 5.0
     
@@ -149,7 +149,7 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     #do_meas_current(bias)
 
 # Do measurement
-do_meas_current(bias = 1000.0, v2start = -438.0, v2stop = -434.0, v_middle = 3000.0)
+do_meas_current(bias = 1000.0, v2start = -500.0, v2stop = -400.0, v_middle = 3000.0)
 
 
 
