@@ -214,13 +214,10 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 # v_middle_sweep = [-500.0, 0.0, 500.0]
 
 # For ve in v_middle_sweep: 
-do_meas_both(bias = 200.0, v1_start = -580.0, v1_stop = -340.0, v2_start = -480.0, v2_stop = -380.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 500.0)
-do_meas_both(bias = 200.0, v1_start = -580.0, v1_stop = -340.0, v2_start = -480.0, v2_stop = -380.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 1000.0)
-do_meas_both(bias = 200.0, v1_start = -580.0, v1_stop = -340.0, v2_start = -480.0, v2_stop = -380.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 1500.0)
-do_meas_both(bias = 200.0, v1_start = -580.0, v1_stop = -340.0, v2_start = -480.0, v2_stop = -380.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 2000.0)
-do_meas_both(bias = 200.0, v1_start = -580.0, v1_stop = -340.0, v2_start = -480.0, v2_stop = -380.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 2500.0)
-do_meas_both(bias = 200.0, v1_start = -580.0, v1_stop = -340.0, v2_start = -480.0, v2_stop = -380.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3000.0)
 
+do_meas_both(bias = 200.0, v1_start = -530.0, v1_stop = -420.0, v2_start = -458.0, v2_stop = -426.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3000.0)
+do_meas_both(bias = 200.0, v1_start = -520.0, v1_stop = -430.0, v2_start = -486.0, v2_stop = -452.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3500.0)
+do_meas_both(bias = 200.0, v1_start = -580.0, v1_stop = -430.0, v2_start = -410.0, v2_stop = -375.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3500.0)
 
 
 
