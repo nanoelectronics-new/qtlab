@@ -22,7 +22,7 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 
     global name_counter 
     name_counter += 1
-    file_name = '3-5 IV %d GvsG_V_middle=%.2fmV_bias=%.2fmV'%(name_counter, v_middle, (bias/100.0))
+    file_name = '3-5 IV %d GvsG_V_middle=%.2fmV_bias=%.2fmV'%(name_counter, v_middle, (bias/1000.0))
     
     gain = 1e8 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -38,8 +38,8 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 
 
     
-    v1_vec = arange(v1_start, v1_stop,0.12)       #outer
-    v2_vec = arange(v2_start,v2_stop,0.12)        #inner
+    v1_vec = arange(v1_start, v1_stop,0.06)       #outer
+    v2_vec = arange(v2_start,v2_stop,0.06)        #inner
 
     # Substracting the value of the static gate voltages to get the voltages to be swept through
     #v1_vec = v1_vec - static_gate1
@@ -214,9 +214,9 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 # v_middle_sweep = [-500.0, 0.0, 500.0]
 
 # For ve in v_middle_sweep: 
-do_meas_both(bias = -200.0, v1_start = -509.0, v1_stop = -501.0, v2_start = -490.0, v2_stop = -481.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3500.0)
-
-
+do_meas_both(bias = -1000.0, v1_start = -509.0, v1_stop = -501.0, v2_start = -490.0, v2_stop = -481.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3500.0)
+do_meas_both(bias = -500.0, v1_start = -509.0, v1_stop = -501.0, v2_start = -490.0, v2_stop = -481.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3500.0)
+do_meas_both(bias = -250.0, v1_start = -509.0, v1_stop = -501.0, v2_start = -490.0, v2_stop = -481.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3500.0)
 
 
 
