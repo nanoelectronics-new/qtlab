@@ -18,7 +18,7 @@ daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 
 
 
-def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, v1_stop = None, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0):
+def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, v1_stop = None, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 0.0, v_middle_init = 0.0):
 
     global name_counter 
     name_counter += 1
@@ -35,16 +35,20 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     gatediv = 1.0
     v_middle_factor = 5.0 
     
-
+    mg_horizontal_shift = -0.180
+    mg_vertical_shift = -0.055
 
     
-    v1_vec = arange(v1_start, v1_stop,0.12)       #outer
-    v2_vec = arange(v2_start,v2_stop,0.12)        #inner
+
+    v1_vec = arange(v1_start, v1_stop,0.18)       #outer
+    v2_vec = arange(v2_start,v2_stop,0.18)        #inner
 
     # Substracting the value of the static gate voltages to get the voltages to be swept through
     #v1_vec = v1_vec - static_gate1
     #v2_vec = v2_vec - static_gate2
-    
+
+    v1_vec = v1_vec + mg_horizontal_shift*(v_middle - v_middle_init)
+    v2_vec = v2_vec + mg_vertical_shift*(v_middle - v_middle_init)
     
     
     qt.mstart()
@@ -214,8 +218,7 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 # v_middle_sweep = [-500.0, 0.0, 500.0]
 
 # For ve in v_middle_sweep: 
-do_meas_both(bias = -200.0, v1_start = -509.0, v1_stop = -501.0, v2_start = -490.0, v2_stop = -481.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3500.0)
-
+do_meas_both(bias = -200.0, v1_start = -535.0, v1_stop = -496.0, v2_start = -503.0, v2_stop = -489.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3640.0, v_middle_init = 3640.0)
 
 
 
