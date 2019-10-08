@@ -5,6 +5,8 @@ import convert_for_diamond_plot as cnv
 import numpy as np
 from Background_correction import Back_corr as bc
 #from AWG_upload_ramp import upload_ramp_to_AWG as u2AWG
+import AWG_lib
+import Waveform_PresetAmp as Wav
 import UHFLI_lib
 reload(UHFLI_lib)
 
@@ -73,7 +75,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 1.0  # Amplitude of the ramp in mV
+ramp_amp = 2.0  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -137,7 +139,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         
             
         Bmin = 0.0  # Min total field in T
-        Bmax = 2.0 # Max total field in T   
+        Bmax = 1.5 # Max total field in T   
         ramp_rate_Y = 0.0003 #T/s
         ramp_rate_Z = 0.0005 #T/s
         step_size_BY = -2e-3 
@@ -312,5 +314,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -436.0, Vg_static = -441.10, num_aver_pts = 40)
+do_Vg_vs_B(Vg_ramped = -526.0, Vg_static = -492.3, num_aver_pts = 40)
 
