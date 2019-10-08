@@ -35,8 +35,8 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     gatediv = 1.0
     v_middle_factor = 5.0 
     
-    mg_horizontal_shift = -0.180
-    mg_vertical_shift = -0.055
+    mg_horizontal_shift = -0.093
+    mg_vertical_shift = -0.074
 
     
 
@@ -218,12 +218,11 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 # v_middle_sweep = [-500.0, 0.0, 500.0]
 
 # For ve in v_middle_sweep: 
-do_meas_both(bias = -200.0, v1_start = -535.0, v1_stop = -521.0, v2_start = -503.0, v2_stop = -489.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3640.0, v_middle_init = 3640.0)
-do_meas_both(bias = -200.0, v1_start = -535.0, v1_stop = -521.0, v2_start = -503.0, v2_stop = -489.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3670.0, v_middle_init = 3640.0)
-do_meas_both(bias = -200.0, v1_start = -535.0, v1_stop = -521.0, v2_start = -503.0, v2_stop = -489.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3700.0, v_middle_init = 3640.0)
-do_meas_both(bias = -200.0, v1_start = -535.0, v1_stop = -521.0, v2_start = -503.0, v2_stop = -489.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3730.0, v_middle_init = 3640.0)
-do_meas_both(bias = -200.0, v1_start = -535.0, v1_stop = -521.0, v2_start = -503.0, v2_stop = -489.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3760.0, v_middle_init = 3640.0)
-
+do_meas_both(bias = -200.0, v1_start = -539.0, v1_stop = -526.0, v2_start = -506.0, v2_stop = -492.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3700.0, v_middle_init = 3700.0)
+do_meas_both(bias = -200.0, v1_start = -539.0, v1_stop = -526.0, v2_start = -506.0, v2_stop = -492.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3730.0, v_middle_init = 3700.0)
+do_meas_both(bias = -200.0, v1_start = -539.0, v1_stop = -526.0, v2_start = -506.0, v2_stop = -492.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3760.0, v_middle_init = 3700.0)
+do_meas_both(bias = -200.0, v1_start = -539.0, v1_stop = -526.0, v2_start = -506.0, v2_stop = -492.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3790.0, v_middle_init = 3700.0)
+do_meas_both(bias = -200.0, v1_start = -539.0, v1_stop = -526.0, v2_start = -506.0, v2_stop = -492.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3820.0, v_middle_init = 3700.0)
 
 
 
