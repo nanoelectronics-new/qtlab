@@ -18,9 +18,9 @@ reload(UHFLI_lib)
 #####################################################
 
 ## Upload the chirp signal to the AWG
-execfile('C:/QTLab/qtlab/MeasureScripts/AWG_upload_chirp.py')
+#execfile('C:/QTLab/qtlab/MeasureScripts/AWG_upload_chirp.py')
 
-daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
+#daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #VSG = qt.instruments.create('VSG','RS_SMW200A',address = 'TCPIP::10.21.64.105::hislip0::INSTR')
 
 
@@ -37,9 +37,10 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
     file_name = '5-3 IV %d_Vg9=%.2fmV_Vg6=%.2fmV'%(name_counter, vg[0], vg[1])
     #file_name = '3-5 IV %d_'%(name_counter)
     
-    TC = 20e-3 # Time constant of the UHFLI in seconds
+    #TC = 20e-3 # Time constant of the UHFLI in seconds
+    gain = 1e8
     
-    power = 5.0
+    power = -5.0
     theta = 0.0 
     
     ramp_rate_Y = 0.0003 #T/s
@@ -54,13 +55,13 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-    BY_vector = np.linspace(Bymin,Bymax,50.0) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,40.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,50.0) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,40.0) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(1.5e9,10e9,50e6)  # frequency 
+    freq_vec = arange(5e9,8e9,5e6)  # frequency 
     
     qt.mstart()
     
@@ -74,24 +75,24 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
     
     
     #saving directly in matrix format for diamond program
-    new_mat_phase = np.zeros(len(freq_vec)) # Empty vector for storing the data 
-    data_temp_phase = np.zeros(len(freq_vec))  # Temporary vector for storing the data
+    #new_mat_phase = np.zeros(len(freq_vec)) # Empty vector for storing the data 
+    #data_temp_phase = np.zeros(len(freq_vec))  # Temporary vector for storing the data
     
     
     data.add_coordinate('Frequency [Hz]')  #v2
     data.add_coordinate('B [T]')   #v1
-    data.add_value('Refl amplitude [V]')
-    data.add_value('Refl phase [degrees]')
+    data.add_value('Current [pA]')
+    #data.add_value('Refl phase [degrees]')
     
     
     data.create_file()
     
     
-    #plot2d_amplitude = qt.Plot2D(data, name=file_name+ ' amplitude1D',autoupdate=False)
-    plot3d_amplitude = qt.Plot3D(data, name=file_name+ ' amplitude2D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    plot2d_amplitude = qt.Plot2D(data, name=file_name+ ' Current1D',autoupdate=False)
+    plot3d_amplitude = qt.Plot3D(data, name=file_name+ ' Current2D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
     
     #plot2d_phase = qt.Plot2D(data, name=file_name+' phase1D',autoupdate=False)
-    plot3d_phase = qt.Plot3D(data, name=file_name+' phase2D', coorddims=(1,0), valdim=3, style='image') #flipped coordims that it plots correctly
+    #plot3d_phase = qt.Plot3D(data, name=file_name+' phase2D', coorddims=(1,0), valdim=3, style='image') #flipped coordims that it plots correctly
     
     # Set the VSG power units
     VSG.set_power_units("dbm") 
@@ -100,12 +101,12 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
     # Turn the RF on
     VSG.set_status("on") 
     # Turn on IQ modulation
-    VSG.set_IQ_status("on")
+    #VSG.set_IQ_status("on")
     ## Run the AWG sequence 
-    AWG.run()
+    #AWG.run()
     ## Turn ON all necessary AWG channels
     #AWG.set_ch1_output(1)
-    AWG.set_ch2_output(1)
+    #AWG.set_ch2_output(1)
     #AWG.set_ch3_output(1)
     #AWG.set_ch4_output(1)
     
@@ -128,34 +129,34 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
             
         total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
 
-        daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn ON the UHFLI out 1
-        qt.msleep(0.10)
-        daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+        #daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn ON the UHFLI out 1
+        #qt.msleep(0.10)
+        #daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
 
-        if (i%5) == 0: # Adjust the frequency every tenth magnetic field setpoint
-            # After the field is at the set point, we need to check where is the resonant freuqency and set it
-            if i==0: # If determining the resonant freq for the first time    
-                # Then scan a bigger area and find the resonant frequency roughly
-                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 115e6, stop = 130e6, num_samples = 500, do_plot= False)
-                ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
-                f_res = freq[ind_res][0]
-            # Finding the resonant frequency with a better resolution
-            freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-7e6), stop = (f_res+7e6), num_samples = 500, do_plot= False)
-            ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
-            f_res = freq[ind_res][0]
-            f_res -= 200e3 # The readout frequency offset from the resonance
+        #if (i%5) == 0: # Adjust the frequency every tenth magnetic field setpoint
+        #    # After the field is at the set point, we need to check where is the resonant freuqency and set it
+        #    if i==0: # If determining the resonant freq for the first time    
+        #        # Then scan a bigger area and find the resonant frequency roughly
+        #        freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 115e6, stop = 130e6, num_samples = 500, do_plot= False)
+        #        ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
+        #        f_res = freq[ind_res][0]
+        #    # Finding the resonant frequency with a better resolution
+        #    freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-7e6), stop = (f_res+7e6), num_samples = 500, do_plot= False)
+        #    ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
+        #    f_res = freq[ind_res][0]
+        #    f_res -= 200e3 # The readout frequency offset from the resonance
         
 
         # Now set the readout frequency to be the new resonance frequency
-        daq.setDouble('/dev2169/oscs/0/freq', f_res)
-        # Set the TC back to previous
-        daq.setDouble('/dev2169/demods/3/timeconstant', TC)
-        # Initialize the demodulators again, since it got messed up by running the sweeper just before
-        UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
-        
-        daq.setInt('/dev2169/demods/3/enable', 1) # Turn on the demod 3 data acquisition
-        daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
-        qt.msleep(0.10)
+        #daq.setDouble('/dev2169/oscs/0/freq', f_res)
+        ## Set the TC back to previous
+        #daq.setDouble('/dev2169/demods/3/timeconstant', TC)
+        ## Initialize the demodulators again, since it got messed up by running the sweeper just before
+        #UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
+        #
+        #daq.setInt('/dev2169/demods/3/enable', 1) # Turn on the demod 3 data acquisition
+        #daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+        #qt.msleep(0.10)
 
 
         temp_freq = freq_vec[0] # Initial temporary frequency is the first value in the frequency sweep
@@ -182,16 +183,16 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
 
             # readout
             # readout
-            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2.0, Integration_time = 0.040)  # Reading the lockin
-            result_refl = array(result_refl)
-            result_phase = result_refl[0,1]  # Getting phase values 
-            result_amp = result_refl[0,0] # Getting amplitude values 
+            #result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2.0, Integration_time = 0.040)  # Reading the lockin
+            #result_refl = array(result_refl)
+            #result_phase = result_refl[0,1]  # Getting phase values 
+            result_amp = dmm.get_readval()/gain*1e12  # Getting current values 
             
             data_temp_amplitude[j] = result_amp
-            data_temp_phase[j] = result_phase
+            #data_temp_phase[j] = result_phase
             # save the data point to the file, this will automatically trigger
             # the plot windows to update
-            data.add_data_point(freq,total_field, result_amp, result_phase)  
+            data.add_data_point(freq,total_field, result_amp)  
 
         
             
@@ -204,16 +205,16 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
         new_mat_amplitude = np.column_stack((new_mat_amplitude, data_temp_amplitude))
         if i == 0: #Kicking out the first column filled with zero
             new_mat_amplitude = new_mat_amplitude[:,1:]
-        np.savetxt(fname = data.get_dir() + '/' + file_name + "_amplitude_matrix.dat", X = new_mat_amplitude, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+        np.savetxt(fname = data.get_dir() + '/' + file_name + "_matrix.dat", X = new_mat_amplitude, fmt = '%1.4e', delimiter = '  ', newline = '\n')
 
         # Converting the reflectometry phase data to the matrix format
-        new_mat_phase = np.column_stack((new_mat_phase, data_temp_phase))
-        if i == 0: #Kicking out the first column filled with zero
-            new_mat_phase = new_mat_phase[:,1:]
-        np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X = new_mat_phase, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+        #new_mat_phase = np.column_stack((new_mat_phase, data_temp_phase))
+        #if i == 0: #Kicking out the first column filled with zero
+        #    new_mat_phase = new_mat_phase[:,1:]
+        #np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X = new_mat_phase, fmt = '%1.4e', delimiter = '  ', newline = '\n')
         
         plot3d_amplitude.update()
-        plot3d_phase.update()
+        #plot3d_phase.update()
         #plot2d_amplitude.update()
         #plot2d_phase.update()
 
@@ -230,25 +231,25 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
     VSG.set_status("off") 
 
     #Stop the AWG sequence 
-    AWG.stop()
+    #AWG.stop()
     #Turn OFF all necessary AWG channels
     #AWG.set_ch1_output(0)
-    AWG.set_ch2_output(0)
+    #AWG.set_ch2_output(0)
     #AWG.set_ch3_output(0)
     #AWG.set_ch4_output(0)
 
     # after the measurement ends, you need to close the data file.
     data.close_file()
 
-    bc(path = data.get_dir(), fname = file_name + "_amplitude_matrix.dat")
-    bc(path = data.get_dir(), fname = file_name + "_phase_matrix.dat")
+    bc(path = data.get_dir(), fname = file_name + "_matrix.dat")
+    #bc(path = data.get_dir(), fname = file_name + "_phase_matrix.dat")
 
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
 
 
-V_G9 = [-435.61,-436.01,-435.22,-435.64,-434.87,-435.24,-435.76]
-V_G6 = [-441.66,-441.27,-441.35,-441.04,-441.13,-441.05,-441.42]
+V_G9 = [-464.43,-460.74,-460.50,-459.67,-459.37]
+V_G6 = [-498.04,-497.65,-496.76,-496.33,-496.40]
 
 gatediv = 1.0
 
@@ -257,14 +258,9 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.1, Bmax = 0.2)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.130)
 
 
 
-for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
-    IVVI.set_dac2(gatediv*V_G9[nj])
-    IVVI.set_dac1(gatediv*V_G6[nj])
-    # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.5, Bmax = 0.6)
 
 
