@@ -24,7 +24,7 @@ reload(UHFLI_lib)
 #VSG = qt.instruments.create('VSG','RS_SMW200A',address = 'TCPIP::10.21.64.105::hislip0::INSTR')
 
 
-def f_vs_B(vg = None, Bmin = None, Bmax = None):
+def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     """Function for running frequency vs magnetic field sweep."""
 
     if (Bmin == None) or (Bmax==None):
@@ -40,7 +40,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
     #TC = 20e-3 # Time constant of the UHFLI in seconds
     gain = 1e8
     
-    power = -5.0
+    power = power
     theta = 0.0 
     
     ramp_rate_Y = 0.0003 #T/s
@@ -215,7 +215,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
         
         plot3d_amplitude.update()
         #plot3d_phase.update()
-        #plot2d_amplitude.update()
+        plot2d_amplitude.update()
         #plot2d_phase.update()
 
         vec_count = vec_count + 1
@@ -248,8 +248,8 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
     qt.mend()
 
 
-V_G9 = [-464.43,-460.74,-460.50,-459.67,-459.37]
-V_G6 = [-498.04,-497.65,-496.76,-496.33,-496.40]
+V_G9 = [-479.77, -478.91, -477.67]
+V_G6 = [-496.83, -495.26, -494.54]
 
 gatediv = 1.0
 
@@ -258,7 +258,24 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.130)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.130, power = -5)
+
+
+for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
+    IVVI.set_dac2(gatediv*V_G9[nj])
+    IVVI.set_dac1(gatediv*V_G6[nj])
+    # Do_measurement
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.130, power = -10)
+
+
+for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
+    IVVI.set_dac2(gatediv*V_G9[nj])
+    IVVI.set_dac1(gatediv*V_G6[nj])
+    # Do_measurement
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.130, power = 0)
+
+
+
 
 
 
