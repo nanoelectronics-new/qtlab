@@ -53,7 +53,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None):
     Bymax = Bmax*np.cos(np.deg2rad(theta))  # Max By field in T
     Bzmin = Bmin*np.sin(np.deg2rad(theta))  # Min Bz field in T
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
-        
+    
         
     BY_vector = np.linspace(Bymin,Bymax,40.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
