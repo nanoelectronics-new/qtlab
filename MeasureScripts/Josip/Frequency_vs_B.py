@@ -55,9 +55,9 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
     
         
-    BY_vector = np.linspace(Bymin,Bymax,40.0) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,70.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,40.0) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,70.0) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
@@ -258,21 +258,7 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.130, power = -5)
-
-
-for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
-    IVVI.set_dac2(gatediv*V_G9[nj])
-    IVVI.set_dac1(gatediv*V_G6[nj])
-    # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.130, power = -10)
-
-
-for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
-    IVVI.set_dac2(gatediv*V_G9[nj])
-    IVVI.set_dac1(gatediv*V_G6[nj])
-    # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.130, power = 0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.100, power = 0)
 
 
 
