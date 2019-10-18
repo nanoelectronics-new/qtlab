@@ -19,7 +19,7 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     name_counter += 1
     file_name = '3-5_GvsG_%d_V_middle=%.2f'%(name_counter, v_middle)
     
-    gain = 1e8  #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+    gain = 1e9  #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     bias = bias
     
