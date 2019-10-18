@@ -38,7 +38,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     #file_name = '3-5 IV %d_'%(name_counter)
     
     #TC = 20e-3 # Time constant of the UHFLI in seconds
-    gain = 1e8
+    gain = 1e9
     
     power = power
     theta = 0.0 
@@ -55,13 +55,13 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
     
         
-    BY_vector = np.linspace(Bymin,Bymax,70.0) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,33.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,70.0) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,33.0) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(5e9,8e9,5e6)  # frequency 
+    freq_vec = arange(3.5e9,10e9,5e6)  # frequency 
     
     qt.mstart()
     
@@ -228,7 +228,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
 
 
     # Switching off the RF 
-    VSG.set_status("off") 
+    #VSG.set_status("off") 
 
     #Stop the AWG sequence 
     #AWG.stop()
@@ -248,8 +248,8 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     qt.mend()
 
 
-V_G9 = [-479.77, -478.91, -477.67]
-V_G6 = [-496.83, -495.26, -494.54]
+V_G9 = [-491.60, -490.17, -491.79, -490.60]
+V_G6 = [-477.33, -476.77, -476.92, -475.57]
 
 gatediv = 1.0
 
@@ -258,7 +258,7 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.100, power = 0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.150, Bmax = 0.200, power = -5.0)
 
 
 
