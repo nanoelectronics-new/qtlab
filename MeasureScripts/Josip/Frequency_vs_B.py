@@ -248,8 +248,8 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     qt.mend()
 
 
-V_G9 = [-491.60, -490.17, -491.79, -490.60]
-V_G6 = [-477.33, -476.77, -476.92, -475.57]
+V_G9 = [-491.73, -489.98, -491.51, -490.41, -491.00]
+V_G6 = [-478.44, -476.63, -477.73, -476.54, -477.33]
 
 gatediv = 1.0
 
@@ -258,7 +258,10 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.150, Bmax = 0.200, power = -5.0)
+    if nj == 0:
+        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.200, power = -5.0)
+    else:
+        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.150, Bmax = 0.200, power = -5.0)
 
 
 
