@@ -159,10 +159,14 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         #qt.msleep(0.10)
 
 
-        temp_freq = freq_vec[0] # Initial temporary frequency is the first value in the frequency sweep
-        temp_power = power
+
 
         for j,freq in enumerate(freq_vec):  
+            if j == 0:
+                temp_freq = freq_vec[0] # Initial temporary frequency is the first value in the frequency sweep
+                temp_power = power
+                VSG.set_power(temp_power)
+
 
             # For the coax line 3 the power drop, above 5 GHz, is 1dB per 1GHz
             # Therefore, each time the frequency increases for 1 GHz we are increasing the power for 1 dB
@@ -259,7 +263,7 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
     if nj == 0:
-        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.170, Bmax = 0.200, power = -5.0)
+        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.18629, Bmax = 0.200, power = -5.0)
     else:
         f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.150, Bmax = 0.200, power = -5.0)
 
