@@ -30,7 +30,7 @@ sync = Wav.Waveform(waveform_name = 'WAV1elem%d'%0, AWG_clock = AWG_clock, TimeU
 #### MANUAL sequence generation - sequnce is generated manually - more flexible
 if not(Automatic_sequence_generation):  # If user wants manual sequence generation (Automatic_sequence_generation = False)
 
-    seqCH2 = list() # Initializing list for channel 1 sequence
+    seqCH1 = list() # Initializing list for channel 1 sequence
    
     seq = list() # Initializing list that will contain all sequences (all channels)
 
@@ -44,17 +44,17 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
         
      
 
-        p.setValuesCH2([0.5,0.0],[0.5,0.0]) 
-        p.setMarkersCH2([0,1],[0,0])
+        p.setValuesCH1([20.0,-500.0],[80.0,500.0]) 
+        p.setMarkersCH1([0,0],[0,0])
 
     
 
     
-        seqCH2.append(p.CH2) # Filing sequence list for channel 2 (seqCH2) with next waveform (period)
+        seqCH1.append(p.CH1) # Filing sequence list for channel 2 (seqCH2) with next waveform (period)
     
 
 
-    seq.append(seqCH2) # Putting sequence list for channel 2 in list that contain all sequences (all channels)
+    seq.append(seqCH1) # Putting sequence list for channel 2 in list that contain all sequences (all channels)
 
 
 
