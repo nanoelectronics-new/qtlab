@@ -274,6 +274,7 @@ V_G9 = [-478.59,-477.76,-477.43,-476.89,-476.62]
 V_G6 = [-491.00,-491.00,-490.14,-490.21,-489.23]
 
 gatediv = 1.0
+dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
 
 # Runf the G_vs_G once to have the function do_meas_current available and updated
 execfile('C:/QTLab/qtlab/MeasureScripts/Josip/G_vs_G.py')
