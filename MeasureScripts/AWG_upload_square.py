@@ -44,7 +44,7 @@ if not(Automatic_sequence_generation):  # If user wants manual sequence generati
         
      
 
-        p.setValuesCH1([20.0,-500.0],[80.0,500.0]) 
+        p.setValuesCH1([50.0,-500.0],[50.0,500.0]) 
         p.setMarkersCH1([0,0],[0,0])
 
     
