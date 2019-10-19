@@ -53,7 +53,11 @@ class a34410a(Instrument):
             
         self.add_parameter('NPLC',
             flags=Instrument.FLAG_GETSET,
-            units='#', type=types.FloatType, minval=0.01, maxval=200)     
+            units='#', type=types.FloatType, minval=0.01, maxval=200)
+
+        self.add_parameter('APER',
+            flags=Instrument.FLAG_GETSET,
+            units='#', type=types.FloatType, minval=200e-6, maxval=1)     
             
             
 
@@ -87,6 +91,12 @@ class a34410a(Instrument):
         
     def do_get_NPLC(self):
         return self._query("VOLT:DC:NPLC?")
+
+    def do_set_APER(self,aper = 0.02):
+        self._write("VOLT:DC:APER " + str(aper))
+        
+    def do_get_APER(self):
+        return self._query("VOLT:DC:APER?")
     
     def Config(self,F='VDC'):
         func_dict={'VDC': 'CONF:VOLT:DC', 'VAC': 'CONF:VOLT:AC'}

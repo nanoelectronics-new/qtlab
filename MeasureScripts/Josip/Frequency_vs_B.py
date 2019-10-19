@@ -129,6 +129,9 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
             
         total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
 
+        
+
+
         #daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn ON the UHFLI out 1
         #qt.msleep(0.10)
         #daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
@@ -198,6 +201,21 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
             # the plot windows to update
             data.add_data_point(freq,total_field, result_amp)  
 
+        ## Do the triangle scan at the beginning, in the middle and at the end of every EDSR scan
+        if (i==0) or (i==(len(BY_vector)/2)) or (i == (len(BY_vector)-1)):
+            ## Remeber the current DC point and the dmm PLC(aperture) before the triangle scan
+            dmm_APER = dmm.get_APER()
+            dac2_volt = IVVI.get_dac2()
+            dac1_volt = IVVI.get_dac1()
+            # Set the PLC to 0.2 for the fast trnagle scan
+            dmm.set_NPLC(0.2)
+            do_meas_current(bias = 200.0, v2start = -498.0, v2stop = -485.0, v_middle = 3640.0, B_field = BY_vector[i])
+            ## Set the DC point and the dmm PLC (sperture) back
+            dmm.set_APER(dmm_APER)
+            IVVI.set_dac2(dac2_volt)
+            IVVI.set_dac1(dac1_volt)
+
+
         
             
 
@@ -252,17 +270,20 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     qt.mend()
 
 
-V_G9 = [-491.73, -489.98, -491.51, -490.41, -491.00]
-V_G6 = [-478.44, -476.63, -477.73, -476.54, -477.33]
+V_G9 = [-478.59,-477.76,-477.43,-476.89,-476.62]
+V_G6 = [-491.00,-491.00,-490.14,-490.21,-489.23]
 
 gatediv = 1.0
 
+# Runf the G_vs_G once to have the function do_meas_current available and updated
+execfile('C:/QTLab/qtlab/MeasureScripts/Josip/G_vs_G.py')
 
 for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
+    
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.150, Bmax = 0.200, power = -5.0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.200, Bmax = 0.150, power = -5.0)
 
 
 

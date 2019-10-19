@@ -14,10 +14,10 @@ import UHFLI_lib
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 100.0):
+def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 100.0, B_field = 0):
     global name_counter
     name_counter += 1
-    file_name = '3-5_GvsG_%d_V_middle=%.2f'%(name_counter, v_middle)
+    file_name = '3-5_GvsG_%d_V_middle=%.2f_B_field=%.2fmT'%(name_counter, v_middle, B_field*1000)
     
     gain = 1e9  #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -26,8 +26,8 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     gatediv = 1.0
     
     
-    v1_vec = arange(-482.0,-472.0,0.18)       # outer
-    v2_vec = arange(v2start,v2stop,0.18)    # inner
+    v1_vec = arange(-482.0,-472.0,0.5)       # outer
+    v2_vec = arange(v2start,v2stop,0.5)   # inner
 
     v_middle_div = 5.0
     
@@ -149,7 +149,7 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     #do_meas_current(bias)
 
 # Do measurement
-do_meas_current(bias = 200.0, v2start = -498.0, v2stop = -485.0, v_middle = 3640.0)
+#do_meas_current(bias = 200.0, v2start = -498.0, v2stop = -485.0, v_middle = 3640.0, B_field = 0)
 
 
 
