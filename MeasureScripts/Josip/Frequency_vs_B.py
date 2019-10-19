@@ -262,10 +262,7 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    if nj == 0:
-        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.18629, Bmax = 0.200, power = -5.0)
-    else:
-        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.150, Bmax = 0.200, power = -5.0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.150, Bmax = 0.200, power = -5.0)
 
 
 
