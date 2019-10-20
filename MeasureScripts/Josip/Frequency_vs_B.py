@@ -270,8 +270,8 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     qt.mend()
 
 
-V_G9 = [-478.59,-477.76,-477.43,-476.89,-476.62]
-V_G6 = [-491.00,-491.00,-490.14,-490.21,-489.23]
+V_G9 = [-483.41,-482.64,-482.23,-481.33,-480.92]
+V_G6 = [-490.96,-490.76,-489.81,-489.56,-488.65]
 
 gatediv = 1.0
 dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
@@ -284,7 +284,7 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.200, Bmax = 0.150, power = -5.0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.200, Bmax = 0.150, power = -10.0)
 
 
 
