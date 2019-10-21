@@ -55,9 +55,9 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
     
         
-    BY_vector = np.linspace(Bymin,Bymax,33.0) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,20.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,33.0) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,20.0) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
@@ -202,18 +202,18 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
             data.add_data_point(freq,total_field, result_amp)  
 
         ## Do the triangle scan at the beginning, in the middle and at the end of every EDSR scan
-        if (i==0) or (i==(len(BY_vector)/2)) or (i == (len(BY_vector)-1)):
-            ## Remeber the current DC point and the dmm PLC(aperture) before the triangle scan
-            dmm_APER = dmm.get_APER()
-            dac2_volt = IVVI.get_dac2()
-            dac1_volt = IVVI.get_dac1()
-            # Set the PLC to 0.2 for the fast trnagle scan
-            dmm.set_NPLC(0.2)
-            do_meas_current(bias = 200.0, v2start = -498.0, v2stop = -485.0, v_middle = 3640.0, B_field = BY_vector[i])
-            ## Set the DC point and the dmm PLC (sperture) back
-            dmm.set_APER(dmm_APER)
-            IVVI.set_dac2(dac2_volt)
-            IVVI.set_dac1(dac1_volt)
+        #if (i==0) or (i==(len(BY_vector)/2)) or (i == (len(BY_vector)-1)):
+        #    ## Remeber the current DC point and the dmm PLC(aperture) before the triangle scan
+        #    dmm_APER = dmm.get_APER()
+        #    dac2_volt = IVVI.get_dac2()
+        #    dac1_volt = IVVI.get_dac1()
+        #    # Set the PLC to 0.2 for the fast trnagle scan
+        #    dmm.set_NPLC(0.2)
+        #    do_meas_current(bias = 200.0, v2start = -498.0, v2stop = -485.0, v_middle = 3640.0, B_field = BY_vector[i])
+        #    ## Set the DC point and the dmm PLC (sperture) back
+        #    dmm.set_APER(dmm_APER)
+        #    IVVI.set_dac2(dac2_volt)
+        #    IVVI.set_dac1(dac1_volt)
 
 
         
@@ -284,7 +284,7 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.180, Bmax = 0.150, power = -10.0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.180, Bmax = 0.150, power = -8.0)
 
 
 
