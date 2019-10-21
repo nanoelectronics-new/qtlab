@@ -1,4 +1,5 @@
 from numpy import pi, random, arange, size
+import numpy as np
 from time import time,sleep
 
 
@@ -80,5 +81,40 @@ def run_IV():
 
 
 #Run the measurement
-run_IV()
+#run_IV()
+
+
+
+def run_line_scan():
+    ''' 
+    Just to run the code below in the separate function
+    not to polute common memory space'''
+
+    global name_counter
+    name_counter +=1
+    gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+    
+    
+    v_vec = arange(-498.0,-485.0,0.06)   
+
+    div = 1.0
+    
+    result = np.array([])
+    qt.mstart()
+    
+ 
+    
+    for v in v_vec:  
+        IVVI.set_dac1(v/div)
+        res = dmm._ins.get_readval()/(gain)*1e12
+        result = np.append(result, res) 
+        qt.msleep(0.003)
+
+    qt.mend()
+    #plt.plot(v_vec, result)
+    #plt.xlabel('Gate 6 [mV]')
+    #plt.ylabel('Current [pA]')
+    #plt.show()
+    return result, v_vec
+
    

@@ -61,7 +61,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(4.0e9,6.0e9,5e6)  # frequency 
+    freq_vec = arange(3.5e9,6.0e9,5e6)  # frequency 
     
     qt.mstart()
     
@@ -215,6 +215,15 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         #    IVVI.set_dac2(dac2_volt)
         #    IVVI.set_dac1(dac1_volt)
 
+        # Do the vertical line scan and correct the DC point
+        dmm_APER = dmm.get_APER()   # Remember the previous apreture
+        dmm.set_NPLC(1.0)           # Set the averaging for the line scan
+        line_scan, gate_voltages = run_line_scan()      # Get the line scan and corresponding gate voltages as numpy arrays
+        index_max_current = line_scan.argmax()    # Find the index of the maximum current
+        corr_volt = gate_voltages[index_max_current]    # Find the gate voltage that corresponds to the maximum current
+        IVVI.set_dac1(corr_volt - 0.5)  # Do the voltage correction
+        dmm.set_APER(dmm_APER)          # Set back to the previous aperture
+
 
         
             
@@ -270,21 +279,21 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     qt.mend()
 
 
-V_G9 = [-483.41]
-V_G6 = [-490.96]
+V_G9 = [-483.83]
+V_G6 = [-490.51]
 
 gatediv = 1.0
 dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
 
 # Runf the G_vs_G once to have the function do_meas_current available and updated
-execfile('C:/QTLab/qtlab/MeasureScripts/Josip/G_vs_G.py')
+execfile('C:/QTLab/qtlab/MeasureScripts/Josip/IV.py')
 
 for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.180, Bmax = 0.150, power = -8.0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.180, Bmax = 0.150, power = -10.0)
 
 
 
