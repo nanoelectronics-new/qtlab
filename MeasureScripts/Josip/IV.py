@@ -95,7 +95,7 @@ def run_line_scan():
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    v_vec = arange(-498.0,-485.0,0.06)   
+    v_vec = arange(-495.0,-488.0,0.06)   
 
     div = 1.0
     

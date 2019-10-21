@@ -55,13 +55,13 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
     
         
-    BY_vector = np.linspace(Bymin,Bymax,20.0) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,30.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,20.0) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,30.0) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(3.5e9,6.0e9,5e6)  # frequency 
+    freq_vec = arange(3.0e9,5.5e9,3e6)  # Frequency 
     
     qt.mstart()
     
@@ -221,7 +221,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         line_scan, gate_voltages = run_line_scan()      # Get the line scan and corresponding gate voltages as numpy arrays
         index_max_current = line_scan.argmax()    # Find the index of the maximum current
         corr_volt = gate_voltages[index_max_current]    # Find the gate voltage that corresponds to the maximum current
-        IVVI.set_dac1(corr_volt - 0.5)  # Do the voltage correction
+        IVVI.set_dac1(corr_volt - 0.4)  # Do the voltage correction
         dmm.set_APER(dmm_APER)          # Set back to the previous aperture
 
 
@@ -279,8 +279,8 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     qt.mend()
 
 
-V_G9 = [-483.83]
-V_G6 = [-490.51]
+V_G9 = [-483.83, -484.00]
+V_G6 = [-490.51, -490.74]
 
 gatediv = 1.0
 dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
@@ -293,7 +293,8 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.180, Bmax = 0.150, power = -10.0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -10.0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -15.0)
 
 
 
