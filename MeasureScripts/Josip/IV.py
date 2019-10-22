@@ -90,8 +90,6 @@ def run_line_scan():
     Just to run the code below in the separate function
     not to polute common memory space'''
 
-    global name_counter
-    name_counter +=1
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     

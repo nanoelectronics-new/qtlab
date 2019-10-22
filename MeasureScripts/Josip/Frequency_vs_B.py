@@ -34,7 +34,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
 
     name_counter += 1
 
-    file_name = '5-3 IV %d_Vg9=%.2fmV_Vg6=%.2fmV'%(name_counter, vg[0], vg[1])
+    file_name = '5-3 IV %d_Vg9=%.2fmV_Vg6=%.2fmV_power=%ddBm'%(name_counter, vg[0], vg[1], power)
     #file_name = '3-5 IV %d_'%(name_counter)
     
     #TC = 20e-3 # Time constant of the UHFLI in seconds
@@ -293,8 +293,14 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -10.0)
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -15.0)
+    if nj == 0:
+        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = 0.0)
+        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -5.0)
+    else:
+        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = 0.0)
+        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -5.0)
+        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -10.0)
+        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -15.0)
 
 
 
