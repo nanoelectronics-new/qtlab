@@ -1,6 +1,7 @@
 from numpy import pi, random, arange, size
 import numpy as np
 from time import time,sleep
+import matplotlib.pyplot as plt
 
 
 #IVVI = qt.instruments.create('DAC','IVVI',interface = 'COM4', polarity=['BIP', 'BIP', 'BIP', 'BIP'], numdacs=16)

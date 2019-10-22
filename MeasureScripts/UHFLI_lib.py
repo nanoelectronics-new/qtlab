@@ -1194,7 +1194,7 @@ def UHF_measure_demod_multiple(Num_of_TC = 3, Integration_time = None, Measure =
 
 
         # Else it is in the first or in the second quadrant and therefore does not need the correction
-
+        
         if Measure == "Quadratures":
             result.append([mean_x,mean_y])
         else:
