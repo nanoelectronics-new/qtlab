@@ -75,8 +75,8 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     
     
     #saving directly in matrix format for diamond program
-    #new_mat_phase = np.zeros(len(freq_vec)) # Empty vector for storing the data 
-    #data_temp_phase = np.zeros(len(freq_vec))  # Temporary vector for storing the data
+    new_mat_phase = np.zeros(len(freq_vec)) # Empty vector for storing the data 
+    data_temp_phase = np.zeros(len(freq_vec))  # Temporary vector for storing the data
     
     
     data.add_coordinate('Frequency [Hz]')  #v2
@@ -88,10 +88,10 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     data.create_file()
     
     
-    plot2d_amplitude = qt.Plot2D(data, name=file_name+ ' Current1D',autoupdate=False)
-    plot3d_amplitude = qt.Plot3D(data, name=file_name+ ' Current2D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    plot2d_amplitude = qt.Plot2D(data, name=file_name+ ' Amplitude1D',autoupdate=False, valdim = 2)
+    plot3d_amplitude = qt.Plot3D(data, name=file_name+ ' Amplitude2D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
     
-    plot2d_phase = qt.Plot2D(data, name=file_name+' phase1D',autoupdate=False)
+    plot2d_phase = qt.Plot2D(data, name=file_name+' phase1D',autoupdate=False, valdim = 3)
     plot3d_phase = qt.Plot3D(data, name=file_name+' phase2D', coorddims=(1,0), valdim=3, style='image') #flipped coordims that it plots correctly
     
     # Set the VSG power units
@@ -276,14 +276,14 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     qt.mend()
 
 
-V_G9 = [-483.83, -484.00]
-V_G6 = [-490.51, -490.74]
+V_G9 = [-473.44, -473.88, -474.18, -474.54, -474.78]
+V_G6 = [-485.75, -485.54, -485.41, -485.28, -485.15]
 
 gatediv = 1.0
-dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
+#dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
 
 # Runf the G_vs_G once to have the function do_meas_current available and updated
-execfile('C:/QTLab/qtlab/MeasureScripts/Josip/IV.py')
+#execfile('C:/QTLab/qtlab/MeasureScripts/Josip/IV.py')
 
 for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     
