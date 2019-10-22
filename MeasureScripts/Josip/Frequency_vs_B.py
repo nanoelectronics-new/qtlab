@@ -37,7 +37,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     file_name = '5-3 IV %d_Vg9=%.2fmV_Vg6=%.2fmV_power=%ddBm'%(name_counter, vg[0], vg[1], power)
     #file_name = '3-5 IV %d_'%(name_counter)
     
-    #TC = 20e-3 # Time constant of the UHFLI in seconds
+    TC = 50e-3 # Time constant of the UHFLI in seconds
     gain = 1e9
     
     power = power
@@ -81,8 +81,8 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     
     data.add_coordinate('Frequency [Hz]')  #v2
     data.add_coordinate('B [T]')   #v1
-    data.add_value('Current [pA]')
-    #data.add_value('Refl phase [degrees]')
+    data.add_value('Amplitude [V]')
+    data.add_value('Refl phase [degrees]')
     
     
     data.create_file()
@@ -91,8 +91,8 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     plot2d_amplitude = qt.Plot2D(data, name=file_name+ ' Current1D',autoupdate=False)
     plot3d_amplitude = qt.Plot3D(data, name=file_name+ ' Current2D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
     
-    #plot2d_phase = qt.Plot2D(data, name=file_name+' phase1D',autoupdate=False)
-    #plot3d_phase = qt.Plot3D(data, name=file_name+' phase2D', coorddims=(1,0), valdim=3, style='image') #flipped coordims that it plots correctly
+    plot2d_phase = qt.Plot2D(data, name=file_name+' phase1D',autoupdate=False)
+    plot3d_phase = qt.Plot3D(data, name=file_name+' phase2D', coorddims=(1,0), valdim=3, style='image') #flipped coordims that it plots correctly
     
     # Set the VSG power units
     VSG.set_power_units("dbm") 
@@ -132,34 +132,32 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         
 
 
-        #daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn ON the UHFLI out 1
-        #qt.msleep(0.10)
-        #daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
-
-        #if (i%5) == 0: # Adjust the frequency every tenth magnetic field setpoint
-        #    # After the field is at the set point, we need to check where is the resonant freuqency and set it
-        #    if i==0: # If determining the resonant freq for the first time    
-        #        # Then scan a bigger area and find the resonant frequency roughly
-        #        freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 115e6, stop = 130e6, num_samples = 500, do_plot= False)
-        #        ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
-        #        f_res = freq[ind_res][0]
-        #    # Finding the resonant frequency with a better resolution
-        #    freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-7e6), stop = (f_res+7e6), num_samples = 500, do_plot= False)
-        #    ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
-        #    f_res = freq[ind_res][0]
-        #    f_res -= 200e3 # The readout frequency offset from the resonance
+        daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn ON the UHFLI out 1
+        qt.msleep(0.10)
+        daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+        if (i%5) == 0: # Adjust the frequency every few magnetic field setpoints
+            # After the field is at the set point, we need to check where is the resonant freuqency and set it
+            if i==0: # If determining the resonant freq for the first time    
+                # Then scan a bigger area and find the resonant frequency roughly
+                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = 115e6, stop = 130e6, num_samples = 500, do_plot= False)
+                ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
+                f_res = freq[ind_res][0]
+            # Finding the resonant frequency with a better resolution
+            freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-3e6), stop = (f_res+3e6), num_samples = 200, do_plot= False)
+            ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
+            f_res = freq[ind_res][0]
+            f_res -= 40e3 # The readout frequency offset from the resonance
+       
+        #Now set the readout frequency to be the new resonance frequency
+        daq.setDouble('/dev2169/oscs/0/freq', f_res)
+        # Set the TC back to previous
+        daq.setDouble('/dev2169/demods/3/timeconstant', TC)
+        # Initialize the demodulators again, since it got messed up by running the sweeper just before
+        UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
         
-
-        # Now set the readout frequency to be the new resonance frequency
-        #daq.setDouble('/dev2169/oscs/0/freq', f_res)
-        ## Set the TC back to previous
-        #daq.setDouble('/dev2169/demods/3/timeconstant', TC)
-        ## Initialize the demodulators again, since it got messed up by running the sweeper just before
-        #UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
-        #
-        #daq.setInt('/dev2169/demods/3/enable', 1) # Turn on the demod 3 data acquisition
-        #daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
-        #qt.msleep(0.10)
+        daq.setInt('/dev2169/demods/3/enable', 1) # Turn on the demod 3 data acquisition
+        daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+        qt.msleep(0.10)
 
 
 
@@ -189,17 +187,16 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
             qt.msleep(0.005)
 
             # readout
-            # readout
-            #result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2.0, Integration_time = 0.040)  # Reading the lockin
-            #result_refl = array(result_refl)
-            #result_phase = result_refl[0,1]  # Getting phase values 
-            result_amp = dmm.get_readval()/gain*1e12  # Getting current values 
+            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 2.0, Integration_time = 0.100)  # Reading the lockin
+            result_refl = array(result_refl)
+            result_phase = result_refl[0,1]  # Getting phase values 
+            result_amp =  result_refl[0,0]  # Getting amplitude values 
             
             data_temp_amplitude[j] = result_amp
-            #data_temp_phase[j] = result_phase
+            data_temp_phase[j] = result_phase
             # save the data point to the file, this will automatically trigger
             # the plot windows to update
-            data.add_data_point(freq,total_field, result_amp)  
+            data.add_data_point(freq,total_field, result_amp, result_phase)  
 
         ## Do the triangle scan at the beginning, in the middle and at the end of every EDSR scan
         #if (i==0) or (i==(len(BY_vector)/2)) or (i == (len(BY_vector)-1)):
@@ -216,13 +213,13 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         #    IVVI.set_dac1(dac1_volt)
 
         # Do the vertical line scan and correct the DC point
-        dmm_APER = dmm.get_APER()   # Remember the previous apreture
-        dmm.set_NPLC(1.0)           # Set the averaging for the line scan
-        line_scan, gate_voltages = run_line_scan()      # Get the line scan and corresponding gate voltages as numpy arrays
-        index_max_current = line_scan.argmax()    # Find the index of the maximum current
-        corr_volt = gate_voltages[index_max_current]    # Find the gate voltage that corresponds to the maximum current
-        IVVI.set_dac1(corr_volt - 0.4)  # Do the voltage correction
-        dmm.set_APER(dmm_APER)          # Set back to the previous aperture
+        #dmm_APER = dmm.get_APER()   # Remember the previous apreture
+        #dmm.set_NPLC(1.0)           # Set the averaging for the line scan
+        #line_scan, gate_voltages = run_line_scan()      # Get the line scan and corresponding gate voltages as numpy arrays
+        #index_max_current = line_scan.argmax()    # Find the index of the maximum current
+        #corr_volt = gate_voltages[index_max_current]    # Find the gate voltage that corresponds to the maximum current
+        #IVVI.set_dac1(corr_volt - 0.4)  # Do the voltage correction
+        #dmm.set_APER(dmm_APER)          # Set back to the previous aperture
 
 
         
@@ -239,15 +236,15 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         np.savetxt(fname = data.get_dir() + '/' + file_name + "_matrix.dat", X = new_mat_amplitude, fmt = '%1.4e', delimiter = '  ', newline = '\n')
 
         # Converting the reflectometry phase data to the matrix format
-        #new_mat_phase = np.column_stack((new_mat_phase, data_temp_phase))
-        #if i == 0: #Kicking out the first column filled with zero
-        #    new_mat_phase = new_mat_phase[:,1:]
-        #np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X = new_mat_phase, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+        new_mat_phase = np.column_stack((new_mat_phase, data_temp_phase))
+        if i == 0: #Kicking out the first column filled with zero
+            new_mat_phase = new_mat_phase[:,1:]
+        np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X = new_mat_phase, fmt = '%1.4e', delimiter = '  ', newline = '\n')
         
         plot3d_amplitude.update()
-        #plot3d_phase.update()
+        plot3d_phase.update()
         plot2d_amplitude.update()
-        #plot2d_phase.update()
+        plot2d_phase.update()
 
         vec_count = vec_count + 1
         print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(BY_vector.size - vec_count))))
@@ -273,7 +270,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     data.close_file()
 
     bc(path = data.get_dir(), fname = file_name + "_matrix.dat")
-    #bc(path = data.get_dir(), fname = file_name + "_phase_matrix.dat")
+    bc(path = data.get_dir(), fname = file_name + "_phase_matrix.dat")
 
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
@@ -293,14 +290,9 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    if nj == 0:
-        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = 0.0)
-        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -5.0)
-    else:
-        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = 0.0)
-        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -5.0)
-        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -10.0)
-        f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -15.0)
+
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -10.0)
+
 
 
 
