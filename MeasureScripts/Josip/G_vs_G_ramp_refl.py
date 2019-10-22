@@ -122,7 +122,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     #qt.mstart()
     
     # Set the bias and static gates
-    IVVI.set_dac1(bias)
+    IVVI.set_dac3(bias)
     IVVI.set_dac5(v_middle/v_middle_factor)  
     #IVVI.set_dac5(v2*gate2div)
     #IVVI.set_dac6(v1_mean)
@@ -273,7 +273,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
 # For v2 in v2s:
 #for z in xrange(20):
-do_meas_refl(bias = 200.0, v2 = -476.0, v1_start = -492.0, v1_stop = -485.0, v_middle = 3640.0, num_aver_pts = 20, num_ramps = 1)
+do_meas_refl(bias = 0.0, v2 = -476.0, v1_start = -492.0, v1_stop = -485.0, v_middle = 3640.0, num_aver_pts = 20, num_ramps = 1)
 #qt.msleep(300)
 
 
