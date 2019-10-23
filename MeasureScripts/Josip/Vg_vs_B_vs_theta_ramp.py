@@ -56,7 +56,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
             
             p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
                                                                                                                  
-            p.setValuesCH1([3.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [3.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
+            p.setValuesCH1([1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
             p.setMarkersCH1([1,0], [1,0])
     
             seqCH1.append(p.CH1)
@@ -93,7 +93,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
     global name_counter
     
     thetas = [0.0, 90.0, 180, 270.0] # Angle between the By and Bx axis
-    TC = 10e-6 # Time constant of the UHFLI in seconds
+    TC = 5e-6 # Time constant of the UHFLI in seconds
 
     scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
     scope_num_segments = daq.getDouble('/dev2169/scopes/0/segments/count')
@@ -138,8 +138,8 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
          
         
             
-        Bmin = 0.0  # Min total field in T
-        Bmax = 1.5 # Max total field in T   
+        Bmin = 0.13  # Min total field in T
+        Bmax = 1.0 # Max total field in T   
         ramp_rate_Y = 0.0003 #T/s
         ramp_rate_Z = 0.0005 #T/s
         step_size_BY = -2e-3 
@@ -150,10 +150,10 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-        BY_vector = np.linspace(Bymin,Bymax,300) # Defining the By vector in T  
+        BY_vector = np.linspace(Bymin,Bymax,200) # Defining the By vector in T  
         magnetY.set_rampRate_T_s(ramp_rate_Y)
 
-        BZ_vector = np.linspace(Bzmin,Bzmax,300) # Defining the Bz vector in T  
+        BZ_vector = np.linspace(Bzmin,Bzmax,200) # Defining the Bz vector in T  
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
     
@@ -215,11 +215,11 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
                     f_res = freq[ind_res][0]
 
                 # Finding the resonant frequency with a better resolution
-                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-7e6), stop = (f_res+7e6), num_samples = 500, do_plot= False)
+                freq, R = UHFLI_lib.run_sweeper(oscilator_num = 0, demod = 3, start = (f_res-3e6), stop = (f_res+3e6), num_samples = 200, do_plot= False)
 
                 ind_res = np.where(R == R.min())  # On resonance the amplitude has the minimum value -> getting the index of the resonant frequency
                 f_res = freq[ind_res][0]
-                f_res -= -200e3 # The readout frequency offset from the resonance
+                f_res -= -50e3 # The readout frequency offset from the resonance
             
                 # Now set the readout frequency 
                 daq.setDouble('/dev2169/oscs/0/freq', f_res)
@@ -314,5 +314,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -526.0, Vg_static = -492.3, num_aver_pts = 40)
+do_Vg_vs_B(Vg_ramped = -473.7, Vg_static = -485.0, num_aver_pts = 40)
 
