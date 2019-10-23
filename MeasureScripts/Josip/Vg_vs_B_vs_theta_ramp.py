@@ -138,7 +138,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
          
         
             
-        Bmin = 0.13  # Min total field in T
+        Bmin = 0.0  # Min total field in T
         Bmax = 1.0 # Max total field in T   
         ramp_rate_Y = 0.0003 #T/s
         ramp_rate_Z = 0.0005 #T/s
@@ -314,5 +314,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -473.7, Vg_static = -485.0, num_aver_pts = 40)
+do_Vg_vs_B(Vg_ramped = -482.5, Vg_static = -489.0, num_aver_pts = 40)
 
