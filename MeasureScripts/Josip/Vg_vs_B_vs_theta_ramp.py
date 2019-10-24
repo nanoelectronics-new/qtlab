@@ -75,7 +75,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 2.0  # Amplitude of the ramp in mV
+ramp_amp = 1.0  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -92,7 +92,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
     global name_counter
     
-    thetas = [0.0, 90.0, 180, 270.0] # Angle between the By and Bx axis
+    thetas = [0.0, 90.0] # Angle between the By and Bx axis
     TC = 5e-6 # Time constant of the UHFLI in seconds
 
     scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
@@ -314,5 +314,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -482.5, Vg_static = -489.0, num_aver_pts = 40)
+do_Vg_vs_B(Vg_ramped = -478.0, Vg_static = -486.5, num_aver_pts = 40)
 
