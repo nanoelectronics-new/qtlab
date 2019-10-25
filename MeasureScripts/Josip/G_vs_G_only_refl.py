@@ -29,18 +29,18 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300, v1_sta
     global name_counter
     name_counter += 1
 
-    file_name = '17-3 IV %d GvsG_V_middle=%.2fmV_'%(name_counter, v_middle)
+    file_name = '3-5 IV %d GvsG_V_middle=%.2fmV_'%(name_counter, v_middle)
 
     
     gate1div = 1.0
     gate2div = 1.0
-    v_middle_factor = 1.0 
+    v_middle_factor = 5.0 
     
     bias = bias
     
 
-    v1_vec = arange(v1_start,v1_stop,0.2)      #outer
-    v2_vec = arange(v2_start,v2_stop,0.2)       #inner
+    v1_vec = arange(v1_start,v1_stop,0.06)      #outer
+    v2_vec = arange(v2_start,v2_stop,0.06)       #inner
 
     #v2_vec = arange(V_G1(v1_vec[0]),V_G1(v1_vec[0])+2.0,0.05) # only to get the v2_vec length
 
@@ -50,8 +50,8 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300, v1_sta
     
     qt.mstart()
     
-    IVVI.set_dac1(bias)
-    IVVI.set_dac7(v_middle/v_middle_factor)  
+    IVVI.set_dac3(bias)
+    IVVI.set_dac5(v_middle/v_middle_factor)  
     
     
     
@@ -63,12 +63,12 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300, v1_sta
     
     
 
-    data_mag.add_coordinate('V_G 18 [mV]')       # inner
-    data_mag.add_coordinate('V_G 21 [mV]')      # outer
+    data_mag.add_coordinate('V_G 9 [mV]')       # inner
+    data_mag.add_coordinate('V_G 6 [mV]')      # outer
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 18 [mV]')
-    data_phase.add_coordinate('V_G 21 [mV]')
+    data_phase.add_coordinate('V_G 9 [mV]')
+    data_phase.add_coordinate('V_G 6 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -113,19 +113,19 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300, v1_sta
         start = time()
         # set the voltage
     
-        IVVI.set_dac6(v1*gate1div)
+        IVVI.set_dac1(v1*gate1div)
 
 
         
 
         for j,v2 in enumerate(v2_vec):
 
-            IVVI.set_dac5(v2*gate2div)
+            IVVI.set_dac2(v2*gate2div)
             
 
             # readout
 
-            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5, Integration_time = 0.002)  # Reading the lockin
+            result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 1.0, Integration_time = 0.002)  # Reading the lockin
             result_refl = array(result_refl)
             result_phase = result_refl[0,1]  # Getting phase values 
             result_mag = result_refl[0,0] # Getting amplitude values 
@@ -199,8 +199,8 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300, v1_sta
 #v_middle_sweep = [-500.0, 0.0, 500.0]
 
 #for ve in v_middle_sweep: 
-do_meas_refl(bias = 0.0, v1_start = 500.0, v1_stop = 600.0, v2_start = 500.0, v2_stop = 600.0, v_middle = 0.0)
-do_meas_refl(bias = 0.0, v1_start = 500.0, v1_stop = 600.0, v2_start = 500.0, v2_stop = 600.0, v_middle = 500.0)
+do_meas_refl(bias = 0.0, v1_start = -484.0, v1_stop = -481.0, v2_start = -489.5, v2_stop = -485.5, v_middle = 3550.0)
+
 
 
 

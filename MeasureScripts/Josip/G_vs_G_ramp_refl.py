@@ -36,7 +36,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
     
     if not(Automatic_sequence_generation):  
     
-        seqCH1 = list() 
+        seqCH3 = list() 
         seq = list()
         seq_wav = list()
     
@@ -47,15 +47,15 @@ def upload_ramp_to_AWG(ramp_amp = 4):
             
             p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
                                                                                                                  
-            p.setValuesCH1([1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
-            p.setMarkersCH1([1,0], [1,0])
+            p.setValuesCH3([1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
+            p.setMarkersCH3([1,0], [1,0])
     
-            seqCH1.append(p.CH1)
+            seqCH3.append(p.CH3)
             seq_wav.append(p)  # Sequence of complete waveforms. Needed for compatibility reasons.
                                # That the TWAIT flag can be passed on the Waveform and not Pulse hierarchy level. 
     
     
-        seq.append(seqCH1) 
+        seq.append(seqCH3) 
     
         # Function for uploading and setting all sequence waveforms to AWG
         AWG_lib.set_waveform_trigger_all(seq_wav,seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = False) 
@@ -130,7 +130,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     #Run the AWG sequence - ramp
     AWG.run()
     #Turn ON necessary AWG channels
-    AWG.set_ch1_output(1)
+    AWG.set_ch3_output(1)
     
     
     # Create data files
@@ -262,7 +262,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
     #Turn OFF the AWG 
     AWG.stop()
-    AWG.set_ch1_output(0)
+    AWG.set_ch3_output(0)
     daq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     #qt.mend()
