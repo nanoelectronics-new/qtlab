@@ -126,14 +126,14 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
             start = time()
             # set the voltage
         
-            IVVI.set_dac2(v1*gatediv)
+            IVVI.set_dac1(v1*gatediv)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac1(v2*gatediv)
+                IVVI.set_dac2(v2*gatediv)
                 
     
                 # readout
@@ -218,5 +218,5 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 # v_middle_sweep = [-500.0, 0.0, 500.0]
 
 # For ve in v_middle_sweep: 
-do_meas_both(bias = 200.0, v1_start = -485.0, v1_stop = -472.0, v2_start = -500.0, v2_stop = -488.0, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3640.0)
+do_meas_both(bias = 0.0, v1_start = -484.0, v1_stop = -481.0, v2_start = -489.5, v2_stop = -485.5, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3550.0)
 

@@ -13,7 +13,7 @@ from Waveform_PresetAmp import Pulse as pul
      
 
 AWG_clock = 1.0e9    # AWG sampling rate                                                                         
-AWGMax_amp = 0.5        
+AWGMax_amp = 1.0        
 t_sync = 0          # Some things for the compatibility with AWG_lib scripts 
                                #they mean nothing for this case    
 
@@ -32,17 +32,17 @@ seq = list()
         
         
           
-init_and_read = 0.030                       # First part of the pulse
-manipulate = 0.100                      # Second part of the pulse
+init_and_read = 0.200                       # First part of the pulse
+manipulate = 0.200                      # Second part of the pulse
                                             
 period = init_and_read + manipulate        # Total pulse period
                                
         
         
         
-delay = 0.023                           # Delay of the IQ in ns
+delay = 0.025                           # Delay of the IQ in ns
         
-gate_to_IQ = 0.010                      # Intentional pause between the onset of the C.B. part of the gate pulse (CH3) and the IQ pulse in ns
+gate_to_IQ = 0.020                      # Intentional pause between the onset of the C.B. part of the gate pulse (CH3) and the IQ pulse in ns
         
 delay_IQ_to_PM = 0.040                  # Additional delay between the IQ and PM in ns  
                                                 # Reason is that PM delays after IQ in the instrument and therefore need to be sent earlier to compensate
@@ -64,9 +64,9 @@ for i in xrange(3):          # Creating waveforms for all sequence elements
     a = init_and_read + gate_to_IQ - delay                                   # Time from the start of the period, until the start of the IQ pulse 
     rest_of_IQ = period - a - IQ_duration                           # The duration after the second IQ pulse until the end of the period
         
-    p.setValuesCH1([a, 0.0],[IQ_duration, 500.0],[rest_of_IQ, 0.0])  # I analog wavefrom
+    p.setValuesCH1([a, 0.0],[IQ_duration, 800.0],[rest_of_IQ, 0.0])  # I analog wavefrom
     p.setMarkersCH1([0,0,0],[0,0,0])                                                       # I markers
-    p.setValuesCH2([a, 0.0],[IQ_duration, 500.0],[rest_of_IQ, 0.0])   # Q analog wavefrom
+    p.setValuesCH2([a, 0.0],[IQ_duration, 800.0],[rest_of_IQ, 0.0])   # Q analog wavefrom
     p.setMarkersCH2([0,0,0],[0,0,0])                                                       # Q markers
         
         
@@ -79,7 +79,7 @@ for i in xrange(3):          # Creating waveforms for all sequence elements
     if b > 0:   # if b is positive then there is no reason for splitting the PM pulse into two parts   
         
         rest_PM = period - b - PM_duration                     # The duration after the PM pulse until the end of the period
-        p.setValuesCH4([b, 0.0],[PM_duration, 0.0],[rest_PM, 0.0])
+        p.setValuesCH4([b, 0.0],[PM_duration, 500.0],[rest_PM, 0.0])
         p.setMarkersCH4([0,1,0],[0,0,0])
         
     elif b <= 0: # if b is negative then split the PM pulse into two - part of it at the start and part of it at the end of the CH4 pulse
@@ -87,7 +87,7 @@ for i in xrange(3):          # Creating waveforms for all sequence elements
         b = abs(b)
         rest_PM = period - PM_duration                     # The duration after the PM pulse until the end of the period
         PM_first_part = PM_duration - b
-        p.setValuesCH4([PM_first_part, 0.0],[rest_PM, 0.0],[b, 0.0])
+        p.setValuesCH4([PM_first_part, 500.0],[rest_PM, 0.0],[b, 500.0])
         p.setMarkersCH4([1,0,1],[0,0,0])
         
   
