@@ -71,7 +71,7 @@ for i in xrange(3):          # Creating waveforms for all sequence elements
         
         
         
-    p.setValuesCH3([init_and_read, 200.0],[manipulate, 0.0])  # Gate pulse analog wavefrom
+    p.setValuesCH3([init_and_read, 500.0],[manipulate, 0.0])  # Gate pulse analog wavefrom
     p.setMarkersCH3([0,0],[0,0])                              # Gate pulse markers
         
     b = a - overall_delay_IQ_to_PM
