@@ -61,7 +61,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(3.0e9,5.5e9,3e6)  # Frequency 
+    freq_vec = arange(3.0e9,6.5e9,3e6)  # Frequency 
     
     qt.mstart()
     
@@ -276,11 +276,11 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         qt.mend()
 
 
-V_G9 = array([-488.22,-488.43,-488.64,-488.31,-488.10])
-V_G6 = array([-482.56,-482.75,-482.89,-482.86,-482.76])
+V_G9 = array([-487.86,-487.97,-488.05,-487.63,-487.76])
+V_G6 = array([-482.81,-482.88,-482.96,-482.84,-482.96])
 
 ## Taking into account the mean value of the pulse (bias tee does not pass the mean value) and correcting the Vg9 voltages for this amount
-avg = 0.5 #mV
+avg = 0.75 #mV
 V_G9 = V_G9 - avg 
 
 gatediv = 1.0
@@ -295,7 +295,7 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
 
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -10.0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.180, Bmax = 0.130, power = -10.0)
 
 
 

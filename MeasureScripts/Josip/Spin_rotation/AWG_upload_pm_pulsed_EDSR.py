@@ -32,8 +32,8 @@ seq = list()
         
         
           
-init_and_read = 0.500                       # First part of the pulse
-manipulate = 0.500                      # Second part of the pulse
+init_and_read = 0.200                       # First part of the pulse
+manipulate = 0.200                      # Second part of the pulse
                                             
 period = init_and_read + manipulate        # Total pulse period
                                
@@ -54,7 +54,7 @@ PM_before_IQ = 0.010                    # Since the rise time of the PM is slowe
 overall_delay_IQ_to_PM = delay_IQ_to_PM + PM_before_IQ   #  Self descriptive
         
         
-IQ_duration = 0.400                        # Duration of the IQ pulse in ns
+IQ_duration = 0.150                        # Duration of the IQ pulse in ns
 PM_duration = IQ_duration + 2*PM_before_IQ  # Duration of the pm pulse in ns - window around IQ pulses
         
 for i in xrange(3):          # Creating waveforms for all sequence elements
@@ -71,7 +71,7 @@ for i in xrange(3):          # Creating waveforms for all sequence elements
         
         
         
-    p.setValuesCH3([init_and_read, 200.0],[manipulate, 0.0])  # Gate pulse analog wavefrom
+    p.setValuesCH3([init_and_read, 300.0],[manipulate, 0.0])  # Gate pulse analog wavefrom
     p.setMarkersCH3([0,0],[0,0])                              # Gate pulse markers
         
     b = a - overall_delay_IQ_to_PM
