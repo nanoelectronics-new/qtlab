@@ -199,7 +199,7 @@ def do_meas_refl(bias = 200.0, fmw = None, v2_start = 200, v2_stop = 300, v1_sta
 #v_middle_sweep = [-500.0, 0.0, 500.0]
 
 #for ve in v_middle_sweep: 
-do_meas_refl(bias = 0.0, v1_start = -484.0, v1_stop = -481.0, v2_start = -489.5, v2_stop = -485.5, v_middle = 3550.0)
+do_meas_refl(bias = 0.0, v1_start = -484.0, v1_stop = -481.0, v2_start = -493.0, v2_stop = -482.0, v_middle = 3550.0)
 
 
 
