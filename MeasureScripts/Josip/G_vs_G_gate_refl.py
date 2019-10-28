@@ -4,7 +4,7 @@ import datetime
 import convert_for_diamond_plot as cnv
 import UHFLI_lib
 reload(UHFLI_lib)
-
+execfile('C:/QTLab/qtlab/MeasureScripts/Josip/save_the_plot.py') # Same as import save the plot function
 
 
 
@@ -62,17 +62,17 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     
     
     ##CURRENT
-    data.add_coordinate('V_G 6 [mV]')   # inner
-    data.add_coordinate('V_G 9 [mV]')  #  outer
+    data.add_coordinate('V_G 9 [mV]')   # inner
+    data.add_coordinate('V_G 6 [mV]')  #  outer
     data.add_value('Current [pA]')
     
     ##REFL f1
-    data_mag.add_coordinate('V_G 6 [mV]')
     data_mag.add_coordinate('V_G 9 [mV]')
+    data_mag.add_coordinate('V_G 6 [mV]')
     data_mag.add_value('Refl_mag [V]')
     
-    data_phase.add_coordinate('V_G 6 [mV]')
     data_phase.add_coordinate('V_G 9 [mV]')
+    data_phase.add_coordinate('V_G 6 [mV]')
     data_phase.add_value('Refl_phase [deg]')
     
     
@@ -193,14 +193,16 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     
     finally:
         #Saving plot images
-        plot3d_phase.save_png(filepath = data_phase.get_dir())
-        plot3d_phase.save_eps(filepath = data_phase.get_dir())
-    
-        plot3d_mag.save_png(filepath = data_mag.get_dir())
-        plot3d_mag.save_eps(filepath = data_mag.get_dir())
-    
-        plot3d.save_png(filepath = data.get_dir())
-        plot3d.save_eps(filepath = data.get_dir())
+        
+        #plot3d_phase.save_png(filepath = data_phase.get_dir())
+        #plot3d_phase.save_eps(filepath = data_phase.get_dir())
+        save_the_plot(to_plot = new_mat_mag, title = file_name + '_amplitude', x = v1_vec, y = v2_vec, x_label = data_ma.get_coordinates()[0]['name'], y_label = data_mag.get_coordinates()[1]['name'], c_label = data_mag.get_values()[0]['name'], dir = data_mag.get_dir())
+        #plot3d_mag.save_png(filepath = data_mag.get_dir())
+        #plot3d_mag.save_eps(filepath = data_mag.get_dir())
+        save_the_plot(to_plot = new_mat_phase, title = file_name + '_phase', x = v1_vec, y = v2_vec, x_label = data_phase.get_coordinates()[0]['name'], y_label = data_phase.get_coordinates()[1]['name'], c_label = data_phase.get_values()[0]['name'], dir = data_phase.get_dir())
+        #plot3d.save_png(filepath = data.get_dir())
+        #plot3d.save_eps(filepath = data.get_dir())
+        save_the_plot(to_plot = new_mat_cur, title = file_name + '_current', x = v1_vec, y = v2_vec, x_label = data.get_coordinates()[0]['name'], y_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dir = data.get_dir())
         # after the measurement ends, you need to close the data files.
         data.close_file()
         data_mag.close_file()
@@ -218,5 +220,32 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 # v_middle_sweep = [-500.0, 0.0, 500.0]
 
 # For ve in v_middle_sweep: 
-do_meas_both(bias = 0.0, v1_start = -484.0, v1_stop = -481.0, v2_start = -489.5, v2_stop = -485.5, static_gate1 = 0.0, static_gate2 = 0.0, v_middle = 3550.0)
+do_meas_both(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start = -492.0, v2_stop = -485.0, v_middle = 3550.0)
+
+
+
+def save_the_plot(to_plot, title, x, y, x_label, y_label, c_label, dir):
+    '''Function the plot and save the matrix data
+        Inputs:
+            to_plot: numpy array to plot (matrix)
+            title: title of the plot
+            x: x axis values
+            y: y axis values
+            labels are labels of the axes - strings
+            dir: path to the save directory
+            name: name of the saved figure'''
+
+    fig, ax = plt.subplots()
+    im = ax.imshow(np.flipud(to_plot), aspect = "auto", cmap = "bwr_r", extent=[x[0],x[-1],y[0],y[-1]])
+    ax.set_xlabel(x_label, size = 24)
+    ax.set_ylabel(y_label, size = 24)
+    ax.set_title(title, size = 30)
+    cbar = fig.colorbar(im, ax = ax)
+    cbar.set_label("c", size = 24)
+    matplotlib.rcParams.update({'font.size': 18})
+    fig.savefig(fname = dir + '\\' + title + '.png', bbox_inches = 'tight')
+
+
+
+
 

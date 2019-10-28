@@ -89,11 +89,11 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     
     
     plot2d_amplitude = qt.Plot2D(data, name=file_name+ ' Amplitude1D',autoupdate=False, valdim = 2)
-    plot3d_amplitude = qt.Plot3D(data, name=file_name+ ' Amplitude2D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
-    
+    plot3d_amplitude = qt.Plot3D(data, name=file_name+ ' Amplitude2D', coorddims=(1,0), valdim=2, style='image', pal = 'bluewhitered') #flipped coordims that it plots correctly
+    #plot3d_amplitude.set_palette(pal = 'bluewhitered')
     plot2d_phase = qt.Plot2D(data, name=file_name+' phase1D',autoupdate=False, valdim = 3)
-    plot3d_phase = qt.Plot3D(data, name=file_name+' phase2D', coorddims=(1,0), valdim=3, style='image') #flipped coordims that it plots correctly
-    
+    plot3d_phase = qt.Plot3D(data, name=file_name+' phase2D', coorddims=(1,0), valdim=3, style='image', pal = 'bluewhitered') #flipped coordims that it plots correctly
+    #plot3d_phase.set_palette(pal = 'bluewhitered')
     # Set the VSG power units
     VSG.set_power_units("dbm") 
     # Set the RF power
