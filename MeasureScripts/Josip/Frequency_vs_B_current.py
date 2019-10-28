@@ -37,7 +37,6 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     file_name = '5-3 IV %d_Vg9=%.2fmV_Vg6=%.2fmV_power=%ddBm'%(name_counter, vg[0], vg[1], power)
 
     
-    TC = 100e-3 # Time constant of the UHFLI in seconds
     gain = 1e9
     
     power = power
@@ -55,13 +54,13 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
     
         
-    BY_vector = np.linspace(Bymin,Bymax,30.0) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,50.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,30.0) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,50.0) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(3.0e9,5.5e9,3e6)  # Frequency 
+    freq_vec = arange(3.0e9,6.5e9,3e6)  # Frequency 
     
     qt.mstart()
     
@@ -74,15 +73,13 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     data_temp_current = np.zeros(len(freq_vec))  # Temporary vector for storing the data
     
     
-    #saving directly in matrix format for diamond program
-    #new_mat_lockin = np.zeros(len(freq_vec)) # Empty vector for storing the data 
-    #data_temp_lockin = np.zeros(len(freq_vec))  # Temporary vector for storing the data
+  
     
     
     data.add_coordinate('Frequency [Hz]')  #v2
     data.add_coordinate('B [T]')   #v1
     data.add_value('Current [pA]')
-    #data.add_value('Lockin [pA]')
+
     
     
     data.create_file()
@@ -91,8 +88,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     plot2d_current = qt.Plot2D(data, name=file_name+ ' Current1D',autoupdate=False, valdim = 2)
     plot3d_current = qt.Plot3D(data, name=file_name+ ' Current2D', coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
     
-    #plot2d_lockin = qt.Plot2D(data, name=file_name+' Lockin1D',autoupdate=False, valdim = 3)
-    #plot3d_lockin = qt.Plot3D(data, name=file_name+' Lockin2D', coorddims=(1,0), valdim=3, style='image') #flipped coordims that it plots correctly
+
     
     # Set the VSG power units
     VSG.set_power_units("dbm") 
@@ -149,14 +145,9 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
             qt.msleep(0.005)
 
             # readout
-            
             result_current = dmm.get_readval()/gain*1e12  # Getting current values 
-            #result_lockin = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5, Integration_time = 0.040)  # Reading the lockin
-            #result_lockin = array(result_lockin)
-            #result_r = result_lockin[0,0]  # Getting absolute values 
-            
+        
             data_temp_current[j] = result_current
-            #data_temp_lockin[j] = result_r
             # save the data point to the file, this will automatically trigger
             # the plot windows to update
             data.add_data_point(freq,total_field, result_current)  
@@ -176,13 +167,13 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         #    IVVI.set_dac1(dac1_volt)
 
         # Do the vertical line scan and correct the DC point
-        dmm_APER = dmm.get_APER()   # Remember the previous apreture
-        dmm.set_NPLC(1.0)           # Set the averaging for the line scan
-        line_scan, gate_voltages = run_line_scan()      # Get the line scan and corresponding gate voltages as numpy arrays
-        index_max_current = line_scan.argmax()    # Find the index of the maximum current
-        corr_volt = gate_voltages[index_max_current]    # Find the gate voltage that corresponds to the maximum current
-        IVVI.set_dac1(corr_volt - 0.4)  # Do the voltage correction
-        dmm.set_APER(dmm_APER)          # Set back to the previous aperture
+        #dmm_APER = dmm.get_APER()   # Remember the previous apreture
+        #dmm.set_NPLC(1.0)           # Set the averaging for the line scan
+        #line_scan, gate_voltages = run_line_scan()      # Get the line scan and corresponding gate voltages as numpy arrays
+        #index_max_current = line_scan.argmax()    # Find the index of the maximum current
+        #corr_volt = gate_voltages[index_max_current]    # Find the gate voltage that corresponds to the maximum current
+        #IVVI.set_dac1(corr_volt - 0.4)  # Do the voltage correction
+        #dmm.set_APER(dmm_APER)          # Set back to the previous aperture
 
 
         
@@ -198,16 +189,11 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
             new_mat_current = new_mat_current[:,1:]
         np.savetxt(fname = data.get_dir() + '/' + file_name + "_matrix.dat", X = new_mat_current, fmt = '%1.4e', delimiter = '  ', newline = '\n')
 
-        # Converting the lockin data to the matrix format
-        new_mat_lockin = np.column_stack((new_mat_lockin, data_temp_lockin))
-        if i == 0: #Kicking out the first column filled with zeros
-            new_mat_lockin = new_mat_lockin[:,1:]
-        np.savetxt(fname = data.get_dir() + '/' + file_name + "_lockin_matrix.dat", X = new_mat_lockin, fmt = '%1.4e', delimiter = '  ', newline = '\n')
+    
         
         plot3d_current.update()
-        plot3d_lockin.update()
         plot2d_current.update()
-        plot2d_lockin.update()
+
 
         vec_count = vec_count + 1
         print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(BY_vector.size - vec_count))))
@@ -227,26 +213,27 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
 
     bc(path = data.get_dir(), fname = file_name + "_matrix.dat")
     bc(path = data.get_dir(), fname = file_name + "_lockin_matrix.dat")
+    save_the_plot(to_plot = new_mat_current, title = file_name + '_current', x = BY_vector, y = freq_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
 
     # lastly tell the secondary processes (if any) that they are allowed to start again.
     qt.mend()
 
 
-V_G9 = [-483.80]
-V_G6 = [-489.80]
+V_G9 = [-487.36,-486.60,-485.86,-486.05,-487.11,-487.94]
+V_G6 = [-482.72,-481.98,-481.24,-480.73,-481.74,-482.48]
 
 gatediv = 1.0
 dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
 
 # Runf the G_vs_G once to have the function do_meas_current available and updated
-execfile('C:/QTLab/qtlab/MeasureScripts/Josip/IV.py')
+#execfile('C:/QTLab/qtlab/MeasureScripts/Josip/IV.py')
 
 for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.160, Bmax = 0.130, power = -10.0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.180, Bmax = 0.130, power = -10.0)
 
 
 

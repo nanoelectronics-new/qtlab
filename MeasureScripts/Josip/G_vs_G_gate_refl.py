@@ -40,8 +40,8 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 
     
 
-    v1_vec = arange(v1_start, v1_stop,0.12)       #outer
-    v2_vec = arange(v2_start,v2_stop,0.12)        #inner
+    v1_vec = arange(v1_start, v1_stop,0.06)       #outer
+    v2_vec = arange(v2_start,v2_stop,0.06)        #inner
 
     # Substracting the value of the static gate voltages to get the voltages to be swept through
     #v1_vec = v1_vec - static_gate1
@@ -196,13 +196,14 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
         
         #plot3d_phase.save_png(filepath = data_phase.get_dir())
         #plot3d_phase.save_eps(filepath = data_phase.get_dir())
-        save_the_plot(to_plot = new_mat_mag, title = file_name + '_amplitude', x = v1_vec, y = v2_vec, x_label = data_ma.get_coordinates()[0]['name'], y_label = data_mag.get_coordinates()[1]['name'], c_label = data_mag.get_values()[0]['name'], dir = data_mag.get_dir())
+        save_the_plot(to_plot = new_mat_mag, title = file_name + '_amplitude', x = v1_vec, y = v2_vec, y_label = data_mag.get_coordinates()[0]['name'], x_label = data_mag.get_coordinates()[1]['name'], c_label = data_mag.get_values()[0]['name'], dire = data_mag.get_dir())
         #plot3d_mag.save_png(filepath = data_mag.get_dir())
         #plot3d_mag.save_eps(filepath = data_mag.get_dir())
-        save_the_plot(to_plot = new_mat_phase, title = file_name + '_phase', x = v1_vec, y = v2_vec, x_label = data_phase.get_coordinates()[0]['name'], y_label = data_phase.get_coordinates()[1]['name'], c_label = data_phase.get_values()[0]['name'], dir = data_phase.get_dir())
+
+        save_the_plot(to_plot = new_mat_phase, title = file_name + '_phase', x = v1_vec, y = v2_vec, y_label = data_phase.get_coordinates()[0]['name'], x_label = data_phase.get_coordinates()[1]['name'], c_label = data_phase.get_values()[0]['name'], dire = data_phase.get_dir())
         #plot3d.save_png(filepath = data.get_dir())
         #plot3d.save_eps(filepath = data.get_dir())
-        save_the_plot(to_plot = new_mat_cur, title = file_name + '_current', x = v1_vec, y = v2_vec, x_label = data.get_coordinates()[0]['name'], y_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dir = data.get_dir())
+        save_the_plot(to_plot = new_mat_cur, title = file_name + '_current', x = v1_vec, y = v2_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
         # after the measurement ends, you need to close the data files.
         data.close_file()
         data_mag.close_file()
@@ -220,30 +221,9 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 # v_middle_sweep = [-500.0, 0.0, 500.0]
 
 # For ve in v_middle_sweep: 
-do_meas_both(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start = -492.0, v2_stop = -485.0, v_middle = 3550.0)
+do_meas_both(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start = -492.0, v2_stop = -482.0, v_middle = 3550.0)
 
 
-
-def save_the_plot(to_plot, title, x, y, x_label, y_label, c_label, dir):
-    '''Function the plot and save the matrix data
-        Inputs:
-            to_plot: numpy array to plot (matrix)
-            title: title of the plot
-            x: x axis values
-            y: y axis values
-            labels are labels of the axes - strings
-            dir: path to the save directory
-            name: name of the saved figure'''
-
-    fig, ax = plt.subplots()
-    im = ax.imshow(np.flipud(to_plot), aspect = "auto", cmap = "bwr_r", extent=[x[0],x[-1],y[0],y[-1]])
-    ax.set_xlabel(x_label, size = 24)
-    ax.set_ylabel(y_label, size = 24)
-    ax.set_title(title, size = 30)
-    cbar = fig.colorbar(im, ax = ax)
-    cbar.set_label("c", size = 24)
-    matplotlib.rcParams.update({'font.size': 18})
-    fig.savefig(fname = dir + '\\' + title + '.png', bbox_inches = 'tight')
 
 
 
