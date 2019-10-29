@@ -155,18 +155,18 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
                 data.add_data_point(freq,total_field, result_current)  
     
             ## Do the triangle scan at the beginning, in the middle and at the end of every EDSR scan
-            #if (i==0) or (i==(len(BY_vector)/2)) or (i == (len(BY_vector)-1)):
-            #    ## Remeber the current DC point and the dmm PLC(aperture) before the triangle scan
-            #    dmm_APER = dmm.get_APER()
-            #    dac2_volt = IVVI.get_dac2()
-            #    dac1_volt = IVVI.get_dac1()
-            #    # Set the PLC to 0.2 for the fast trnagle scan
-            #    dmm.set_NPLC(0.2)
-            #    do_meas_current(bias = 200.0, v2start = -498.0, v2stop = -485.0, v_middle = 3640.0, B_field = BY_vector[i])
-            #    ## Set the DC point and the dmm PLC (sperture) back
-            #    dmm.set_APER(dmm_APER)
-            #    IVVI.set_dac2(dac2_volt)
-            #    IVVI.set_dac1(dac1_volt)
+            if (i==0) or (i==(len(BY_vector)/2)) or (i == (len(BY_vector)-1)):
+                ## Remeber the current DC point and the dmm PLC(aperture) before the triangle scan
+                dmm_APER = dmm.get_APER()
+                dac2_volt = IVVI.get_dac2()
+                dac1_volt = IVVI.get_dac1()
+                # Set the PLC to 0.2 for the fast trnagle scan
+                dmm.set_NPLC(0.2)
+                do_meas_current(bias = 200.0, v2start = -498.0, v2stop = -485.0, v_middle = 3640.0, B_field = BY_vector[i])
+                ## Set the DC point and the dmm PLC (aperture) back
+                dmm.set_APER(dmm_APER)
+                IVVI.set_dac2(dac2_volt)
+                IVVI.set_dac1(dac1_volt)
     
             # Do the vertical line scan and correct the DC point
             #dmm_APER = dmm.get_APER()   # Remember the previous apreture
