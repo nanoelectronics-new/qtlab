@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 
-def Back_corr(path = None, fname = None):
+def bc(path = None, fname = None):
 
     file_path = path + "/" + fname
     mat = np.loadtxt(file_path)

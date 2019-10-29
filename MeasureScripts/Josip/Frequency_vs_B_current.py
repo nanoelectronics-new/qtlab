@@ -3,8 +3,7 @@ from time import time,sleep
 import datetime
 import convert_for_diamond_plot as cnv
 import numpy as np
-from Background_correction import Back_corr as bc
-reload(bc)
+execfile('C:/QTLab/qtlab/MeasureScripts/Background_correction.py')
 import UHFLI_lib
 reload(UHFLI_lib)
 execfile('C:/QTLab/qtlab/MeasureScripts/Josip/save_the_plot.py') # Same as import save the plot function
@@ -56,13 +55,13 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
     
         
-    BY_vector = np.linspace(Bymin,Bymax,50.0) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,30.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,50.0) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,30.0) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(3.0e9,6.5e9,3e6)  # Frequency 
+    freq_vec = arange(3.0e9,6.5e9,5e6)  # Frequency 
     
     qt.mstart()
     
@@ -160,9 +159,9 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
                 dmm_APER = dmm.get_APER()
                 dac2_volt = IVVI.get_dac2()
                 dac1_volt = IVVI.get_dac1()
-                # Set the PLC to 0.2 for the fast trnagle scan
+                # Set the PLC to 0.2 for the fast triangle scan
                 dmm.set_NPLC(0.2)
-                do_meas_current(bias = 200.0, v2start = -498.0, v2stop = -485.0, v_middle = 3640.0, B_field = BY_vector[i])
+                do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -480.0, v2_start = -473.0, v2_stop = -464.0, v_middle = 3550.0, B_field = BY_vector[i])
                 ## Set the DC point and the dmm PLC (aperture) back
                 dmm.set_APER(dmm_APER)
                 IVVI.set_dac2(dac2_volt)
@@ -202,6 +201,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
                 
             
     finally:
+        stop = time()
         print 'Overall duration: %s sec' % (stop - init_start, )
     
     
@@ -221,14 +221,14 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         qt.mend()
 
 
-V_G9 = [-486.60,-485.86,-486.05,-487.11,-487.94]
-V_G6 = [-481.98,-481.24,-480.73,-481.74,-482.48]
+V_G9 = [-469.72,-467.54,-469.04,-468.22]
+V_G6 = [-483.96,-482.13,-483.32,-482.74]
 
 gatediv = 1.0
 dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
 
-# Runf the G_vs_G once to have the function do_meas_current available and updated
-#execfile('C:/QTLab/qtlab/MeasureScripts/Josip/IV.py')
+# Run the G_vs_G once to have the function do_meas_current available and updated
+execfile('C:/QTLab/qtlab/MeasureScripts/Josip/G_vs_G.py')
 
 for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     

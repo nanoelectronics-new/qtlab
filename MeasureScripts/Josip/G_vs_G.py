@@ -15,10 +15,13 @@ execfile('C:/QTLab/qtlab/MeasureScripts/Josip/save_the_plot.py') # Same as impor
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start = -492.0, v2_stop = -482.0, v_middle = 3550.0):
+def do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start = -492.0, v2_stop = -482.0, v_middle = 3550.0, B_field = None):
     global name_counter
     name_counter += 1
-    file_name = '3-5 IV %d GvsG_V_middle=%.2fmV_bias=%.2fmV'%(name_counter, v_middle, (bias/100.0))
+    if B_field == None:
+        file_name = '3-5 IV %d GvsG_V_middle=%.2fmV_bias=%.2fmV'%(name_counter, v_middle, (bias/100.0))
+    else:
+        file_name = '3-5 IV %d GvsG_V_middle=%.2fmV_bias=%.2fmV_B=%dmT'%(name_counter, v_middle, (bias/100.0), B_field*1000)
     
     gain = 1e9  #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -150,5 +153,4 @@ def do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start
     #do_meas_current(bias)
 
 # Do measurement
-do_meas_current(bias = 200.0,  v1_start = -489.0, v1_stop = -478.0, v2_start = -475.0, v2_stop = -463.0, v_middle = 3550.0)
-do_meas_current(bias = 200.0,  v1_start = -489.0, v1_stop = -478.0, v2_start = -475.0, v2_stop = -463.0, v_middle = 3550.0)
+#do_meas_current(bias = 200.0,  v1_start = -489.0, v1_stop = -478.0, v2_start = -475.0, v2_stop = -463.0, v_middle = 3550.0)
