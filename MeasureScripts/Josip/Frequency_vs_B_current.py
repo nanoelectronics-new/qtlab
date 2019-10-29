@@ -6,6 +6,7 @@ import numpy as np
 from Background_correction import Back_corr as bc
 import UHFLI_lib
 reload(UHFLI_lib)
+execfile('C:/QTLab/qtlab/MeasureScripts/Josip/save_the_plot.py') # Same as import save the plot function
 #####################################################
 # this part is to simulate some data, you can skip it
 #####################################################
@@ -20,7 +21,7 @@ reload(UHFLI_lib)
 ## Upload the chirp signal to the AWG
 #execfile('C:/QTLab/qtlab/MeasureScripts/AWG_upload_chirp.py')
 
-daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
+#daq = UHFLI_lib.UHF_init_demod_multiple(device_id = 'dev2169', demod_c = [3])
 #VSG = qt.instruments.create('VSG','RS_SMW200A',address = 'TCPIP::10.21.64.105::hislip0::INSTR')
 
 
@@ -54,13 +55,13 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
     
         
-    BY_vector = np.linspace(Bymin,Bymax,50.0) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,2.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,50.0) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,2.0) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(3.0e9,6.5e9,3e6)  # Frequency 
+    freq_vec = arange(3.0e9,3.012e9,3e6)  # Frequency 
     
     qt.mstart()
     
@@ -102,125 +103,125 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     vec_count = 0
     
     
+    try:
+        for i,v1 in enumerate(BY_vector):  
+            
+            start = time()
+            ## SEting the B field 
+            magnetY.set_field(BY_vector[i])   # Set the By field first
+            while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
+                qt.msleep(0.050)
     
-    for i,v1 in enumerate(BY_vector):  
-        
-        start = time()
-        ## SEting the B field 
-        magnetY.set_field(BY_vector[i])   # Set the By field first
-        while math.fabs(BY_vector[i] - magnetY.get_field_get()) > 0.0001:  # Wait until the By field is set
-            qt.msleep(0.050)
-
-        magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
-        while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
-            qt.msleep(0.050)
+            magnetZ.set_field(BZ_vector[i])   # Set the Bz field second
+            while math.fabs(BZ_vector[i] - magnetZ.get_field_get()) > 0.0001:  # Wait until the Bz field is set
+                qt.msleep(0.050)
+                
+            total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
+    
+    
+    
+    
+            for j,freq in enumerate(freq_vec):  
+                if j == 0:
+                    temp_freq = freq_vec[0] # Initial temporary frequency is the first value in the frequency sweep
+                    temp_power = power
+                    VSG.set_power(temp_power)
+    
+    
+                # For the coax line 3 the power drop, above 5 GHz, is 1dB per 1GHz
+                # Therefore, each time the frequency increases for 1 GHz we are increasing the power for 1 dB
+                if freq >= (temp_freq + 1e9):
+                    temp_freq = freq
+                    temp_power += 1
+                    # Set the VSG power units
+                    VSG.set_power_units("dbm") 
+                    # Set the RF power
+                    VSG.set_power(temp_power)
+    
+                VSG.set_frequency(freq)
+    
+                # the next function is necessary to keep the gui responsive. It
+                # checks for instance if the 'stop' button is pushed. It also checks
+                # if the plots need updating.
+                qt.msleep(0.005)
+    
+                # readout
+                result_current = dmm.get_readval()/gain*1e12  # Getting current values 
             
-        total_field = np.sqrt(BY_vector[i]**2+BZ_vector[i]**2)
-
-
-
-
-        for j,freq in enumerate(freq_vec):  
-            if j == 0:
-                temp_freq = freq_vec[0] # Initial temporary frequency is the first value in the frequency sweep
-                temp_power = power
-                VSG.set_power(temp_power)
-
-
-            # For the coax line 3 the power drop, above 5 GHz, is 1dB per 1GHz
-            # Therefore, each time the frequency increases for 1 GHz we are increasing the power for 1 dB
-            if freq >= (temp_freq + 1e9):
-                temp_freq = freq
-                temp_power += 1
-                # Set the VSG power units
-                VSG.set_power_units("dbm") 
-                # Set the RF power
-                VSG.set_power(temp_power)
-
-            VSG.set_frequency(freq)
-
-            # the next function is necessary to keep the gui responsive. It
-            # checks for instance if the 'stop' button is pushed. It also checks
-            # if the plots need updating.
-            qt.msleep(0.005)
-
-            # readout
-            result_current = dmm.get_readval()/gain*1e12  # Getting current values 
-        
-            data_temp_current[j] = result_current
-            # save the data point to the file, this will automatically trigger
-            # the plot windows to update
-            data.add_data_point(freq,total_field, result_current)  
-
-        ## Do the triangle scan at the beginning, in the middle and at the end of every EDSR scan
-        #if (i==0) or (i==(len(BY_vector)/2)) or (i == (len(BY_vector)-1)):
-        #    ## Remeber the current DC point and the dmm PLC(aperture) before the triangle scan
-        #    dmm_APER = dmm.get_APER()
-        #    dac2_volt = IVVI.get_dac2()
-        #    dac1_volt = IVVI.get_dac1()
-        #    # Set the PLC to 0.2 for the fast trnagle scan
-        #    dmm.set_NPLC(0.2)
-        #    do_meas_current(bias = 200.0, v2start = -498.0, v2stop = -485.0, v_middle = 3640.0, B_field = BY_vector[i])
-        #    ## Set the DC point and the dmm PLC (sperture) back
-        #    dmm.set_APER(dmm_APER)
-        #    IVVI.set_dac2(dac2_volt)
-        #    IVVI.set_dac1(dac1_volt)
-
-        # Do the vertical line scan and correct the DC point
-        #dmm_APER = dmm.get_APER()   # Remember the previous apreture
-        #dmm.set_NPLC(1.0)           # Set the averaging for the line scan
-        #line_scan, gate_voltages = run_line_scan()      # Get the line scan and corresponding gate voltages as numpy arrays
-        #index_max_current = line_scan.argmax()    # Find the index of the maximum current
-        #corr_volt = gate_voltages[index_max_current]    # Find the gate voltage that corresponds to the maximum current
-        #IVVI.set_dac1(corr_volt - 0.4)  # Do the voltage correction
-        #dmm.set_APER(dmm_APER)          # Set back to the previous aperture
-
-
-        
+                data_temp_current[j] = result_current
+                # save the data point to the file, this will automatically trigger
+                # the plot windows to update
+                data.add_data_point(freq,total_field, result_current)  
+    
+            ## Do the triangle scan at the beginning, in the middle and at the end of every EDSR scan
+            #if (i==0) or (i==(len(BY_vector)/2)) or (i == (len(BY_vector)-1)):
+            #    ## Remeber the current DC point and the dmm PLC(aperture) before the triangle scan
+            #    dmm_APER = dmm.get_APER()
+            #    dac2_volt = IVVI.get_dac2()
+            #    dac1_volt = IVVI.get_dac1()
+            #    # Set the PLC to 0.2 for the fast trnagle scan
+            #    dmm.set_NPLC(0.2)
+            #    do_meas_current(bias = 200.0, v2start = -498.0, v2stop = -485.0, v_middle = 3640.0, B_field = BY_vector[i])
+            #    ## Set the DC point and the dmm PLC (sperture) back
+            #    dmm.set_APER(dmm_APER)
+            #    IVVI.set_dac2(dac2_volt)
+            #    IVVI.set_dac1(dac1_volt)
+    
+            # Do the vertical line scan and correct the DC point
+            #dmm_APER = dmm.get_APER()   # Remember the previous apreture
+            #dmm.set_NPLC(1.0)           # Set the averaging for the line scan
+            #line_scan, gate_voltages = run_line_scan()      # Get the line scan and corresponding gate voltages as numpy arrays
+            #index_max_current = line_scan.argmax()    # Find the index of the maximum current
+            #corr_volt = gate_voltages[index_max_current]    # Find the gate voltage that corresponds to the maximum current
+            #IVVI.set_dac1(corr_volt - 0.4)  # Do the voltage correction
+            #dmm.set_APER(dmm_APER)          # Set back to the previous aperture
+    
+    
             
-
-         
-            
-        data.new_block()
-        stop = time()
-        # Converting the reflectometry amplitude data to the matrix format
-        new_mat_current = np.column_stack((new_mat_current, data_temp_current))
-        if i == 0: #Kicking out the first column filled with zero
-            new_mat_current = new_mat_current[:,1:]
-        np.savetxt(fname = data.get_dir() + '/' + file_name + "_matrix.dat", X = new_mat_current, fmt = '%1.4e', delimiter = '  ', newline = '\n')
-
+                
+    
+             
+                
+            data.new_block()
+            stop = time()
+            # Converting the reflectometry amplitude data to the matrix format
+            new_mat_current = np.column_stack((new_mat_current, data_temp_current))
+            if i == 0: #Kicking out the first column filled with zero
+                new_mat_current = new_mat_current[:,1:]
+            np.savetxt(fname = data.get_dir() + '/' + file_name + "_matrix.dat", X = new_mat_current, fmt = '%1.4e', delimiter = '  ', newline = '\n')
     
         
-        plot3d_current.update()
-        plot2d_current.update()
-
-
-        vec_count = vec_count + 1
-        print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(BY_vector.size - vec_count))))
             
-            
+            plot3d_current.update()
+            plot2d_current.update()
     
-    print 'Overall duration: %s sec' % (stop - init_start, )
+    
+            vec_count = vec_count + 1
+            print 'Estimated time left: %s hours\n' % str(datetime.timedelta(seconds=int((stop - start)*(BY_vector.size - vec_count))))
+                
+            
+    finally:
+        print 'Overall duration: %s sec' % (stop - init_start, )
+    
+    
+    
+        # Switching off the RF 
+        #VSG.set_status("off") 
+    
+    
+        # after the measurement ends, you need to close the data file.
+        data.close_file()
+    
+        bc(path = data.get_dir(), fname = file_name + "_matrix.dat")
+        #bc(path = data.get_dir(), fname = file_name + "_lockin_matrix.dat")
+        save_the_plot(to_plot = new_mat_current, title = file_name + '_current', x = BY_vector, y = freq_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
+    
+        # lastly tell the secondary processes (if any) that they are allowed to start again.
+        qt.mend()
 
 
-
-    # Switching off the RF 
-    #VSG.set_status("off") 
-
-
-    # after the measurement ends, you need to close the data file.
-    data.close_file()
-
-    bc(path = data.get_dir(), fname = file_name + "_matrix.dat")
-    bc(path = data.get_dir(), fname = file_name + "_lockin_matrix.dat")
-    save_the_plot(to_plot = new_mat_current, title = file_name + '_current', x = BY_vector, y = freq_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
-
-    # lastly tell the secondary processes (if any) that they are allowed to start again.
-    qt.mend()
-
-
-V_G9 = [-487.36,-486.60,-485.86,-486.05,-487.11,-487.94]
-V_G6 = [-482.72,-481.98,-481.24,-480.73,-481.74,-482.48]
+V_G9 = [-486.60,-485.86,-486.05,-487.11,-487.94]
+V_G6 = [-481.98,-481.24,-480.73,-481.74,-482.48]
 
 gatediv = 1.0
 dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
@@ -233,7 +234,7 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.180, Bmax = 0.130, power = -10.0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.148, Bmax = 0.147, power = -10.0)
 
 
 

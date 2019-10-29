@@ -14,7 +14,8 @@ def save_the_plot(to_plot, title, x, y, x_label, y_label, c_label, dire):
             name: name of the saved figure'''
 
     fig, ax = plt.subplots()
-    im = ax.imshow(np.flipud(to_plot), aspect = "auto", cmap = "bwr_r", extent=[x[0],x[-1],y[0],y[-1]])
+    im = ax.imshow(np.flipud(to_plot), aspect = "auto", cmap = "bwr_r", interpolation = 'None', extent=[x[0],x[-1],y[0],y[-1]])
+    ax.ticklabel_format(axis = 'both', style = 'sci', scilimits = (-2,2))
     ax.set_xlabel(x_label, size = 24)
     ax.set_ylabel(y_label, size = 24)
     ax.set_title(title, size = 24)

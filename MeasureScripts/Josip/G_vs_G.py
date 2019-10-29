@@ -3,6 +3,7 @@ from time import time,sleep
 import datetime
 import convert_for_diamond_plot as cnv
 import UHFLI_lib
+execfile('C:/QTLab/qtlab/MeasureScripts/Josip/save_the_plot.py') # Same as import save the plot function
 
 
 
@@ -14,10 +15,10 @@ import UHFLI_lib
 #dmm = qt.instruments.create('dmm','a34410a', address = 'USB0::0x2A8D::0x0101::MY54502777::INSTR')
 
 
-def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 100.0, B_field = 0):
+def do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start = -492.0, v2_stop = -482.0, v_middle = 3550.0):
     global name_counter
     name_counter += 1
-    file_name = '3-5_GvsG_%d_V_middle=%.2f_B_field=%.2fmT'%(name_counter, v_middle, B_field*1000)
+    file_name = '3-5 IV %d GvsG_V_middle=%.2fmV_bias=%.2fmV'%(name_counter, v_middle, (bias/100.0))
     
     gain = 1e9  #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
@@ -26,8 +27,8 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     gatediv = 1.0
     
     
-    v1_vec = arange(-480.0,-472.0,0.12)       # outer
-    v2_vec = arange(v2start,v2stop,0.12)   # inner
+    v1_vec = arange(v1_start,v1_stop,0.06)   # outer
+    v2_vec = arange(v2_start,v2_stop,0.06)   # inner
 
     v_middle_div = 5.0
     
@@ -42,8 +43,8 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     
     
     ## CURRENT
-    data.add_coordinate('V_G 6 [mV]')    # inner
-    data.add_coordinate('V_G 9 [mV]')     # outer
+    data.add_coordinate('V_G 9 [mV]')    # inner
+    data.add_coordinate('V_G 6 [mV]')     # outer
     data.add_value('Current [pA]')
     
     
@@ -83,14 +84,14 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
             start = time()
             # set the voltage
        
-            IVVI.set_dac2(v1*gatediv)
+            IVVI.set_dac1(v1*gatediv)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac1(v2*gatediv)
+                IVVI.set_dac2(v2*gatediv)
                 
     
                 # readout
@@ -135,9 +136,9 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     finally:
 
         #Saving plot images
-        plot3d.save_png(filepath = data.get_dir())
-        plot3d.save_eps(filepath = data.get_dir())
-    
+        #plot3d.save_png(filepath = data.get_dir())
+        #plot3d.save_eps(filepath = data.get_dir())
+        save_the_plot(to_plot = new_mat_cur, title = file_name + '_current', x = v1_vec, y = v2_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
         # after the measurement ends, you need to close the data files.
         data.close_file()
     
@@ -149,6 +150,6 @@ def do_meas_current(bias = 200.0, v2start = 100.0, v2stop = 100.0, v_middle = 10
     #do_meas_current(bias)
 
 # Do measurement
-do_meas_current(bias = 200.0, v2start = -492.0, v2stop = -485.0, v_middle = 3640.0, B_field = 0)
+do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start = -492.0, v2_stop = -482.0, v_middle = 3550.0)
 
 
