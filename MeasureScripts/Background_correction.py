@@ -34,3 +34,4 @@ def Back_corr(path = None, fname = None):
     #plt.show()
          
     np.savetxt(fname=path + "/" + "CORR_" + fname, X=mat, fmt='%1.4e', delimiter=' ', newline='\n')  
+    return mat

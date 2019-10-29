@@ -4,6 +4,7 @@ import datetime
 import convert_for_diamond_plot as cnv
 import numpy as np
 from Background_correction import Back_corr as bc
+reload(bc)
 import UHFLI_lib
 reload(UHFLI_lib)
 execfile('C:/QTLab/qtlab/MeasureScripts/Josip/save_the_plot.py') # Same as import save the plot function
@@ -55,13 +56,13 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
     
         
-    BY_vector = np.linspace(Bymin,Bymax,2.0) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,50.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,2.0) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,50.0) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(3.0e9,3.012e9,3e6)  # Frequency 
+    freq_vec = arange(3.0e9,6.5e9,3e6)  # Frequency 
     
     qt.mstart()
     
@@ -212,9 +213,9 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         # after the measurement ends, you need to close the data file.
         data.close_file()
     
-        bc(path = data.get_dir(), fname = file_name + "_matrix.dat")
+        corrected_data_matrix = bc(path = data.get_dir(), fname = file_name + "_matrix.dat")
         #bc(path = data.get_dir(), fname = file_name + "_lockin_matrix.dat")
-        save_the_plot(to_plot = new_mat_current, title = file_name + '_current', x = BY_vector, y = freq_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
+        save_the_plot(to_plot = corrected_data_matrix, title = file_name + '_current_CORR', x = BY_vector, y = freq_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
     
         # lastly tell the secondary processes (if any) that they are allowed to start again.
         qt.mend()
@@ -234,7 +235,7 @@ for nj,vg in enumerate(V_G9):     # Do measurement for different DC points
     IVVI.set_dac2(gatediv*V_G9[nj])
     IVVI.set_dac1(gatediv*V_G6[nj])
     # Do_measurement
-    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.148, Bmax = 0.147, power = -10.0)
+    f_vs_B(vg = [V_G9[nj], V_G6[nj]], Bmin = 0.180, Bmax = 0.130, power = -10.0)
 
 
 
