@@ -225,7 +225,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         qt.mend()
 
 
-V_G9 = [-488.96,-487.24]
+V_G9 = [-488.80,-487.24]
 V_G6 = [-493.34,-491.69]
 
 gatediv = 1.0
