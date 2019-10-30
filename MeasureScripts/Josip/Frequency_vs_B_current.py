@@ -55,13 +55,13 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
     
         
-    BY_vector = np.linspace(Bymin,Bymax,30.0) # Defining the By vector in T  
+    BY_vector = np.linspace(Bymin,Bymax,25.0) # Defining the By vector in T  
     magnetY.set_rampRate_T_s(ramp_rate_Y)
-    BZ_vector = np.linspace(Bzmin,Bzmax,30.0) # Defining the Bz vector in T  
+    BZ_vector = np.linspace(Bzmin,Bzmax,25.0) # Defining the Bz vector in T  
     magnetZ.set_rampRate_T_s(ramp_rate_Z)
     
     
-    freq_vec = arange(3.0e9,6.5e9,5e6)  # Frequency 
+    freq_vec = arange(3.0e9,6.5e9,7e6)  # Frequency 
     
     qt.mstart()
     
@@ -161,7 +161,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
                 dac1_volt = IVVI.get_dac1()
                 # Set the PLC to 0.2 for the fast triangle scan
                 dmm.set_NPLC(0.2)
-                do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -480.0, v2_start = -473.0, v2_stop = -464.0, v_middle = 3550.0, B_field = BY_vector[i])
+                do_meas_current(bias = 200.0,  v1_start = -495.5, v1_stop = -489.0, v2_start = -491.5, v2_stop = -484.0, v_middle = 3700.0, B_field = BY_vector[i])
                 ## Set the DC point and the dmm PLC (aperture) back
                 dmm.set_APER(dmm_APER)
                 IVVI.set_dac2(dac2_volt)
@@ -225,8 +225,8 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         qt.mend()
 
 
-V_G9 = [-468.76,-467.55,-466.55,-466.94,-469.12]
-V_G6 = [-483.63,-482.73,-481.95,-481.46,-483.18]
+V_G9 = [-488.96,-487.24]
+V_G6 = [-493.34,-491.69]
 
 gatediv = 1.0
 dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
