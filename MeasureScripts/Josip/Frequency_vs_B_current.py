@@ -215,14 +215,18 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     
         corrected_data_matrix = bc(path = data.get_dir(), fname = file_name + "_matrix.dat")
         #bc(path = data.get_dir(), fname = file_name + "_lockin_matrix.dat")
-        save_the_plot(to_plot = corrected_data_matrix, title = file_name + '_current_CORR', x = BY_vector, y = freq_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
-    
+        if BY_vector[0] > BY_vector[-1]:
+        ## Checking if the x axis needs to be flipped or not. It depends on the scanning direction.
+            save_the_plot(to_plot = corrected_data_matrix, title = file_name + '_current_CORR', x = BY_vector[::-1], y = freq_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
+        else:
+            save_the_plot(to_plot = corrected_data_matrix, title = file_name + '_current_CORR', x = BY_vector, y = freq_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
+
         # lastly tell the secondary processes (if any) that they are allowed to start again.
         qt.mend()
 
 
-V_G9 = [-469.72,-467.54,-469.04,-468.22]
-V_G6 = [-483.96,-482.13,-483.32,-482.74]
+V_G9 = [-468.76,-467.55,-466.55,-466.94,-469.12]
+V_G6 = [-483.63,-482.73,-481.95,-481.46,-483.18]
 
 gatediv = 1.0
 dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
