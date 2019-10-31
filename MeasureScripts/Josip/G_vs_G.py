@@ -30,8 +30,8 @@ def do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start
     gatediv = 1.0
     
     
-    v1_vec = arange(v1_start,v1_stop,0.12)   # outer
-    v2_vec = arange(v2_start,v2_stop,0.12)   # inner
+    v1_vec = arange(v1_start,v1_stop,0.18)   # outer
+    v2_vec = arange(v2_start,v2_stop,0.18)   # inner
 
     v_middle_div = 5.0
     
@@ -153,4 +153,5 @@ def do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start
     #do_meas_current(bias)
 
 # Do measurement
-#do_meas_current(bias = 200.0,  v1_start = -478.0, v1_stop = -471.0, v2_start = -454.0, v2_stop = -446.0, v_middle = 3400.0, B_field = 0.180)
+do_meas_current(bias = 200.0,  v1_start = -489.0, v1_stop = -478.0, v2_start = -475.0, v2_stop = -463.0, v_middle = 3550.0, B_field = 0.130)
+
