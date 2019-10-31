@@ -217,7 +217,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         #bc(path = data.get_dir(), fname = file_name + "_lockin_matrix.dat")
         if BY_vector[0] > BY_vector[-1]:
         ## Checking if the x axis needs to be flipped or not. It depends on the scanning direction.
-            save_the_plot(to_plot = corrected_data_matrix, title = file_name + '_current_CORR', x = BY_vector[::-1], y = freq_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
+            save_the_plot(to_plot = np.fliplr(corrected_data_matrix), title = file_name + '_current_CORR', x = BY_vector[::-1], y = freq_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
         else:
             save_the_plot(to_plot = corrected_data_matrix, title = file_name + '_current_CORR', x = BY_vector, y = freq_vec, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
 
