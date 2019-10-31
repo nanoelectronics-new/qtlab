@@ -161,7 +161,7 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
                 dac1_volt = IVVI.get_dac1()
                 # Set the PLC to 0.2 for the fast triangle scan
                 dmm.set_NPLC(0.2)
-                do_meas_current(bias = 200.0,  v1_start = -478.0, v1_stop = -471.0, v2_start = -454.0, v2_stop = -446.0, v_middle = 3400.0, B_field = BY_vector[i])
+                do_meas_current(bias = 200.0,  v1_start = -490.0, v1_stop = -481.0, v2_start = -481.0, v2_stop = -472.0, v_middle = 3600.0, B_field = BY_vector[i])
                 ## Set the DC point and the dmm PLC (aperture) back
                 dmm.set_APER(dmm_APER)
                 IVVI.set_dac2(dac2_volt)
@@ -225,8 +225,8 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
         qt.mend()
 
 
-V_G9 = [-450.68,-449.72,-448.77,-449.37,-450.93]
-V_G6 = [-475.15,-474.43,-473.60,-473.26,-474.51]
+V_G9 = [-477.00,-474.91]
+V_G6 = [-486.37,-484.71]
 
 gatediv = 1.0
 dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
