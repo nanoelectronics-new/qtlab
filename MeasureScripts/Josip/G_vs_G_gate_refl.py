@@ -190,6 +190,7 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     
         print 'Overall duration: %s sec' % (stop - init_start, )
     
+
     
     finally:
         #Saving plot images
@@ -221,7 +222,16 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 # v_middle_sweep = [-500.0, 0.0, 500.0]
 
 # For ve in v_middle_sweep: 
-do_meas_both(bias = 200.0,  v1_start = -499.0, v1_stop = -487.0, v2_start = -494.0, v2_stop = -480.0, v_middle = 3700.0)
+#g6_vs_m = 0.065
+#g9_vs_m = 0.14
+#initial_Vm = 3700.0
+#next_Vm = 3800.0
+#
+#g6_shift = (next_Vm - initial_Vm)*g6_vs_m
+#g9_shift = (next_Vm - initial_Vm)*g9_vs_m
+
+
+do_meas_both(bias = 200.0,  v1_start = -500.0, v1_stop = -470.0, v2_start = -487.0, v2_stop = -457.0, v_middle = 3700.0)
 
 
 
