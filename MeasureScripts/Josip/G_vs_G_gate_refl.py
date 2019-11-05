@@ -219,20 +219,19 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 
 
 
-# v_middle_sweep = [-500.0, 0.0, 500.0]
-
-# For ve in v_middle_sweep: 
 #g6_vs_m = 0.065
 #g9_vs_m = 0.14
-#initial_Vm = 3700.0
-#next_Vm = 3800.0
+#initial_Vm = 3000.0
 #
-#g6_shift = (next_Vm - initial_Vm)*g6_vs_m
-#g9_shift = (next_Vm - initial_Vm)*g9_vs_m
+#Vms = np.arange(3000.0,2800.0,-20.0)
+#
 
 
 
-do_meas_both(bias = 200.0,  v1_start = -437.0, v1_stop = -411.5, v2_start = -416.0, v2_stop = -398.0, v_middle = 3000.0)
+#for Vm in Vms:
+    #g6_shift = (Vm - initial_Vm)*g6_vs_m
+    #g9_shift = (Vm - initial_Vm)*g9_vs_m
+do_meas_both(bias = 200.0,  v1_start = -387.0, v1_stop = -379.0, v2_start = -419.0, v2_stop = -409.0, v_middle = 2820.0)
 
 
  
