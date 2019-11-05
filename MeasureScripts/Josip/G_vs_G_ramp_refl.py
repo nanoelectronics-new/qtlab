@@ -12,6 +12,7 @@ import Waveform_PresetAmp as Wav
 #import qt
 import matplotlib.pyplot as plt
 from Waveform_PresetAmp import Pulse as pul
+execfile('C:/QTLab/qtlab/MeasureScripts/Josip/save_the_plot.py') # Same as import save the plot function
 
 
 
@@ -242,15 +243,17 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
    
     print 'Overall duration: %s sec' % (stop - init_start, )
 
-    #plot3d_mag.update()
-    #plot3d_phase.update()
+    plot3d_mag.update()
+    plot3d_phase.update()
 
     #Saving plot images
-    plot3d_phase.save_png(filepath = data.get_dir())
-    plot3d_phase.save_eps(filepath = data.get_dir())
+    #plot3d_phase.save_png(filepath = data.get_dir())
+    #plot3d_phase.save_eps(filepath = data.get_dir())
+    #plot3d_mag.save_png(filepath = data.get_dir())
+    #plot3d_mag.save_eps(filepath = data.get_dir())
+    save_the_plot(to_plot = new_mat_mag, title = file_name + '_amplitude', x = v1_vec, y = v2 + ramp, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
+    save_the_plot(to_plot = new_mat_phase, title = file_name + '_phase', x = v1_vec, y = v2 + ramp, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[1]['name'], dire = data.get_dir())
 
-    plot3d_mag.save_png(filepath = data.get_dir())
-    plot3d_mag.save_eps(filepath = data.get_dir())
 
     # after the measurement ends, you need to close the data files.
     data.close_file()
@@ -273,7 +276,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
 # For v2 in v2s:
 #for z in xrange(20):
-do_meas_refl(bias = 0.0, v2 = -487.5, v1_start = -484.0, v1_stop = -481.0, v_middle = 3550.0, num_aver_pts = 20, num_ramps = 1)
+do_meas_refl(bias = 0.0, v2 = -383.0, v1_start = -416.0, v1_stop = -412.5, v_middle = 2820.0, num_aver_pts = 20, num_ramps = 1)
 #qt.msleep(300)
 
 
