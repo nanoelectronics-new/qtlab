@@ -104,7 +104,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     v2 = v2       #inner - the middle DC point of the ramp
     v2_initial = v2 - (num_ramps-1)*ramp_amp    # Complete vertical sweep ic segmented into n_ramps so v2 needs to be positioned properly for each segment
                                                 # Initial one is given by this formula
-    v1_vec = arange(v1_start,v1_stop,0.24)      # Outer
+    v1_vec = arange(v1_start,v1_stop,0.12)      # Outer
     v1_vec_for_graph = v1_vec                   # Defining the v1_vec which is going to be used for the graph axis
     #v1_mean = (v1_start + v1_stop)/2.0          # The value of non-divided DAC which is superimposed to the gate via an S3b card
     #v1_vec = v1_vec - v1_mean
@@ -276,9 +276,8 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 #
 #
 #for Vm in Vms:
-do_meas_refl(bias = 0.0, v2 = -430.0, v1_start = -450.0, v1_stop = -350.0, v_middle = 2000.0, num_aver_pts = 20, num_ramps = 6)
-do_meas_refl(bias = 0.0, v2 = -370.0, v1_start = -450.0, v1_stop = -350.0, v_middle = 2000.0, num_aver_pts = 20, num_ramps = 6)
-do_meas_refl(bias = 0.0, v2 = -310.0, v1_start = -450.0, v1_stop = -350.0, v_middle = 2000.0, num_aver_pts = 20, num_ramps = 6)
+do_meas_refl(bias = 0.0, v2 = -329.0, v1_start = -416.0, v1_stop = -405.0, v_middle = 2000.0, num_aver_pts = 20, num_ramps = 3)
+
 
 
 
