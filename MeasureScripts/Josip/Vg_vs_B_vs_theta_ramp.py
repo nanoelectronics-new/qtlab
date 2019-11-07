@@ -3,7 +3,7 @@ from time import time,sleep
 import datetime
 import convert_for_diamond_plot as cnv
 import numpy as np
-from Background_correction import Back_corr as bc
+execfile('C:/QTLab/qtlab/MeasureScripts/Background_correction.py')  # Same as import Background_correction
 #from AWG_upload_ramp import upload_ramp_to_AWG as u2AWG
 import AWG_lib
 import Waveform_PresetAmp as Wav
@@ -45,7 +45,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
     
     if not(Automatic_sequence_generation):  
     
-        seqCH1 = list() 
+        seqCH3 = list() 
         seq = list()
         seq_wav = list()
     
@@ -56,15 +56,15 @@ def upload_ramp_to_AWG(ramp_amp = 4):
             
             p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
                                                                                                                  
-            p.setValuesCH1([1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
-            p.setMarkersCH1([1,0], [1,0])
+            p.setValuesCH3([1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
+            p.setMarkersCH3([1,0], [1,0])
     
-            seqCH1.append(p.CH1)
+            seqCH3.append(p.CH3)
             seq_wav.append(p)  # Sequence of complete waveforms. Needed for compatibility reasons.
                                # That the TWAIT flag can be passed on the Waveform and not Pulse hierarchy level. 
     
     
-        seq.append(seqCH1) 
+        seq.append(seqCH3) 
     
         # Function for uploading and setting all sequence waveforms to AWG
         AWG_lib.set_waveform_trigger_all(seq_wav,seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = False) 
@@ -75,7 +75,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 1.0  # Amplitude of the ramp in mV
+ramp_amp = 0.5 # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -123,7 +123,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
     #Run the AWG sequence - ramp
     AWG.run()
     #Turn ON necessary AWG channels
-    AWG.set_ch1_output(1)
+    AWG.set_ch3_output(1)
     
     init_start = time()
     vec_count = 0
@@ -228,8 +228,10 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
                 # Set the TC back to the previous one
                 daq.setDouble('/dev2169/demods/3/timeconstant', TC)
 
-        
                 
+   
+
+
                 daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
                 qt.msleep(0.10)
 
@@ -301,7 +303,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
     
     # Turn OFF the AWG 
     AWG.stop()
-    AWG.set_ch1_output(0)
+    AWG.set_ch3_output(0)
     daq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
 
     # At the end set the magnetic field to zero as well, one by one
@@ -314,5 +316,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -478.0, Vg_static = -486.5, num_aver_pts = 40)
-
+do_Vg_vs_B(Vg_ramped = -389.4, Vg_static = -404.275, num_aver_pts = 20)
+do_Vg_vs_B(Vg_ramped = -389.4, Vg_static = -405.120, num_aver_pts = 20)
