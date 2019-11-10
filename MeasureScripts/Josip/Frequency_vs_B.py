@@ -103,12 +103,12 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
     # Turn on IQ modulation
     VSG.set_IQ_status("on")
     ## Run the AWG sequence 
-    AWG.run()
+    #AWG.run()
     ## Turn ON all necessary AWG channels
-    AWG.set_ch1_output(1)
-    AWG.set_ch2_output(1)
-    AWG.set_ch3_output(1)
-    AWG.set_ch4_output(1)
+    #AWG.set_ch1_output(1)
+    #AWG.set_ch2_output(1)
+    #AWG.set_ch3_output(1)
+    #AWG.set_ch4_output(1)
     
     init_start = time()
     vec_count = 0
@@ -280,8 +280,8 @@ V_G9 = array([-487.86,-487.97,-488.05,-487.63,-487.76])
 V_G6 = array([-482.81,-482.88,-482.96,-482.84,-482.96])
 
 ## Taking into account the mean value of the pulse (bias tee does not pass the mean value) and correcting the Vg9 voltages for this amount
-avg = 0.75 #mV
-V_G9 = V_G9 - avg 
+#avg = 0.75 #mV
+#V_G9 = V_G9 - avg 
 
 gatediv = 1.0
 #dmm.set_APER(0.1) # Set the dmm aperture time to 100 ms
