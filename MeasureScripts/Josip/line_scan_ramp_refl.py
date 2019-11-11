@@ -72,13 +72,13 @@ ramp_amp = 0.8  # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
-daq, scopeModule = UHFLI_lib.UHF_init_scope_module()
+#daq, scopeModule = UHFLI_lib.UHF_init_scope_module()
 
 
 
 
 
-def do_line_scan_ramp(v2 = None, v1, num_aver_pts = 20, num_ramps = 2):
+def do_line_scan_ramp(v2 = None, v1 = None, num_aver_pts = 20, num_ramps = 1):
      
 
     # Initialize the UHFLI scope module
@@ -117,12 +117,12 @@ def do_line_scan_ramp(v2 = None, v1, num_aver_pts = 20, num_ramps = 2):
     
     
 
-
     
-    
-   
-    daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+    daq.setDouble('/dev2169/sigouts/0/amplitudes/3', 0.00177827941)  # Set the out 1 ampl to -45 dBm
+    daq.setDouble('/dev2169/demods/3/timeconstant', 1e-06)  # Set time constatn to 1 us
     daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn on the UHFLI out 1
+    daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
+
 
 
     try:
@@ -174,12 +174,13 @@ def do_line_scan_ramp(v2 = None, v1, num_aver_pts = 20, num_ramps = 2):
         #aq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
         # lastly tell the secondary processes (if any) that they are allowed to start again.
         #qt.mend()
-        #plt.plot(v_vec, result)
-        #plt.xlabel('Gate 6 [mV]')
-        #plt.ylabel('Current [pA]')
-        #plt.show()
+        plt.plot((v2 + ramp), refl_phase_full)
+        plt.xlabel('Gate 9 [mV]')
+        plt.ylabel('Refl phase [deg]')
+        plt.show()
 
-    return refl_mag_full, refl_phase_full
+    # Return x-axis voltages and corresponding measured phase
+    return (v2+ramp), refl_phase_full
 
 
 

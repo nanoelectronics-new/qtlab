@@ -650,7 +650,7 @@ def UHF_init_scope_module(device_id = 'dev2169', mode = 1, PSD = 0):
     daq.sync()
 
 
-    raw_input("Set the UHF LI Scope parameters in the user interface dialog and then close the Scope tab!  Press enter to continue...")  # Wait for user to set the device parametrs from user interface
+    #raw_input("Set the UHF LI Scope parameters in the user interface dialog and then close the Scope tab!  Press enter to continue...")  # Wait for user to set the device parametrs from user interface
 
     # Perform a global synchronisation between the device and the data server: Ensure that the settings have taken
     # effect on the device before continuing. This also clears the API's data buffers to remove any old data.

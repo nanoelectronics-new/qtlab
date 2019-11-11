@@ -150,6 +150,14 @@ def f_vs_B(vg = None, Bmin = None, Bmax = None, power = -10):
            
             #Now set the readout frequency to be the new resonance frequency
             daq.setDouble('/dev2169/oscs/0/freq', f_res)
+
+
+            ## Now check where is the inter-dot (vertical line cut) and adjust the corresponding DAC voltage
+            index_min_phase = line_scan.argmin()    # Find the index of the maximum current
+            corr_volt = gate_voltages[index_max_current]    # Find the gate voltage that corresponds to the maximum current
+            #IVVI.set_dac1(corr_volt - 0.4)  # Do the voltage correction
+
+
             # Set the TC back to previous
             daq.setDouble('/dev2169/demods/3/timeconstant', TC)
             # Initialize the demodulators again, since it got messed up by running the sweeper just before
