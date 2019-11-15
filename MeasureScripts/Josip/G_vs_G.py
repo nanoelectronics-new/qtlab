@@ -23,17 +23,17 @@ def do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start
     else:
         file_name = '3-5 IV %d GvsG_V_middle=%.2fmV_bias=%.2fmV_B=%dmT'%(name_counter, v_middle, (bias/100.0), B_field*1000)
     
-    gain = 1e9  #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
+    gain = 1e8  #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     bias = bias
     
     gatediv = 1.0
     
     
-    v1_vec = arange(v1_start,v1_stop,0.12)   # outer
-    v2_vec = arange(v2_start,v2_stop,0.12)   # inner
+    v1_vec = arange(v1_start,v1_stop,0.5)   # outer
+    v2_vec = arange(v2_start,v2_stop,0.5)   # inner
 
-    v_middle_div = 5.0
+    v_middle_div = 1.0
     
     
     qt.mstart()
@@ -46,8 +46,8 @@ def do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start
     
     
     ## CURRENT
-    data.add_coordinate('V_G 9 [mV]')    # inner
-    data.add_coordinate('V_G 6 [mV]')     # outer
+    data.add_coordinate('V_G 6 [mV]')    # inner
+    data.add_coordinate('V_G 4 [mV]')     # outer
     data.add_value('Current [pA]')
     
     
@@ -71,7 +71,7 @@ def do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start
     
     
     # preparation is done, now start the measurement.
-    IVVI.set_dac5(v_middle/v_middle_div)
+    IVVI.set_dac7(v_middle/v_middle_div)
     IVVI.set_dac3(bias)  
     
     init_start = time()
@@ -87,14 +87,14 @@ def do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start
             start = time()
             # set the voltage
        
-            IVVI.set_dac1(v1*gatediv)
+            IVVI.set_dac5(v1*gatediv)
     
     
             
     
             for j,v2 in enumerate(v2_vec):
     
-                IVVI.set_dac2(v2*gatediv)
+                IVVI.set_dac6(v2*gatediv)
                 
     
                 # readout
@@ -153,6 +153,6 @@ def do_meas_current(bias = 200.0,  v1_start = -486.0, v1_stop = -479.0, v2_start
     #do_meas_current(bias)
 
 # Do measurement
-do_meas_current(bias = 200.0,  v1_start = -410.0, v1_stop = -400.0, v2_start = -410.0, v2_stop = -400.0, v_middle = 3700.0, B_field = 0.0)
+do_meas_current(bias = 200.0,  v1_start = -850, v1_stop = -500.0, v2_start = -400.0, v2_stop = -300.0, v_middle = 0.0, B_field = None)
 
 
