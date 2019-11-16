@@ -138,7 +138,7 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     
                 # readout
                 result = dmm.get_readval()/gain*1e12
-                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 0.5, Integration_time = 0.005)  # Reading the lockin
+                result_refl = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 1.0, Integration_time = 0.005)  # Reading the lockin
                 result_refl = array(result_refl)
                 result_phase = result_refl[0,1]  # Getting phase values 
                 result_mag = result_refl[0,0] # Getting amplitude values 
@@ -231,11 +231,11 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 #for Vm in Vms:
     #g6_shift = (Vm - initial_Vm)*g6_vs_m
     #g9_shift = (Vm - initial_Vm)*g9_vs_m
-do_meas_both(bias = 0.0,  v1_start = -540.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -330.0, v_middle = -200.0)
-do_meas_both(bias = 0.0,  v1_start = -540.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -330.0, v_middle = 200.0)
-do_meas_both(bias = 0.0,  v1_start = -540.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -330.0, v_middle = 500.0)
-do_meas_both(bias = 0.0,  v1_start = -540.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -330.0, v_middle = 1000.0)
-do_meas_both(bias = 0.0,  v1_start = -540.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -330.0, v_middle = 1500.0)
+do_meas_both(bias = 0.0,  v1_start = -560.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -300.0, v_middle = -200.0)
+do_meas_both(bias = 0.0,  v1_start = -560.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -300.0, v_middle = 200.0)
+do_meas_both(bias = 0.0,  v1_start = -560.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -300.0, v_middle = 500.0)
+do_meas_both(bias = 0.0,  v1_start = -560.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -300.0, v_middle = 1000.0)
+do_meas_both(bias = 0.0,  v1_start = -560.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -300.0, v_middle = 1500.0)
 
 
  
