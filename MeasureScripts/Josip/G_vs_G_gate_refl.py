@@ -108,7 +108,7 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
     IVVI.set_dac3(bias)  
 
     # Set gates
-    IVVI.set_dac5(v_middle/v_middle_factor)
+    IVVI.set_dac7(v_middle/v_middle_factor)
     #IVVI.set_dac5(static_gate1)
     #IVVI.set_dac6(static_gate2)
 
@@ -231,7 +231,11 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 #for Vm in Vms:
     #g6_shift = (Vm - initial_Vm)*g6_vs_m
     #g9_shift = (Vm - initial_Vm)*g9_vs_m
-do_meas_both(bias = 0.0,  v1_start = -600.0, v1_stop = -300.0, v2_start = -400.0, v2_stop = -300.0, v_middle = 0.0)
+do_meas_both(bias = 0.0,  v1_start = -540.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -330.0, v_middle = -200.0)
+do_meas_both(bias = 0.0,  v1_start = -540.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -330.0, v_middle = 200.0)
+do_meas_both(bias = 0.0,  v1_start = -540.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -330.0, v_middle = 500.0)
+do_meas_both(bias = 0.0,  v1_start = -540.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -330.0, v_middle = 1000.0)
+do_meas_both(bias = 0.0,  v1_start = -540.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -330.0, v_middle = 1500.0)
 
 
  
