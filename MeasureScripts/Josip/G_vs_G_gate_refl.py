@@ -40,8 +40,8 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 
     
 
-    v1_vec = arange(v1_start, v1_stop,0.2)       #outer
-    v2_vec = arange(v2_start,v2_stop,0.2)        #inner
+    v1_vec = arange(v1_start, v1_stop,0.12)       #outer
+    v2_vec = arange(v2_start,v2_stop,0.12)        #inner
 
     # Substracting the value of the static gate voltages to get the voltages to be swept through
     #v1_vec = v1_vec - static_gate1
@@ -231,11 +231,9 @@ def do_meas_both(bias = 1000.0, v2_start = 200, v2_stop = 300, v1_start = None, 
 #for Vm in Vms:
     #g6_shift = (Vm - initial_Vm)*g6_vs_m
     #g9_shift = (Vm - initial_Vm)*g9_vs_m
-do_meas_both(bias = 0.0,  v1_start = -560.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -300.0, v_middle = -200.0)
-do_meas_both(bias = 0.0,  v1_start = -560.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -300.0, v_middle = 200.0)
-do_meas_both(bias = 0.0,  v1_start = -560.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -300.0, v_middle = 500.0)
-do_meas_both(bias = 0.0,  v1_start = -560.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -300.0, v_middle = 1000.0)
-do_meas_both(bias = 0.0,  v1_start = -560.0, v1_stop = -400.0, v2_start = -380.0, v2_stop = -300.0, v_middle = 1500.0)
+
+do_meas_both(bias = 0.0,  v1_start = -416.0, v1_stop = -407.0, v2_start = -360.0, v2_stop = -350.0, v_middle = -200.0)
+
 
 
  
