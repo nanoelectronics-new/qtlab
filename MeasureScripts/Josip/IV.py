@@ -19,14 +19,14 @@ def run_IV():
     gain = 1e9 #Choose between: 1e6 for 1M, 10e6 for 10M, 100e6 for 100M and 1e9 for 1G
     
     
-    v_vec = arange(0.0,-2000.0,-5.0)   
+    v_vec = arange(1400.0,400.0,-0.5)   
     
 
     div = 1.0
     
     
     qt.mstart()
-    name = 'Leak_check_6to18_%d'%name_counter
+    name = "Seting"#'Leak_check_6to18_%d'%name_counter
     data = qt.Data(name=name)
     
     
