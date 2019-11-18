@@ -75,7 +75,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 0.8 # Amplitude of the ramp in mV
+ramp_amp = 1.0 # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -106,18 +106,12 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
 
 
-
-
-
-
-
-
     num_points_vertical = scope_segment_length//num_aver_pts 
     ramp = np.linspace(-ramp_amp, ramp_amp, num_points_vertical)  # Defining the ramp segment
 
     # Set the ramping and the static gates
-    IVVI.set_dac2(Vg_ramped*divgate)
-    IVVI.set_dac1(Vg_static*divgate)
+    IVVI.set_dac5(Vg_ramped*divgate)
+    IVVI.set_dac6(Vg_static*divgate)
 
 
     #Run the AWG sequence - ramp
@@ -134,7 +128,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
         start = time()
         name_counter += 1
-        file_name = '3-5 IV %d_theta=%d'%(name_counter,theta)
+        file_name = '7-11 IV %d_theta=%d'%(name_counter,theta)
          
         
             
@@ -168,7 +162,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         data_temp = np.zeros(num_points_vertical)  # Temporary vector for storing the data
         
         
-        data.add_coordinate('Vg 9 [mV]')  #v2
+        data.add_coordinate('Vg 4 [mV]')  #v2
         data.add_coordinate('B [T]')   #v1
         data.add_value('Refl_phase [deg]')
         data.add_value('Refl_amplitude [arb.u.]')
@@ -316,5 +310,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -352.50, Vg_static = -420.58, num_aver_pts = 20)
+do_Vg_vs_B(Vg_ramped = -633.25, Vg_static = -330.50, num_aver_pts = 20)
 
