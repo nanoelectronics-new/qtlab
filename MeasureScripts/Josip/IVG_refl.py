@@ -26,13 +26,13 @@ def run_IVG():
     bias = 0.0
     
     leak_test = True
-    gate2div = 10.0
+    gate2div = 1.0
     
-    v_vec = arange(-25.0,-11.0,0.1)
+    v_vec = arange(-1400.0,1000.0,1.0)
     
     
     
-    name = ' 8-10 IV %d'%name_counter
+    name = ' 3-23 IV %d'%name_counter
     
     qt.mstart()
     
@@ -40,9 +40,9 @@ def run_IVG():
     
     
     
-    data.add_coordinate('Voltage [mV]')
+    data.add_coordinate('V_G 24 [mV]')
     
-    data.add_value('Refl mag [V]')
+    data.add_value('Refl_phase [deg]')
     
     
     data.create_file()
@@ -54,7 +54,7 @@ def run_IVG():
     
     
     
-    IVVI.set_dac1(bias)
+    #IVVI.set_dac1(bias)
     
     
     start = time()
@@ -62,16 +62,17 @@ def run_IVG():
     try:
         for v in v_vec:
         
-            IVVI.set_dac3(v*gate2div)
-            #IVVI.set_dac6(v*gate2div)
+ 
+            IVVI.set_dac6(v*gate2div)
         
             result = UHFLI_lib.UHF_measure_demod_multiple(Num_of_TC = 3)  # Reading the lockin
-            result_refl = array(result)
-            result_mag = result_refl[0,0] # Getting amplitude values  
+            result = array(result)
+            result_phase = result[0,1]  # Getting phase values 
+    
            
         
         
-            data.add_data_point(v, result_mag)
+            data.add_data_point(v, result_phase)
         
             if leak_test:
                 plot2d.update()   # If leak_test is True update every point 
