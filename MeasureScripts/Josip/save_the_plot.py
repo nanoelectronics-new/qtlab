@@ -4,7 +4,7 @@ import matplotlib
 import numpy as np
 
 def save_the_plot(to_plot, title, x, y, x_label, y_label, c_label, dire):
-    '''Function the plot and save the matrix data
+    '''Function plotting and saving the matrix data
         Inputs:
             to_plot: numpy array to plot (matrix)
             title: title of the plot
@@ -32,7 +32,8 @@ def save_the_plot(to_plot, title, x, y, x_label, y_label, c_label, dire):
 
 
 class Labeloffset():
-    '''The following automates setting the scientific exponent next to the axis label, using a class with a callback, such that if the offset changes, it will be updated in the label.'''
+    '''The following automates setting the scientific exponent next to the axis label, using a class with a callback, 
+    such that if the offset changes, it will be updated in the label.'''
     def __init__(self,  ax, label="", axis="y"):
         self.axis = {"y":ax.yaxis, "x":ax.xaxis}[axis]
         self.label=label

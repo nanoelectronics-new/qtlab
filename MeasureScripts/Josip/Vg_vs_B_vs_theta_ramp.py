@@ -75,7 +75,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 0.5 # Amplitude of the ramp in mV
+ramp_amp = 0.2 # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -92,7 +92,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
 
     global name_counter
     
-    thetas = [0.0] # Angle between the By and Bx axis
+    thetas = [0.0,90.0] # Angle between the By and Bx axis
     TC = 3e-6 # Time constant of the UHFLI in seconds
 
     scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
@@ -132,7 +132,7 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
          
         
             
-        Bmin = 0.46  # Min total field in T
+        Bmin = 0.0  # Min total field in T
         Bmax = 1.0 # Max total field in T   
         ramp_rate_Y = 0.0003 #T/s
         ramp_rate_Z = 0.0005 #T/s
@@ -144,10 +144,10 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         Bzmax = Bmax*np.sin(np.deg2rad(theta))  # Max Bz field in T
         
         
-        BY_vector = np.linspace(Bymin,Bymax,27) # Defining the By vector in T  
+        BY_vector = np.linspace(Bymin,Bymax,50) # Defining the By vector in T  
         magnetY.set_rampRate_T_s(ramp_rate_Y)
 
-        BZ_vector = np.linspace(Bzmin,Bzmax,27) # Defining the Bz vector in T  
+        BZ_vector = np.linspace(Bzmin,Bzmax,50) # Defining the Bz vector in T  
         magnetZ.set_rampRate_T_s(ramp_rate_Z)
         
     
@@ -310,5 +310,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -633.25, Vg_static = -330.50, num_aver_pts = 20)
+do_Vg_vs_B(Vg_ramped = -540.00, Vg_static = -370.22, num_aver_pts = 20)
 
