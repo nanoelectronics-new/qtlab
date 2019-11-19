@@ -75,7 +75,7 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 0.2 # Amplitude of the ramp in mV
+ramp_amp = 0.3 # Amplitude of the ramp in mV
 upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
 
 # Initialize the UHFLI scope module
@@ -310,5 +310,5 @@ def do_Vg_vs_B(Vg_ramped = None, Vg_static = None, num_aver_pts = None, daq = da
         sleep(0.050)
 
 # Do measurement
-do_Vg_vs_B(Vg_ramped = -540.00, Vg_static = -370.22, num_aver_pts = 20)
+do_Vg_vs_B(Vg_ramped = -649.66, Vg_static = -382.00, num_aver_pts = 20)
 
