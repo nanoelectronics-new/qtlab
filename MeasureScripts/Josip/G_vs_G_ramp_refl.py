@@ -104,9 +104,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     v2 = v2       #inner - the middle DC point of the ramp
     v2_initial = v2 - (num_ramps-1)*ramp_amp    # Complete vertical sweep ic segmented into n_ramps so v2 needs to be positioned properly for each segment
                                                 # Initial one is given by this formula
-    
-    v1_vec = aray_diferente(v1_start, v1_stop, small_spacing = 0.18, big_spacing = 20.0)
-    #v1_vec = arange(v1_start,v1_stop,0.12)      # Outer
+    v1_vec = arange(v1_start,v1_stop,0.06)      # Outer
     v1_vec_for_graph = v1_vec                   # Defining the v1_vec which is going to be used for the graph axis
     #v1_mean = (v1_start + v1_stop)/2.0          # The value of non-divided DAC which is superimposed to the gate via an S3b card
     #v1_vec = v1_vec - v1_mean
@@ -274,28 +272,14 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
 
 
-Vms = [-1000.0, -500.0, 0.0, 500.0, 1000.0]
+#Vms = [2000.0, 2300.0, 2600.0, 2900.0, 3200.0]
 #
 #
-for Vm in Vms:
-    do_meas_refl(bias = 0.0, v2 = -375.0, v1_start = -1200.0, v1_stop = -800.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
-    do_meas_refl(bias = 0.0, v2 = -275.0, v1_start = -1200.0, v1_stop = -800.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
-    do_meas_refl(bias = 0.0, v2 = -175.0, v1_start = -1200.0, v1_stop = -800.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
-    do_meas_refl(bias = 0.0, v2 = -75.0, v1_start = -1200.0, v1_stop = -800.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
+#for Vm in Vms:
+do_meas_refl(bias = 0.0, v2 = -85.0, v1_start = -106.0, v1_stop = -90.0, v_middle = 1000.0, num_aver_pts = 20, num_ramps = 2)
+do_meas_refl(bias = 0.0, v2 = -365.0, v1_start = -1085.0, v1_stop = -1068.0, v_middle = 1000.0, num_aver_pts = 20, num_ramps = 2)
 
 
-for Vm in Vms:
-    do_meas_refl(bias = 0.0, v2 = -175.0, v1_start = -200.0, v1_stop = 200.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
-    do_meas_refl(bias = 0.0, v2 = -75.0, v1_start = -200.0, v1_stop = 200.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
-    do_meas_refl(bias = 0.0, v2 = 75.0, v1_start = -200.0, v1_stop = 200.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
-    do_meas_refl(bias = 0.0, v2 = 175.0, v1_start = -200.0, v1_stop = 200.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
-
-
-for Vm in Vms:
-    do_meas_refl(bias = 0.0, v2 = 75.0, v1_start = 400.0, v1_stop = 800.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
-    do_meas_refl(bias = 0.0, v2 = 175.0, v1_start = 400.0, v1_stop = 800.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
-    do_meas_refl(bias = 0.0, v2 = 275.0, v1_start = 400.0, v1_stop = 800.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
-    do_meas_refl(bias = 0.0, v2 = 375.0, v1_start = 400.0, v1_stop = 800.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 5)
 
 
 
