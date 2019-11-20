@@ -45,3 +45,42 @@ class Labeloffset():
         fmt = self.axis.get_major_formatter()
         self.axis.offsetText.set_visible(False)
         self.axis.set_label_text(self.label + " "+ fmt.get_offset() )
+
+
+
+
+
+def aray_diferente(v1_start, v1_stop, small_spacing = 0.18, big_spacing = 20.0):
+
+    v1_start = v1_start
+    v1_stop = v1_stop
+    # Checking the direction of the array to be
+    if v1_stop - v1_start > 0:
+        pos_direction = 1
+    else:
+        pos_direction = 0
+    
+    v1_vec = np.array([v1_start])
+    # Spacings always positive
+    small_spacing = abs(small_spacing)
+    big_spacing = abs(big_spacing)
+    k = 0
+    while True:
+        if pos_direction == 1:
+            if v1_vec[k] > v1_stop:
+                break
+            if ((k%3 == 0)&(k>0)):
+                v1_vec = np.append(v1_vec, v1_vec[k] + big_spacing)
+            else:
+                v1_vec = np.append(v1_vec, v1_vec[k] + small_spacing)
+        
+        elif pos_direction == 0:
+            if v1_vec[k] < v1_stop:
+                break
+            if ((k%3 == 0)&(k>0)):
+                v1_vec = np.append(v1_vec, v1_vec[k] - big_spacing)
+            else:
+                v1_vec = np.append(v1_vec, v1_vec[k] - small_spacing)
+        k = k + 1
+    return v1_vec[:len(v1_vec)-1]
+
