@@ -93,7 +93,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     file_name = '7-11 IV %d GvsG_V_middle=%.2fmV'%(name_counter, v_middle)
 
     
-    gate1div = 100.0
+    gate1div = 10.0
     gate2div = 1.0
     v_middle_factor = 1.0 
     
