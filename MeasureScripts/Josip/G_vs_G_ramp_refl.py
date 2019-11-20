@@ -90,7 +90,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     global name_counter
     name_counter += 1
 
-    file_name = '3-23 IV %d GvsG_V_middle=%.2fmV'%(name_counter, v_middle)
+    file_name = '7-11 IV %d GvsG_V_middle=%.2fmV'%(name_counter, v_middle)
 
     
     gate1div = 1.0
@@ -104,9 +104,9 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     v2 = v2       #inner - the middle DC point of the ramp
     v2_initial = v2 - (num_ramps-1)*ramp_amp    # Complete vertical sweep ic segmented into n_ramps so v2 needs to be positioned properly for each segment
                                                 # Initial one is given by this formula
-    v1_vec = arange(v1_start,v1_stop,0.06)      # Outer
+    v1_vec = arange(v1_start,v1_stop,0.12)      # Outer
     v1_vec_for_graph = v1_vec                   # Defining the v1_vec which is going to be used for the graph axis
-    #v1_mean = (v1_start + v1_stop)/2.0          # The value of non-divided DAC which is superimposed to the gate via an S3b card
+    #v1_mean = (v1_start + v1_stop)/2.0         # The value of non-divided DAC which is superimposed to the gate via an S3b card
     #v1_vec = v1_vec - v1_mean
 
  
@@ -139,8 +139,8 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
     
     
-    data.add_coordinate('V_G 2 [mV]')       # inner
-    data.add_coordinate('V_G 24 [mV]')      # outer
+    data.add_coordinate('V_G 4 [mV]')       # inner
+    data.add_coordinate('V_G 6 [mV]')      # outer
     data.add_value('Refl_mag [V]')
     data.add_value('Refl_phase [deg]')
     
@@ -276,11 +276,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 #
 #
 #for Vm in Vms:
-do_meas_refl(bias = 0.0, v2 = -85.0, v1_start = -106.0, v1_stop = -90.0, v_middle = 1000.0, num_aver_pts = 20, num_ramps = 2)
-do_meas_refl(bias = 0.0, v2 = -365.0, v1_start = -1085.0, v1_stop = -1068.0, v_middle = 1000.0, num_aver_pts = 20, num_ramps = 2)
-
-
-
+do_meas_refl(bias = 0.0, v2 = -649.50, v1_start = -392.0, v1_stop = -372.0, v_middle = 600.0, num_aver_pts = 20, num_ramps = 2)
 
 
 
