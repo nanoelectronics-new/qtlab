@@ -98,7 +98,8 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     v_middle_factor = 1.0 
     
     bias = bias
-    
+
+    averages = 8
 
 
     v2 = v2       #inner - the middle DC point of the ramp
@@ -187,43 +188,53 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
             IVVI.set_dac6(v1*gate1div)
     
             # UHFLI data containers
-            refl_mag_full = np.array([])
-            refl_phase_full = np.array([])
+            refl_mag_averaged = np.array([])
+            refl_phase_averaged = np.array([])
             
             for n in xrange(num_ramps):
                 
-                IVVI.set_dac5(v2_initial + (n*2*ramp_amp)) # Setting the v2 properly in the middle of each vertical segment
-                # the next function is necessary to keep the gui responsive. It
-                # checks for instance if the 'stop' button is pushed. It also checks
-                # if the plots need updating.
-                qt.msleep(0.01)
-                # readout - getting the recording corresponding to one ramp
-                num_samples, wave = UHFLI_lib.get_scope_record(daq = daq, scopeModule= scopeModule)           
-                
-                
-                # Organizing each scope shot into individual rows 
-                refl_mag = wave[0].reshape(-1, scope_segment_length)   
-                refl_phase = wave[1].reshape(-1, scope_segment_length) 
-                # Average the read scope segments (rows) to one segment (one row)
-                refl_mag = np.mean(refl_mag, axis = 0)
-                refl_phase = np.mean(refl_phase, axis = 0)
-                # Reduce the number of samples - average amongst adjacent samples
-                refl_mag = np.mean(refl_mag[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
-                refl_phase = np.mean(refl_phase[:num_points_vertical*num_aver_pts].reshape(-1,num_aver_pts), axis=1)
-                refl_mag_full = np.concatenate((refl_mag_full, refl_mag))
-                refl_phase_full = np.concatenate((refl_phase_full, refl_phase))
+                for avgs in xrange(averages):
+
+                    IVVI.set_dac5(v2_initial + (n*2*ramp_amp)) # Setting the v2 properly in the middle of each vertical segment
+                    # the next function is necessary to keep the gui responsive. It
+                    # checks for instance if the 'stop' button is pushed. It also checks
+                    # if the plots need updating.
+                    qt.msleep(0.01)
+                    # readout - getting the recording corresponding to one ramp
+                    num_samples, wave = UHFLI_lib.get_scope_record(daq = daq, scopeModule= scopeModule)           
+                    
+                    # Organizing the scope shot into a matrix corresponding to 2D map where columns correspond to responses to ramps
+                    refl_mag = wave[0].reshape(-1, scope_segment_length).T
+                    refl_phase = wave[1].reshape(-1, scope_segment_length).T
+
+
+                        
+                    # Kick out the last elements from each measurement, which do not fit in num_points_vertical*num_aver_pts
+                    refl_mag = refl_mag[:num_points_vertical*num_aver_pts,:]
+                    refl_phase = refl_phase[:num_points_vertical*num_aver_pts,:]
+                    # Reduce the number of samples - average amongst adjacent samples of each ramp 
+                    # Average every num_aver_pts point of each column in the matrix
+                    # General formula for taking the average of r rows for a 2D array a with c columns:
+                    # a.transpose().reshape(-1,r).mean(1).reshape(c,-1).transpose()
+                    refl_mag = refl_mag.transpose().reshape(-1,num_aver_pts).mean(1).reshape(-1,num_points_vertical).transpose()
+                    refl_phase = refl_phase.transpose().reshape(-1,num_aver_pts).mean(1).reshape(-1,num_points_vertical).transpose()
+
+
+                    # Averaging amongst adjacent 2D measurements
+                    refl_mag_averaged = (refl_mag + refl_mag_averaged)/2.0
+                    refl_phase_averaged = (refl_phase + refl_phase_averaged)/2.0
                 
             
             # save the data to the file
             v1_real = v1_vec_for_graph[i]
-            data.add_data_point(v2 + ramp, np.linspace(v1_real,v1_real,num_ramps*num_points_vertical), refl_mag_full, refl_phase_full)
+            data.add_data_point(v2 + ramp, np.linspace(v1_real,v1_real,num_ramps*num_points_vertical), refl_mag_averaged, refl_phase_averaged)
     
     
             data.new_block()
             stop = time()
     
-            new_mat_mag = np.column_stack((new_mat_mag, refl_mag_full))
-            new_mat_phase = np.column_stack((new_mat_phase, refl_phase_full))
+            new_mat_mag = np.column_stack((new_mat_mag, refl_mag_averaged))
+            new_mat_phase = np.column_stack((new_mat_phase, refl_phase_averaged))
     
             # Kicking out the first column with zeros
             if not(i):
@@ -272,15 +283,9 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
 
 
-do_meas_refl(bias = 0.0, v2 = -321.5, v1_start = -375.0, v1_stop = -355.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = -558.0, v1_start = -226.0, v1_stop = -206.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = -114.5, v1_start = -60.0, v1_stop = -40.0, v_middle = 100.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = -137.0, v1_start = -95.0, v1_stop = -75.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = -175.0, v1_start = 101.0, v1_stop = 121.0, v_middle = 100.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = -170.0, v1_start = 110.0, v1_stop = 130.0, v_middle = 500.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = 80.0, v1_start = 125.0, v1_stop = 145.0, v_middle = 500.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = 71.0, v1_start = 332.0, v1_stop = 352.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = 33.0, v1_start = 346.0, v1_stop = 366.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = 265.0, v1_start = 373.0, v1_stop = 393.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
-
+Vms = [100.0, 300.0, 500.0]
+#
+#
+#for Vm in Vms:
+ #   do_meas_refl(bias = 0.0, v2 = -350.0, v1_start = -400.0, v1_stop = -300.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 10)
 
