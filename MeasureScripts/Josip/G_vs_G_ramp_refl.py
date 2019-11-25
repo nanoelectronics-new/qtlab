@@ -272,15 +272,6 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
 
 
-do_meas_refl(bias = 0.0, v2 = -321.5, v1_start = -375.0, v1_stop = -355.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = -558.0, v1_start = -226.0, v1_stop = -206.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = -114.5, v1_start = -60.0, v1_stop = -40.0, v_middle = 100.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = -137.0, v1_start = -95.0, v1_stop = -75.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = -175.0, v1_start = 101.0, v1_stop = 121.0, v_middle = 100.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = -170.0, v1_start = 110.0, v1_stop = 130.0, v_middle = 500.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = 80.0, v1_start = 125.0, v1_stop = 145.0, v_middle = 500.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = 71.0, v1_start = 332.0, v1_stop = 352.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = 33.0, v1_start = 346.0, v1_stop = 366.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
-do_meas_refl(bias = 0.0, v2 = 265.0, v1_start = 373.0, v1_stop = 393.0, v_middle = 300.0, num_aver_pts = 20, num_ramps = 1)
+do_meas_refl(bias = 0.0, v2 = -643.25, v1_start = -395.0, v1_stop = -365.0, v_middle = 600.0, num_aver_pts = 20, num_ramps = 2)
 
 

@@ -9,7 +9,7 @@ from Waveform_PresetAmp import Pulse as pul
 
 
 num_aver_ramps = 5 # Number of averaged ramps
-v_stepping_dac = np.arange(-400.0,-350.0,5.0)  # Values of the stepping DAC
+v_stepping_dac = np.arange(-1000.0,1000.0,100.0)  # Values of the stepping DAC
 v_stepping_dac_mean = np.mean(v_stepping_dac)
 v_stepping_dac_ramp = v_stepping_dac - v_stepping_dac_mean
 print v_stepping_dac_mean, v_stepping_dac_ramp[0], v_stepping_dac_ramp[-1]
@@ -36,39 +36,38 @@ def upload_ramp_to_AWG(ramp_amp = 4, num_aver_ramps = 1):
     
     if not(Automatic_sequence_generation):  
     
-        seqCH1 = list() 
-        seqCH2 = list()
+        seqCH3 = list() 
+        seqCH4 = list()
         seq = list()
         seq_wav = list()
     
     
         step_index = 0
     
-        for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
+        for i, v_step in enumerate(v_stepping_dac):   # Creating waveforms for all sequence elements
             
             p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
             
 
-            ## CH1                                                                                                  
-            p.setValuesCH1([3.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [3.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
-            p.setMarkersCH1([1,0], [1,0])
+            ## CH3                                                                                                  
+            p.setValuesCH3([0.5, -ramp_amp*ramp_div, 0.0], [0.5, 0.0, ramp_amp*ramp_div])
+            p.setMarkersCH3([1,0], [1,0])
   
 
 
-            ## CH2
-            # Set the next value of the stepping DAC after the averaging for the previous value has finished 
-            # Did by the integer division of the total index with the num_aver_ramps
-            p.setValuesCH2([3.0, v_stepping_dac_ramp[i//num_aver_ramps]], [3.0, v_stepping_dac_ramp[i//num_aver_ramps]])
-            p.setMarkersCH2([0,0],[0,0])
+            ## CH4
+            # Set the next value of the stepping DAC 
+            p.setValuesCH4([0.5, v_step], [0.5, v_step])
+            p.setMarkersCH4([0,0], [0,0])
     
-            seqCH1.append(p.CH1)
-            seqCH2.append(p.CH2)
+            seqCH3.append(p.CH3)
+            seqCH4.append(p.CH4)
             seq_wav.append(p)  # Sequence of complete waveforms. Needed for compatibility reasons.
                                # That the TWAIT flag can be passed on the Waveform and not Pulse hierarchy level. 
     
     
-        seq.append(seqCH1)
-        seq.append(seqCH2) 
+        seq.append(seqCH3)
+        seq.append(seqCH4) 
     
         # Function for uploading and setting all sequence waveforms to AWG
         AWG_lib.set_waveform_trigger_all(seq_wav,seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = False) 

@@ -16,16 +16,25 @@ execfile('C:/QTLab/qtlab/MeasureScripts/Josip/helping_functions.py') # Same as i
 
 
 
-def upload_ramp_to_AWG(ramp_amp = 4):
+
+# Initialize the UHFLI scope module
+daq, scopeModule = UHFLI_lib.UHF_init_scope_module()
+
+
+
+def upload_ramp_to_AWG(ramp_amp = 4, v_stepping_dac = None):
+
+    if v_stepping_dac == None:
+        raise Exception
+
     ### SETTING AWG
     ##
     AWG_clock = 10e6        
                                                 
-    ramp_div = 200.0 # The line 3 attenuators attenuation     
-    ramp_amp = ramp_amp # mV                 
-    AWGMax_amp = (ramp_amp/1000.0)*ramp_div*1.5 # Maximum amplitude is the maximum amplitude that ocurs
+    ramp_div = 10.0        # Total division on the path to the sample    
+    ramp_amp = ramp_amp    # mV                 
+    AWGMax_amp = 2.0#(ramp_amp/1000.0)*ramp_div*1.5 # Maximum amplitude is the maximum amplitude that ocurs
                                                 # in the output waveform increased 1.5 time for safety         
-    Seq_length = 6   
     t_sync = 0              
     t_wait = 100  
     Automatic_sequence_generation = False
@@ -38,25 +47,40 @@ def upload_ramp_to_AWG(ramp_amp = 4):
     if not(Automatic_sequence_generation):  
     
         seqCH3 = list() 
+        seqCH4 = list()
         seq = list()
         seq_wav = list()
     
     
-        
+        step_index = 0
     
-        for i in xrange(Seq_length):   # Creating waveforms for all sequence elements
+        for i, v_step in enumerate(v_stepping_dac):   # Creating waveforms for all sequence elements
             
             p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
-                                                                                                                 
-            p.setValuesCH3([1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div], [1.0, -ramp_amp*ramp_div, ramp_amp*ramp_div])
-            p.setMarkersCH3([1,0], [1,0])
+            
+
+            ## CH3                                                                                                  
+            p.setValuesCH3([0.5, -ramp_amp*ramp_div, 0.0], [0.5, 0.0, ramp_amp*ramp_div])
+            if i==0: # Set marker only at the starting element of the sequence
+                p.setMarkersCH3([1,0],[1,0])
+            else:    
+                p.setMarkersCH3([0,0],[0,0])
+  
+
+
+            ## CH4
+            # Set the next value of the stepping DAC 
+            p.setValuesCH4([0.5, v_step], [0.5, v_step])
+            p.setMarkersCH4([0,0], [0,0])
     
             seqCH3.append(p.CH3)
+            seqCH4.append(p.CH4)
             seq_wav.append(p)  # Sequence of complete waveforms. Needed for compatibility reasons.
                                # That the TWAIT flag can be passed on the Waveform and not Pulse hierarchy level. 
     
     
-        seq.append(seqCH3) 
+        seq.append(seqCH3)
+        seq.append(seqCH4) 
     
         # Function for uploading and setting all sequence waveforms to AWG
         AWG_lib.set_waveform_trigger_all(seq_wav,seq,AWG_clock,AWGMax_amp, t_sync, sync, do_plot = False) 
@@ -68,20 +92,12 @@ def upload_ramp_to_AWG(ramp_amp = 4):
 
 
 
-ramp_amp = 5.0  # Amplitude of the ramp in mV
-upload_ramp_to_AWG(ramp_amp = ramp_amp) # Call the function to upload ramp with a given amplitude to the AWG
-
-# Initialize the UHFLI scope module
-daq, scopeModule = UHFLI_lib.UHF_init_scope_module()
 
 
-
-
-
-def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_middle = None, num_aver_pts = 20, num_ramps = 2):
+def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_middle = None, num_aver_pts = 20, ramp_amp = 5):
     '''Function for running gate vs gate scans. Gate 1 is stepped from v1_start to v1_stop and for it's each value the gate 2 is ramped by AWG
        around the middle value v2. Since the vertical line scan can be huge, and the ramp amplitude is limited to approx +-10mV on the sample end, 
-       it is splitted in num_ramps segments. v2 voltages are then adjsuted to be in the middle of every ramp segment such that whole vertical line 
+       it is splitted in num_ramps segments. v2 voltages are then adjusted to be in the middle of every ramp segment such that whole vertical line 
        trace is covered.''' 
 
     if (bias == None) or (v2 == None) or (v1_start == None) or (v1_stop == None) or (v_middle == None): 
@@ -89,6 +105,8 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
     global name_counter
     name_counter += 1
+
+  
 
     file_name = '7-11 IV %d GvsG_V_middle=%.2fmV'%(name_counter, v_middle)
 
@@ -98,19 +116,21 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     v_middle_factor = 1.0 
     
     bias = bias
+    num_ramps = 1 # This is not used here, but it is kept for the compatibility reasons and set to 1
+    averages = 8 
 
-    averages = 8
 
 
-    v2 = v2       #inner - the middle DC point of the ramp
+    v2 = v2       # Inner - the middle DC point of the ramp
     v2_initial = v2 - (num_ramps-1)*ramp_amp    # Complete vertical sweep ic segmented into n_ramps so v2 needs to be positioned properly for each segment
                                                 # Initial one is given by this formula
     v1_vec = arange(v1_start,v1_stop,0.06)      # Outer
     v1_vec_for_graph = v1_vec                   # Defining the v1_vec which is going to be used for the graph axis
-    #v1_mean = (v1_start + v1_stop)/2.0         # The value of non-divided DAC which is superimposed to the gate via an S3b card
-    #v1_vec = v1_vec - v1_mean
+    v1_mean = (v1_start + v1_stop)/2.0          # The value of non-divided DAC which is superimposed to the gate via an S3b card
+    v1_vec = v1_vec - v1_mean
 
- 
+    upload_ramp_to_AWG(ramp_amp = ramp_amp, v_stepping_dac = v1_vec) # Call the function to upload ramp with a given amplitude to the AWG
+
 
     scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
     scope_num_segments = daq.getDouble('/dev2169/scopes/0/segments/count')
@@ -127,7 +147,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     IVVI.set_dac3(bias)
     IVVI.set_dac7(v_middle/v_middle_factor)  
     #IVVI.set_dac5(v2*gate2div)
-    #IVVI.set_dac6(v1_mean)
+    IVVI.set_dac6(v1_mean)
 
     #Run the AWG sequence - ramp
     AWG.run()
@@ -283,7 +303,7 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 
 
 
-Vms = [100.0, 300.0, 500.0]
+#Vms = [100.0, 300.0, 500.0]
 #
 #
 #for Vm in Vms:
