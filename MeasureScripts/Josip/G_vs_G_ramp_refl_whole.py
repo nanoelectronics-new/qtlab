@@ -33,10 +33,16 @@ def upload_ramp_to_AWG(ramp_amp = 4, v_stepping_dac = None):
     ##
     AWG_clock = 10e6        
                                                 
-    ramp_div = 10.0        # Total division on the path to the sample    
-    ramp_amp = ramp_amp    # mV                 
-    AWGMax_amp = 2.0#(ramp_amp/1000.0)*ramp_div*1.5 # Maximum amplitude is the maximum amplitude that ocurs
-                                                # in the output waveform increased 1.5 time for safety         
+    ramp_div_step = 10.0        # Total division on the path to the stepped gate
+    ramp_div_ramp = 200.0
+    ramp_amp = ramp_amp    # mV
+    # Maximum amplitude is the maximum amplitude that ocurs
+    # in the output waveform increased 1.5 times for safety    
+    if abs(ramp_amp*ramp_div_ramp) > abs(max(v1_vec))*ramp_div_step: # Take a bigger of the two div factors
+        AWGMax_amp = (ramp_amp/1000.0)*ramp_div_ramp*1.5  
+    else:
+        AWGMax_amp = abs(max(v1_vec))*ramp_div_step*1.5/1000.0     
+
     t_sync = 0              
     t_wait = 100  
     Automatic_sequence_generation = False
@@ -61,8 +67,9 @@ def upload_ramp_to_AWG(ramp_amp = 4, v_stepping_dac = None):
             p = Wav.Waveform(waveform_name = 'WAV1elem%d'%(i+1), AWG_clock = AWG_clock, TimeUnits = 'ms' , AmpUnits = 'mV', TWAIT = 0)  
             
 
-            ## CH3                                                                                                  
-            p.setValuesCH3([0.5, -ramp_amp*ramp_div, 0.0], [0.5, 0.0, ramp_amp*ramp_div])
+            ## CH3
+            # Creating ramps for the ramping gate                                                                                                  
+            p.setValuesCH3([0.5, -ramp_amp*ramp_div_ramp, 0.0], [0.5, 0.0, ramp_amp*ramp_div_ramp])
             if i==0: # Set marker only at the starting element of the sequence
                 p.setMarkersCH3([1,0],[1,0])
             else:    
@@ -72,7 +79,7 @@ def upload_ramp_to_AWG(ramp_amp = 4, v_stepping_dac = None):
 
             ## CH4
             # Set the next value of the stepping DAC 
-            p.setValuesCH4([0.5, v_step], [0.5, v_step])
+            p.setValuesCH4([0.5, v_step*ramp_div_step], [0.5, v_step*ramp_div_step])
             p.setMarkersCH4([0,0], [0,0])
     
             seqCH3.append(p.CH3)
@@ -94,13 +101,12 @@ def upload_ramp_to_AWG(ramp_amp = 4, v_stepping_dac = None):
 
 
 
-
-
-def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_middle = None, num_aver_pts = 20, ramp_amp = 5):
-    '''Function for running gate vs gate scans. Gate 1 is stepped from v1_start to v1_stop and for it's each value the gate 2 is ramped by AWG
-       around the middle value v2. Since the vertical line scan can be huge, and the ramp amplitude is limited to approx +-10mV on the sample end, 
-       it is splitted in num_ramps segments. v2 voltages are then adjusted to be in the middle of every ramp segment such that whole vertical line 
-       trace is covered.''' 
+def do_meas_refl_whole(bias = None, v2 = None, v1_start = None, v1_stop = None, v1_step = 0.12, v_middle = None, num_aver_pts = 20, ramp_amp = 5, averages = 8):
+    '''Function for running gate vs gate scans. Gate 1 (ramps) and Gate 2 (steps) volages are supplied from the AWG around the mean voltage value 
+        provided by IVVI DACs. 
+        A whole 2D scan is recorded in one go and read from the UHFLI scope, then it is transformed in corresponding matrices in which rows are
+        averaged for num_aver_pts. Finally, "averages" number of this 2D scans are measured and averaged.
+    ''' 
 
     if (bias == None) or (v2 == None) or (v1_start == None) or (v1_stop == None) or (v_middle == None): 
         raise Exception('Define the values first: bias, v2...')
@@ -119,26 +125,26 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     
     bias = bias
     num_ramps = 1 # This is not used here, but it is kept for the compatibility reasons and set to 1
-    averages = 8 
+
 
 
 
     v2 = v2       # Inner - the middle DC point of the ramp
     v2_initial = v2 - (num_ramps-1)*ramp_amp    # Complete vertical sweep ic segmented into n_ramps so v2 needs to be positioned properly for each segment
                                                 # Initial one is given by this formula
-    v1_vec = arange(v1_start,v1_stop,0.06)      # Outer
-    v1_vec_for_graph = v1_vec                   # Defining the v1_vec which is going to be used for the graph axis
+    v1_vec = arange(v1_start,v1_stop,v1_step)      # Outer
+    v1_vec_for_graph = v1_vec                   # Defining the v1_vec which is going to be used for the graph axis (without the mean substraction)
     v1_mean = (v1_start + v1_stop)/2.0          # The value of non-divided DAC which is superimposed to the gate via an S3b card
-    v1_vec = v1_vec - v1_mean
+    v1_vec = v1_vec - v1_mean                   # Stepping dac values which should be generated by the AWG
 
-    #upload_ramp_to_AWG(ramp_amp = ramp_amp, v_stepping_dac = v1_vec) # Call the function to upload ramp with a given amplitude to the AWG
+    upload_ramp_to_AWG(ramp_amp = ramp_amp, v_stepping_dac = v1_vec) # Call the function to upload ramp with a given amplitude to the AWG
 
 
     scope_sampling_rate = 7.03e6    # In Hz
     ramp_duration = 1e-3 # In seconds
     scope_segment_length = scope_sampling_rate*ramp_duration*len(v1_vec)
     daq.setDouble('/dev2169/scopes/0/length',scope_segment_length)
-    #daq.setDouble('/dev2169/scopes/0/trigdelay', (scope_segment_length/2.0))
+    daq.setDouble('/dev2169/scopes/0/trigdelay', (scope_segment_length/2.0))
     #scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
     #scope_num_segments = daq.getDouble('/dev2169/scopes/0/segments/count')
 
@@ -301,5 +307,5 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 #
 #
 #for Vm in Vms:
-do_meas_refl(bias = 0.0, v2 = -641.0, v1_start = -384.0, v1_stop = -378.0, v_middle = 600.0, num_aver_pts = 20, ramp_amp = 3)
+#do_meas_refl_whole(bias = 0.0, v2 = -643.0, v1_start = -395.0, v1_stop = -365.0, v1_step = 0.12, v_middle = 600.0, num_aver_pts = 20, ramp_amp = 5, averages = 8)
 
