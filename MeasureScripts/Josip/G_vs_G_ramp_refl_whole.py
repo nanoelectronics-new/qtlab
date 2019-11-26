@@ -22,6 +22,8 @@ daq, scopeModule = UHFLI_lib.UHF_init_scope_module()
 
 
 
+
+
 def upload_ramp_to_AWG(ramp_amp = 4, v_stepping_dac = None):
 
     if v_stepping_dac == None:
@@ -129,16 +131,24 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     v1_mean = (v1_start + v1_stop)/2.0          # The value of non-divided DAC which is superimposed to the gate via an S3b card
     v1_vec = v1_vec - v1_mean
 
-    upload_ramp_to_AWG(ramp_amp = ramp_amp, v_stepping_dac = v1_vec) # Call the function to upload ramp with a given amplitude to the AWG
+    #upload_ramp_to_AWG(ramp_amp = ramp_amp, v_stepping_dac = v1_vec) # Call the function to upload ramp with a given amplitude to the AWG
 
 
-    scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
-    scope_num_segments = daq.getDouble('/dev2169/scopes/0/segments/count')
+    scope_sampling_rate = 7.03e6    # In Hz
+    ramp_duration = 1e-3 # In seconds
+    scope_segment_length = scope_sampling_rate*ramp_duration*len(v1_vec)
+    daq.setDouble('/dev2169/scopes/0/length',scope_segment_length)
+    #daq.setDouble('/dev2169/scopes/0/trigdelay', (scope_segment_length/2.0))
+    #scope_segment_length = daq.getDouble('/dev2169/scopes/0/length')
+    #scope_num_segments = daq.getDouble('/dev2169/scopes/0/segments/count')
+
+
+
 
     # Number of adjacent points to average in the read data
     num_aver_pts = num_aver_pts 
 
-    num_points_vertical = scope_segment_length//num_aver_pts
+    num_points_vertical = (scope_sampling_rate*ramp_duration)//num_aver_pts
     ramp = np.linspace(-num_ramps*ramp_amp, num_ramps*ramp_amp, num_ramps*num_points_vertical)  # Defining the ramp segment
     
     #qt.mstart()
@@ -175,15 +185,13 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
     
     
 
-    #saving directly in matrix format 
-    new_mat_mag = np.zeros(num_ramps*num_points_vertical) # Creating empty matrix for storing all data 
-    new_mat_phase = np.zeros(num_ramps*num_points_vertical) # Creating empty matrix for storing all data 
+
     
     
     
-    plot3d_mag = qt.Plot3D(data, name=file_name + "_2D_amplitude", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
+    #plot3d_mag = qt.Plot3D(data, name=file_name + "_2D_amplitude", coorddims=(1,0), valdim=2, style='image') #flipped coordims that it plots correctly
     #plot2d_mag = qt.Plot2D(data_mag, name=file_name + "_1D_amplitude",autoupdate=False)
-    plot3d_phase = qt.Plot3D(data, name=file_name + "_2D_phase", coorddims=(1,0), valdim=3, style='image') #flipped coordims that it plots correctly
+    #plot3d_phase = qt.Plot3D(data, name=file_name + "_2D_phase", coorddims=(1,0), valdim=3, style='image') #flipped coordims that it plots correctly
     #plot2d_phase = qt.Plot2D(data_phase, name=file_name + "_1D_phase",autoupdate=False)
     
     
@@ -199,107 +207,93 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
    
     daq.setInt('/dev2169/sigins/0/autorange', 1)  # Autoset amplification
     daq.setInt('/dev2169/sigouts/0/enables/3', 1) # Turn on the UHFLI out 1
-    try:
-        for i,v1 in enumerate(v1_vec):
+
+
+        
+    
+    # set the voltage
+
+    # IVVI.set_dac6(v1*gate1div)
+    # UHFLI data containers
+    refl_mag_averaged = np.array([])
+    refl_phase_averaged = np.array([])
+        
+    for n in xrange(num_ramps):
+        
+        for avgs in xrange(averages):
+            IVVI.set_dac5(v2_initial + (n*2*ramp_amp)) # Setting the v2 properly in the middle of each vertical segment
+            # the next function is necessary to keep the gui responsive. It
+            # checks for instance if the 'stop' button is pushed. It also checks
+            # if the plots need updating.
+            qt.msleep(0.01)
+            # readout - getting the recording corresponding to one ramp
+            num_samples, wave = UHFLI_lib.get_scope_record(daq = daq, scopeModule= scopeModule)           
+            
+            # Organizing the scope shot into a matrix corresponding to 2D map where columns correspond to responses to ramps
+            refl_mag = wave[0].reshape(-1, scope_sampling_rate*ramp_duration).T
+            refl_phase = wave[1].reshape(-1, scope_sampling_rate*ramp_duration).T
+            print "Ich bin da."
+            # Kick out the last elements from each measurement, which do not fit in num_points_vertical*num_aver_pts
+            refl_mag = refl_mag[:num_points_vertical*num_aver_pts,:]
+            refl_phase = refl_phase[:num_points_vertical*num_aver_pts,:]
+            # Reduce the number of samples - average amongst adjacent samples of each ramp 
+            # Average every num_aver_pts point of each column in the matrix
+            # General formula for taking the average of r rows for a 2D array a with c columns:
+            # a.transpose().reshape(-1,r).mean(1).reshape(c,-1).transpose()
+            refl_mag = refl_mag.transpose().reshape(-1,num_aver_pts).mean(1).reshape(-1,num_points_vertical).transpose()
+            refl_phase = refl_phase.transpose().reshape(-1,num_aver_pts).mean(1).reshape(-1,num_points_vertical).transpose()
+            # Averaging amongst adjacent 2D measurements
+            if avgs == 0: #If getting the data for the first time, the average matrix does not exist still, so do not use it
+                refl_mag_averaged = refl_mag
+                refl_phase_averaged = refl_phase
+            else:
+                refl_mag_averaged = (refl_mag + refl_mag_averaged)/2.0
+                refl_phase_averaged = (refl_phase + refl_phase_averaged)/2.0
             
         
-            # set the voltage
-        
-            IVVI.set_dac6(v1*gate1div)
+    # save the data to the file
+    #v1_real = v1_vec_for_graph[i]
+    #data.add_data_point(v2 + ramp, np.linspace(v1_real,v1_real,num_ramps*num_points_vertical), refl_mag_averaged, refl_phase_averaged)
+    #data.new_block()
+    stop = time()
+
+    #plot2d_mag.update()
+    #plot3d_mag.update()
+    #plot2d_phase.update()
+    #plot3d_phase.update()
+    # Saving the matrix to the matrix filedata.get_filepath
+    np.savetxt(fname = data.get_dir() + '/' + file_name + "_amp_matrix.dat", X=refl_mag_averaged, fmt='%1.4e', delimiter=' ', newline='\n')  
+    np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X=refl_phase_averaged, fmt='%1.4e', delimiter=' ', newline='\n')  
     
-            # UHFLI data containers
-            refl_mag_averaged = np.array([])
-            refl_phase_averaged = np.array([])
-            
-            for n in xrange(num_ramps):
-                
-                for avgs in xrange(averages):
+   
+    print 'Overall duration: %s sec' % (stop - init_start, )
 
-                    IVVI.set_dac5(v2_initial + (n*2*ramp_amp)) # Setting the v2 properly in the middle of each vertical segment
-                    # the next function is necessary to keep the gui responsive. It
-                    # checks for instance if the 'stop' button is pushed. It also checks
-                    # if the plots need updating.
-                    qt.msleep(0.01)
-                    # readout - getting the recording corresponding to one ramp
-                    num_samples, wave = UHFLI_lib.get_scope_record(daq = daq, scopeModule= scopeModule)           
-                    
-                    # Organizing the scope shot into a matrix corresponding to 2D map where columns correspond to responses to ramps
-                    refl_mag = wave[0].reshape(-1, scope_segment_length).T
-                    refl_phase = wave[1].reshape(-1, scope_segment_length).T
+    #plot3d_mag.update()
+    #plot3d_phase.update()
 
-
-                        
-                    # Kick out the last elements from each measurement, which do not fit in num_points_vertical*num_aver_pts
-                    refl_mag = refl_mag[:num_points_vertical*num_aver_pts,:]
-                    refl_phase = refl_phase[:num_points_vertical*num_aver_pts,:]
-                    # Reduce the number of samples - average amongst adjacent samples of each ramp 
-                    # Average every num_aver_pts point of each column in the matrix
-                    # General formula for taking the average of r rows for a 2D array a with c columns:
-                    # a.transpose().reshape(-1,r).mean(1).reshape(c,-1).transpose()
-                    refl_mag = refl_mag.transpose().reshape(-1,num_aver_pts).mean(1).reshape(-1,num_points_vertical).transpose()
-                    refl_phase = refl_phase.transpose().reshape(-1,num_aver_pts).mean(1).reshape(-1,num_points_vertical).transpose()
+    #Saving plot images
+    #plot3d_phase.save_png(filepath = data.get_dir())
+    #plot3d_phase.save_eps(filepath = data.get_dir())
+    #plot3d_mag.save_png(filepath = data.get_dir())
+    #plot3d_mag.save_eps(filepath = data.get_dir())
+    save_the_plot(to_plot = refl_mag_averaged, title = file_name + '_amplitude', x = v1_vec_for_graph, y = v2 + ramp, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
+    save_the_plot(to_plot = refl_phase_averaged, title = file_name + '_phase', x = v1_vec_for_graph, y = v2 + ramp, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[1]['name'], dire = data.get_dir())
 
 
-                    # Averaging amongst adjacent 2D measurements
-                    refl_mag_averaged = (refl_mag + refl_mag_averaged)/2.0
-                    refl_phase_averaged = (refl_phase + refl_phase_averaged)/2.0
-                
-            
-            # save the data to the file
-            v1_real = v1_vec_for_graph[i]
-            data.add_data_point(v2 + ramp, np.linspace(v1_real,v1_real,num_ramps*num_points_vertical), refl_mag_averaged, refl_phase_averaged)
-    
-    
-            data.new_block()
-            stop = time()
-    
-            new_mat_mag = np.column_stack((new_mat_mag, refl_mag_averaged))
-            new_mat_phase = np.column_stack((new_mat_phase, refl_phase_averaged))
-    
-            # Kicking out the first column with zeros
-            if not(i):
-                new_mat_mag = new_mat_mag[:,1:]
-                new_mat_phase = new_mat_phase[:,1:]
-    
-    
-            #plot2d_mag.update()
-            #plot3d_mag.update()
-            #plot2d_phase.update()
-            #plot3d_phase.update()
-    
-            # Saving the matrix to the matrix filedata.get_filepath
-            np.savetxt(fname = data.get_dir() + '/' + file_name + "_amp_matrix.dat", X=new_mat_mag, fmt='%1.4e', delimiter=' ', newline='\n')  
-            np.savetxt(fname = data.get_dir() + '/' + file_name + "_phase_matrix.dat", X=new_mat_phase, fmt='%1.4e', delimiter=' ', newline='\n')  
-    
-    finally:
-        print 'Overall duration: %s sec' % (stop - init_start, )
-    
-        plot3d_mag.update()
-        plot3d_phase.update()
-    
-        #Saving plot images
-        plot3d_phase.save_png(filepath = data.get_dir())
-        #plot3d_phase.save_eps(filepath = data.get_dir())
-        plot3d_mag.save_png(filepath = data.get_dir())
-        #plot3d_mag.save_eps(filepath = data.get_dir())
-        #save_the_plot(to_plot = new_mat_mag, title = file_name + '_amplitude', x = v1_vec, y = v2 + ramp, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[0]['name'], dire = data.get_dir())
-        #save_the_plot(to_plot = new_mat_phase, title = file_name + '_phase', x = v1_vec, y = v2 + ramp, y_label = data.get_coordinates()[0]['name'], x_label = data.get_coordinates()[1]['name'], c_label = data.get_values()[1]['name'], dire = data.get_dir())
-    
-    
-        # after the measurement ends, you need to close the data files.
-        data.close_file()
-    
-    
-        settings_path = data.get_dir()
-    
-        UHFLI_lib.UHF_save_settings(daq, path = settings_path)
-    
-        #Turn OFF the AWG 
-        AWG.stop()
-        AWG.set_ch3_output(0)
-        daq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
-        # lastly tell the secondary processes (if any) that they are allowed to start again.
-        #qt.mend()
+    # after the measurement ends, you need to close the data files.
+    data.close_file()
+
+
+    settings_path = data.get_dir()
+
+    UHFLI_lib.UHF_save_settings(daq, path = settings_path)
+
+    #Turn OFF the AWG 
+    AWG.stop()
+    AWG.set_ch3_output(0)
+    daq.setInt('/dev2169/sigouts/0/enables/3', 0) # Turn OFF the UHFLI out 1
+    # lastly tell the secondary processes (if any) that they are allowed to start again.
+    #qt.mend()
 
 
 
@@ -307,5 +301,5 @@ def do_meas_refl(bias = None, v2 = None, v1_start = None, v1_stop = None, v_midd
 #
 #
 #for Vm in Vms:
- #   do_meas_refl(bias = 0.0, v2 = -350.0, v1_start = -400.0, v1_stop = -300.0, v_middle = Vm, num_aver_pts = 20, num_ramps = 10)
+do_meas_refl(bias = 0.0, v2 = -641.0, v1_start = -384.0, v1_stop = -378.0, v_middle = 600.0, num_aver_pts = 20, ramp_amp = 3)
 
